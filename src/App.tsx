@@ -12,7 +12,7 @@ import './styles/globals.css';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/food-delivery">
       <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900">
         <Header />
         <main className="flex-1">
