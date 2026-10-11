@@ -11,8 +11,10 @@ import './i18n';
 import './styles/globals.css';
 
 function App() {
+  const basename = import.meta.env.MODE === 'production' ? '/food-delivery' : '/';
+
   return (
-    <Router>
+    <Router basename={basename}>
       <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900">
         <Header />
         <main className="flex-1">
