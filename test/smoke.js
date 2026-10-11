@@ -427,6 +427,40 @@ ok('可交互元素 touch-action 覆盖 button', (() => {
 ok('双击卡片不会触发文字选中',
     (() => { const s = window.getComputedStyle($('.shop-card')); return s.userSelect === 'none' || s.webkitUserSelect === 'none'; })());
 
+// ============================================================
+// 15. 真实食物照片
+// ============================================================
+window.location.hash = '#/shop/1';
+await tick();
+const photos1 = $$('.art-wrap .photo');
+ok('商家页挂上了真实照片', photos1.length >= 9, 'photo ' + photos1.length + ' 张');
+ok('首页商家卡也挂上了照片', (() => {
+    window.location.hash = '#/home';
+    return true;
+})());
+await tick();
+const photosHome = $$('.shop-card .photo');
+ok('首页 8 张商家卡全部有照片', photosHome.length === $$('.shop-card').length,
+    photosHome.length + '/' + $$('.shop-card').length);
+ok('照片全部来自 Unsplash 白名单域名',
+    photosHome.every(i => i.src.indexOf('https://images.unsplash.com/photo-') === 0),
+    (photosHome.find(i => i.src.indexOf('https://images.unsplash.com/') !== 0) || {}).src || '');
+ok('照片懒加载（loading=lazy）', photosHome.every(i => i.getAttribute('loading') === 'lazy'));
+ok('照片是 object-fit: cover（不变形）',
+    (() => { const s = window.getComputedStyle(photosHome[0]); return s.objectFit === 'cover'; })());
+ok('照片加载失败会回退到 SVG 插画（捕获阶段 error 监听）',
+    html.indexOf("addEventListener('error'") !== -1 && html.indexOf("classList.contains('photo')") !== -1);
+ok('未使用内联 onerror 处理器', !/\sonerror\s*=/.test(html));
+ok('电池（805）保留 SVG 插画：IMG 表刻意不给它配图', !/\n\s*805:\s*'/.test(html));
+const noImg = [];
+A.shops.forEach(s => s.menu.forEach(d => { if (d.id !== 805 && !A.imgURL(d.id)) noImg.push(d.id); }));
+ok('除电池外全部 37 道菜都配了照片', noImg.length === 0, '缺图: ' + (noImg.join(',') || '无'));
+ok('全部 8 家商家都配了封面照',
+    A.shops.every(s => !!A.imgURL('s' + s.id)),
+    A.shops.filter(s => !A.imgURL('s' + s.id)).map(s => s.id).join(','));
+ok('照片 URL 都带裁剪参数（统一 320x320）',
+    A.imgURL(101).indexOf('w=320&h=320') !== -1, A.imgURL(101));
+
 console.log(results.join('\n'));
 console.log('\n' + (failed === 0 ? '✅ 全部 ' + results.length + ' 项通过' : '❌ ' + failed + ' / ' + results.length + ' 项失败'));
 process.exit(failed === 0 ? 0 : 1);

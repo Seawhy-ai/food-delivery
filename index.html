@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#FFD100">
-<meta name="description" content="袋鼠外卖 · 美团风格外卖点餐演示（单文件版，全 SVG 绘制）">
+<html lang="zh-CN" data-page-node-id="F4lRmD38QOBrRbscu730gZ">
+<head data-page-node-id="mVxNtChfC4tZoh1H87Cfd8">
+<meta charset="UTF-8" data-page-node-id="lUsIPlGtM2OYkLMFndoS0I">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" data-page-node-id="qXVpUDueWnbiihND1zrOvM">
+<meta name="theme-color" content="#FFD100" data-page-node-id="9RiCevBeCyFiAJC74IgIrZ">
+<meta name="description" content="袋鼠外卖 · 美团风格外卖点餐演示（单文件版，全 SVG 绘制）" data-page-node-id="yDMXYeHosuJVjcEpw38fFr">
 <title>袋鼠外卖 - 美食外卖，送啥都快</title>
 <style>
 /* ==========================================================================
@@ -107,6 +107,8 @@ body.dark :focus-visible { outline-color: var(--mt-yellow); }
 .art-wrap { position: relative; border-radius: var(--mt-radius); overflow: hidden; background: var(--mt-surface-2); flex-shrink: 0; }
 .art-wrap::before { content: ''; position: absolute; inset: 0; background: var(--ac, var(--mt-yellow)); opacity: .16; }
 .art { position: relative; display: block; width: 100%; height: 100%; }
+/* 真实照片叠在 SVG 插画之上：图挂了会自动移除，露出下面的插画 */
+.art-wrap .photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
 
 /* ============================ 顶部：定位 + 搜索 ============================ */
 .hero { background: var(--mt-yellow-grad); padding: 12px 14px 18px; position: relative; z-index: 40; }
@@ -486,44 +488,44 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
 }
 </style>
 </head>
-<body>
+<body data-page-node-id="LhxawlrsO3YNFiNMIq5KJm">
 
-<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true" focusable="false"><defs>
-<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.6 12 3.2l9 7.4"/><path d="M5.4 9.6V20.4h13.2V9.6"/><path d="M9.6 20.4v-5.6h4.8v5.6"/></symbol>
-<symbol id="i-receipt" viewBox="0 0 24 24"><path d="M6 3.2h12v17.6l-3-2-3 2-3-2-3 2z"/><path d="M9.2 8h5.6M9.2 11.6h5.6M9.2 15.2h3.4"/></symbol>
-<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.1"/><path d="M4.2 21c0-4.4 3.6-7.1 7.8-7.1S19.8 16.6 19.8 21"/></symbol>
-<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.4 16.4 4.2 4.2"/></symbol>
-<symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21.6s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10.6" r="2.6"/></symbol>
-<symbol id="i-bell" viewBox="0 0 24 24"><path d="M18.2 9.2a6.2 6.2 0 1 0-12.4 0c0 5.2-2.2 6.4-2.2 6.4h16.8s-2.2-1.2-2.2-6.4"/><path d="M13.8 20.2a2.1 2.1 0 0 1-3.6 0"/></symbol>
-<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.4 14.4A8.6 8.6 0 0 1 9.6 3.6a8.6 8.6 0 1 0 10.8 10.8z"/></symbol>
-<symbol id="i-cart" viewBox="0 0 24 24"><path d="M2.8 4h2.1l2.5 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.5L20.8 8H5.6"/><circle cx="9.6" cy="20" r="1.5"/><circle cx="17.4" cy="20" r="1.5"/></symbol>
-<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5.2v13.6M5.2 12h13.6"/></symbol>
-<symbol id="i-minus" viewBox="0 0 24 24"><path d="M5.2 12h13.6"/></symbol>
-<symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9.4 7V4.8h5.2V7M6.4 7l1 13h9.2l1-13"/><path d="M10.2 11v5.4M13.8 11v5.4"/></symbol>
-<symbol id="i-chev-r" viewBox="0 0 24 24"><path d="m9.2 5.2 6.8 6.8-6.8 6.8"/></symbol>
-<symbol id="i-chev-d" viewBox="0 0 24 24"><path d="m5.2 9.2 6.8 6.8 6.8-6.8"/></symbol>
-<symbol id="i-back" viewBox="0 0 24 24"><path d="M19.2 12H4.8M11 5.2 4.2 12l6.8 6.8"/></symbol>
-<symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
-<symbol id="i-check" viewBox="0 0 24 24"><path d="m4.8 12.8 4.8 4.8L19.2 7"/></symbol>
-<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6.8v5.6l3.6 2"/></symbol>
-<symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3 8.4A2.4 2.4 0 0 0 5.4 6h13.2A2.4 2.4 0 0 0 21 8.4v1a2.6 2.6 0 0 0 0 5.2v1a2.4 2.4 0 0 0-2.4 2.4H5.4A2.4 2.4 0 0 0 3 15.6v-1a2.6 2.6 0 0 0 0-5.2z"/><path d="M14.4 6.4v11.2" stroke-dasharray="2.2 2.4"/></symbol>
-<symbol id="i-store" viewBox="0 0 24 24"><path d="M4.4 9.4h15.2V20H4.4z"/><path d="M2.6 9.4 5.4 4h13.2l2.8 5.4"/><path d="M9.4 20v-5.8h5.2V20"/></symbol>
-<symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.8" cy="17" r="3.3"/><circle cx="18.2" cy="17" r="3.3"/><path d="M9.1 17h4.3l3-8h2.8M12.6 9.2 10.6 6H7.8"/><path d="M13.4 9.2h3.2"/></symbol>
-<symbol id="i-edit" viewBox="0 0 24 24"><path d="M4.4 19.6h4L20 8 16.4 4.4 4.4 16.4z"/><path d="m14.2 6.2 3.6 3.6"/></symbol>
-<symbol id="i-gift" viewBox="0 0 24 24"><path d="M4.2 11h15.6v9H4.2z"/><path d="M2.8 7.2h18.4V11H2.8z"/><path d="M12 7.2V20"/><path d="M12 7.2S10.4 3.2 8.4 3.2 6 6.2 8 7.2M12 7.2s1.6-4 3.6-4S18 6.2 16 7.2"/></symbol>
-<symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-13.6-4.5L4 9"/><path d="M4 4v5h5"/><path d="M4 13a8 8 0 0 0 13.6 4.5L20 15"/><path d="M20 20v-5h-5"/></symbol>
-<symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5L2.6 9.4l6.5-.9z"/></symbol>
-<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3.4" y="3.4" width="7.2" height="7.2" rx="2.2"/><rect x="13.4" y="3.4" width="7.2" height="7.2" rx="2.2"/><rect x="3.4" y="13.4" width="7.2" height="7.2" rx="2.2"/><rect x="13.4" y="13.4" width="7.2" height="7.2" rx="2.2"/></symbol>
-<symbol id="i-noodle" viewBox="0 0 24 24"><path d="M3.6 11.4h16.8"/><path d="M5 11.4a7 7 0 0 0 14 0"/><path d="M8.4 11.4V4.6M12 11.4V4.6M15.6 11.4V4.6"/></symbol>
-<symbol id="i-cup" viewBox="0 0 24 24"><path d="M6 8.4h12l-1.2 10.8a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8z"/><path d="M18 10.4 20.4 4"/><path d="M6.6 12.4h10.8"/></symbol>
-<symbol id="i-leaf" viewBox="0 0 24 24"><path d="M20.4 4.4c0 9.4-5.6 14.6-12.4 14.6H4.8c0-8.4 5-14.6 15.6-14.6z"/><path d="M4.8 19c3-6.2 7-10.4 13-12.6"/></symbol>
-<symbol id="i-redpacket" viewBox="0 0 24 24"><rect x="4" y="3.6" width="16" height="16.8" rx="2.6"/><path d="M8 4.4c1.2 3.6 2.4 5.2 4 5.2s2.8-1.6 4-5.2"/><circle cx="12" cy="13.4" r="2.8"/></symbol>
-<symbol id="i-trophy" viewBox="0 0 24 24"><path d="M7 3.8h10v5.4a5 5 0 0 1-10 0z"/><path d="M7 6H4.4v1.8A3.6 3.6 0 0 0 7 11.4M17 6h2.6v1.8A3.6 3.6 0 0 1 17 11.4"/><path d="M12 14.2v3.6M8.4 20.2h7.2"/></symbol>
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true" focusable="false" data-page-node-id="DGNkD1eZmlOLCOGxXCIStF"><defs data-page-node-id="763YGeo3dhr0GBini4QL0D">
+<symbol id="i-home" viewBox="0 0 24 24" data-page-node-id="u9A6ShOQhf86YZkFYRGkBd"><path d="M3 10.6 12 3.2l9 7.4" data-page-node-id="OYYvIqQxEWx8M7J34GkRbY"/><path d="M5.4 9.6V20.4h13.2V9.6" data-page-node-id="8XwtLffhgCVCPkLCBSt7gU"/><path d="M9.6 20.4v-5.6h4.8v5.6" data-page-node-id="l8vyOospgzoSlKc2JaCaSn"/></symbol>
+<symbol id="i-receipt" viewBox="0 0 24 24" data-page-node-id="nCy3LX5htEZ2Sc4GuUEKMr"><path d="M6 3.2h12v17.6l-3-2-3 2-3-2-3 2z" data-page-node-id="wl3hVuPqyEN3sHkilLZpUi"/><path d="M9.2 8h5.6M9.2 11.6h5.6M9.2 15.2h3.4" data-page-node-id="p6bURvZa5Hvs0OgGnhATnz"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" data-page-node-id="Ci4ANR2whNR6uXrCHwOXsU"><circle cx="12" cy="8" r="4.1" data-page-node-id="L9qB6j0U6PQC9bqNHpDPUF"/><path d="M4.2 21c0-4.4 3.6-7.1 7.8-7.1S19.8 16.6 19.8 21" data-page-node-id="6UipJ7P59wYH9pcmM9pd7L"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" data-page-node-id="xnGV6mSwh6tyimGxmpEJwQ"><circle cx="11" cy="11" r="7" data-page-node-id="nGFFgw5iBEIRyuCo9TKjY5"/><path d="m16.4 16.4 4.2 4.2" data-page-node-id="yfswPhSs99sEUybF8CHv34"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24" data-page-node-id="gfwCdCKDyiejC6WHuwjPWE"><path d="M12 21.6s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z" data-page-node-id="CWEJrLcjgaRzoqcbcABTr2"/><circle cx="12" cy="10.6" r="2.6" data-page-node-id="8mKIwV2Is8KXsE4W2U3xew"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24" data-page-node-id="P1eZjmzQGZfjNh99uarkQI"><path d="M18.2 9.2a6.2 6.2 0 1 0-12.4 0c0 5.2-2.2 6.4-2.2 6.4h16.8s-2.2-1.2-2.2-6.4" data-page-node-id="zOMYeJDlSUR280YQgiwHqJ"/><path d="M13.8 20.2a2.1 2.1 0 0 1-3.6 0" data-page-node-id="cVTTWdULMhnHHKcGoukp1w"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24" data-page-node-id="gMilzNs4PqCPvJClXTaGsr"><path d="M20.4 14.4A8.6 8.6 0 0 1 9.6 3.6a8.6 8.6 0 1 0 10.8 10.8z" data-page-node-id="MxVFGDmJFIrwACeKRqhkOz"/></symbol>
+<symbol id="i-cart" viewBox="0 0 24 24" data-page-node-id="ByRdCmlH2GYn1EI0MAG3rC"><path d="M2.8 4h2.1l2.5 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.5L20.8 8H5.6" data-page-node-id="x54wffXnw7D4LuYY5A3NRn"/><circle cx="9.6" cy="20" r="1.5" data-page-node-id="42WiIr4mJNGEAZAgucJhIO"/><circle cx="17.4" cy="20" r="1.5" data-page-node-id="CrOrJ75G0e2yFdi3OOEFJA"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24" data-page-node-id="6TSv5qaL7Ozv95IbbY9ZQl"><path d="M12 5.2v13.6M5.2 12h13.6" data-page-node-id="YKRAZGiTkrT0RfNLzfrLrg"/></symbol>
+<symbol id="i-minus" viewBox="0 0 24 24" data-page-node-id="zLJarHQCxtQpsmgSec3noM"><path d="M5.2 12h13.6" data-page-node-id="sRqpmGJA8NjgVU2V7PFigy"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24" data-page-node-id="J88DnFGbRx3JSFFK6nFQzm"><path d="M4 7h16M9.4 7V4.8h5.2V7M6.4 7l1 13h9.2l1-13" data-page-node-id="bENbUVyiheVh4kPe1O5V3m"/><path d="M10.2 11v5.4M13.8 11v5.4" data-page-node-id="EHekq7sHBHJB31riQYeImj"/></symbol>
+<symbol id="i-chev-r" viewBox="0 0 24 24" data-page-node-id="MfXbumFxnWSD4JBySGJKPz"><path d="m9.2 5.2 6.8 6.8-6.8 6.8" data-page-node-id="2dgf4BiNUVPZPmxBqFWZGA"/></symbol>
+<symbol id="i-chev-d" viewBox="0 0 24 24" data-page-node-id="ZSyE3GfHUeVnRnK0RFcQX4"><path d="m5.2 9.2 6.8 6.8 6.8-6.8" data-page-node-id="F9H6aqvaBNZABxQyW7t0kO"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24" data-page-node-id="FhJceeFHf3n6zJmXWyfwMR"><path d="M19.2 12H4.8M11 5.2 4.2 12l6.8 6.8" data-page-node-id="MINcxGLewLkTFuI9E4Cf8N"/></symbol>
+<symbol id="i-close" viewBox="0 0 24 24" data-page-node-id="9tMmmDuSWNb9nFFHkRpPfo"><path d="M6 6l12 12M18 6 6 18" data-page-node-id="tTrOCM282SpOCUba0EJloc"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" data-page-node-id="N1rvbkgmQEWfrwgKlwfKIB"><path d="m4.8 12.8 4.8 4.8L19.2 7" data-page-node-id="pmGDtJEV62cX2lozF2U12J"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" data-page-node-id="aR586YNG39SoZp2KxwVEpH"><circle cx="12" cy="12" r="9" data-page-node-id="OHcGRYpnpZij5wvakdQZZN"/><path d="M12 6.8v5.6l3.6 2" data-page-node-id="L5Ifx6ITBcgM2C4XFHZiDI"/></symbol>
+<symbol id="i-ticket" viewBox="0 0 24 24" data-page-node-id="61HF7HJSpO0JMdMGwd9VHH"><path d="M3 8.4A2.4 2.4 0 0 0 5.4 6h13.2A2.4 2.4 0 0 0 21 8.4v1a2.6 2.6 0 0 0 0 5.2v1a2.4 2.4 0 0 0-2.4 2.4H5.4A2.4 2.4 0 0 0 3 15.6v-1a2.6 2.6 0 0 0 0-5.2z" data-page-node-id="LNmk3GoMiPV31FdJtldl2j"/><path d="M14.4 6.4v11.2" stroke-dasharray="2.2 2.4" data-page-node-id="EvKIF2HXNL9XMbx8GURo3y"/></symbol>
+<symbol id="i-store" viewBox="0 0 24 24" data-page-node-id="k63xmmH1HmanNIK1rS54tI"><path d="M4.4 9.4h15.2V20H4.4z" data-page-node-id="njWLtEMjnqeaehtdHBKzAy"/><path d="M2.6 9.4 5.4 4h13.2l2.8 5.4" data-page-node-id="UjoWk7FAlG8CnAInMYXqFq"/><path d="M9.4 20v-5.8h5.2V20" data-page-node-id="aHUT75KjX22dRHK9ofeKhv"/></symbol>
+<symbol id="i-bike" viewBox="0 0 24 24" data-page-node-id="ellLQbvKFuCBNC8ge8JTnN"><circle cx="5.8" cy="17" r="3.3" data-page-node-id="ITzfww6csHJJj7k5s4syXs"/><circle cx="18.2" cy="17" r="3.3" data-page-node-id="YwG0cMsqImrh7EQoxsymX8"/><path d="M9.1 17h4.3l3-8h2.8M12.6 9.2 10.6 6H7.8" data-page-node-id="RsiLFeRA44zOLuvCOK9CEy"/><path d="M13.4 9.2h3.2" data-page-node-id="jfKS7VN9bk45nypxoVmWfe"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24" data-page-node-id="FHJFknA7tXYiUdvkSKeN0k"><path d="M4.4 19.6h4L20 8 16.4 4.4 4.4 16.4z" data-page-node-id="yNkiu4oN1YAGQoPmcFj5yK"/><path d="m14.2 6.2 3.6 3.6" data-page-node-id="B6bBTgA84Q3z08EYzqhDB8"/></symbol>
+<symbol id="i-gift" viewBox="0 0 24 24" data-page-node-id="MkMF8hGspHqwQQzSrxvDAa"><path d="M4.2 11h15.6v9H4.2z" data-page-node-id="PMHhwG0ZoC7nxdGaiBWX5E"/><path d="M2.8 7.2h18.4V11H2.8z" data-page-node-id="CjCv1RmnOLOGVKe0q5FGcg"/><path d="M12 7.2V20" data-page-node-id="X8J8rJTaqedB20oiBsNyjY"/><path d="M12 7.2S10.4 3.2 8.4 3.2 6 6.2 8 7.2M12 7.2s1.6-4 3.6-4S18 6.2 16 7.2" data-page-node-id="NgOKfQcMCnNUd9tozjEd8u"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24" data-page-node-id="V0PudXJ3Oh2QzGrZFY7fvI"><path d="M20 11a8 8 0 0 0-13.6-4.5L4 9" data-page-node-id="XMPshIGHI3AFPwf6BXiql6"/><path d="M4 4v5h5" data-page-node-id="RD8aVRrrxJwlEznVx3ynLD"/><path d="M4 13a8 8 0 0 0 13.6 4.5L20 15" data-page-node-id="JNHeFTQu3BUc7tP2odKQUH"/><path d="M20 20v-5h-5" data-page-node-id="nvb9yBrygaHo12MtcbDwue"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24" data-page-node-id="jvigumFFL7Fc2MxG1BGEue"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5L2.6 9.4l6.5-.9z" data-page-node-id="clUpT4EogFO8dUb1xIkNpg"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24" data-page-node-id="nIdRCLzNYZvaEE6bRNKQF6"><rect x="3.4" y="3.4" width="7.2" height="7.2" rx="2.2" data-page-node-id="l3gaTeQMblKt0mBhZCseXs"/><rect x="13.4" y="3.4" width="7.2" height="7.2" rx="2.2" data-page-node-id="Xlbx4uaHTyDHzkgzf9qbh8"/><rect x="3.4" y="13.4" width="7.2" height="7.2" rx="2.2" data-page-node-id="DzTdWGr1S8i6ayIECt3gHM"/><rect x="13.4" y="13.4" width="7.2" height="7.2" rx="2.2" data-page-node-id="IUPhiEhhLgMwA30Np7XbKx"/></symbol>
+<symbol id="i-noodle" viewBox="0 0 24 24" data-page-node-id="zhRpUeD1l9Qcv1CPOCEVuO"><path d="M3.6 11.4h16.8" data-page-node-id="2GWo40Ivq8w0t8M0MexUAc"/><path d="M5 11.4a7 7 0 0 0 14 0" data-page-node-id="Grqh9sztZBVnZetBgsovCn"/><path d="M8.4 11.4V4.6M12 11.4V4.6M15.6 11.4V4.6" data-page-node-id="0vsgr6d8h04BFJDBjQWoga"/></symbol>
+<symbol id="i-cup" viewBox="0 0 24 24" data-page-node-id="WqfpfMrfEgEQ7OjDXtOBQa"><path d="M6 8.4h12l-1.2 10.8a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8z" data-page-node-id="EHzlsfnFw4AsnfHp5pO22l"/><path d="M18 10.4 20.4 4" data-page-node-id="tv3qXPxvffIBzDTJ5dKFf4"/><path d="M6.6 12.4h10.8" data-page-node-id="ha6iHpumzHR3HCFFsLLL6p"/></symbol>
+<symbol id="i-leaf" viewBox="0 0 24 24" data-page-node-id="9bHayrqKrYgMtvsGWzhLvv"><path d="M20.4 4.4c0 9.4-5.6 14.6-12.4 14.6H4.8c0-8.4 5-14.6 15.6-14.6z" data-page-node-id="mvTt8orVlLtmElk274Yh4a"/><path d="M4.8 19c3-6.2 7-10.4 13-12.6" data-page-node-id="AjSq8bfUhmNstvJOCaqnic"/></symbol>
+<symbol id="i-redpacket" viewBox="0 0 24 24" data-page-node-id="q9yq5ybmAGKTw21PIcARsm"><rect x="4" y="3.6" width="16" height="16.8" rx="2.6" data-page-node-id="G7dJITu611GeUf7r4f4Occ"/><path d="M8 4.4c1.2 3.6 2.4 5.2 4 5.2s2.8-1.6 4-5.2" data-page-node-id="YlFucySREJQSFWyhhGIPeI"/><circle cx="12" cy="13.4" r="2.8" data-page-node-id="9vnVXE3OXVvD0AWarzL2zt"/></symbol>
+<symbol id="i-trophy" viewBox="0 0 24 24" data-page-node-id="CoCFeEfpu81lmbA5E7bNSP"><path d="M7 3.8h10v5.4a5 5 0 0 1-10 0z" data-page-node-id="D2v6AC2w2UhNOFOdhudozd"/><path d="M7 6H4.4v1.8A3.6 3.6 0 0 0 7 11.4M17 6h2.6v1.8A3.6 3.6 0 0 1 17 11.4" data-page-node-id="AreDokPGIgADAqFjFAykJc"/><path d="M12 14.2v3.6M8.4 20.2h7.2" data-page-node-id="rPVX3RJrlWN7aEDCLUi4Gn"/></symbol>
 </defs></svg>
 
-<div class="app" id="app"></div>
-<div class="toast-box" id="toastBox" aria-live="polite"></div>
-<div id="layerRoot"></div>
+<div class="app" id="app" data-page-node-id="viRwT6b6T8W1PvEJrJvwly"></div>
+<div class="toast-box" id="toastBox" aria-live="polite" data-page-node-id="sUBzUkBGOi7uD0C5FcRtWB"></div>
+<div id="layerRoot" data-page-node-id="8ld39DurQURhVnvYt7mIig"></div>
 
 <script>
 (function () {
@@ -826,12 +828,63 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         }
     };
 
-    function artHTML(kind, main, food) {
+    /* 真实食物照片（Unsplash 直链，懒加载）。
+       每张都已下载核验过内容与菜品对得上；805 电池没找到合适的图，
+       故意不给 img 字段 —— 会一直显示 SVG 插画。 */
+    const IMG = {
+        s1: '1512003867696-6d5ce6835040', s2: '1553621042-f6e147245754',
+        s3: '1568901346375-23c9450c58cd', s4: '1591814468924-caf88d1232e1',
+        s5: '1555939594-58d7cb561ad1',   s6: '1578985545062-69928b1d9587',
+        s7: '1537640538966-79f369143f8f', s8: '1566478989037-eec170784d0b',
+
+        101: '1512003867696-6d5ce6835040', 102: '1590301157890-4810ed352733',
+        103: '1585937421612-70a008356fbe', 104: '1516684732162-798a0062be99',
+        105: '1555126634-323283e090fa',   106: '1558857563-b371033873b8',
+        107: '1587049352846-4a222e784d38', 108: '1575932444877-5106bee2a599',
+
+        201: '1546069901-ba9599a7e63c',   202: '1579871494447-9811cf80d66c',
+        203: '1611143669185-af224c5e3252', 204: '1534604973900-c43ab4c2e0ab',
+        205: '1565680018434-b513d5e5fd47', 206: '1547592166-23ac45744acd',
+        207: '1563245372-f21724e3856d',
+
+        301: '1568901346375-23c9450c58cd', 302: '1626645738196-c2a7c87a8f58',
+        303: '1571091718767-18b5b1457add', 304: '1573080496219-bb080dd4f877',
+        305: '1573080496219-bb080dd4f877', 306: '1554866585-cd94860890b7',
+
+        401: '1591814468924-caf88d1232e1', 402: '1569718212165-3a8278d5f624',
+        403: '1585032226651-759b368d7246', 404: '1496116218417-1a781b1c416c',
+        405: '1512621776951-a57141f2eefd',
+
+        501: '1529193591184-b1d58069ecdd', 502: '1555939594-58d7cb561ad1',
+        503: '1610057099431-d73a1c9d2f2f', 504: '1504545102780-26774c1bb073',
+        505: '1512621776951-a57141f2eefd',
+
+        601: '1571877227200-a0d98ea607e9', 602: '1578985545062-69928b1d9587',
+        603: '1509042239860-f550ce710b93', 604: '1546173159-315724a31696',
+        605: '1461023058943-07fcbe16d735',
+
+        701: '1537640538966-79f369143f8f', 702: '1553279768-865429fa0078',
+        703: '1547514701-42782101795e',   704: '1587049352846-4a222e784d38',
+        705: '1585059895524-72359e06133a',
+
+        801: '1608270586620-248524c67de9', 802: '1616118132534-381148898bb4',
+        803: '1566478989037-eec170784d0b', 804: '1584556812952-905ffd0c611a'
+        /* 805 电池：无合适实拍图，保留 SVG 插画 */
+    };
+    const imgURL = key => IMG[key]
+        ? 'https://images.unsplash.com/photo-' + IMG[key] + '?auto=format&fit=crop&w=320&h=320&q=70'
+        : null;
+
+    function artHTML(kind, main, food, img) {
         const p = mkPal(main);
         const f = mkPal(food || shade(main, 0.78));
         const fn = ART[kind] || ART.soupbowl;
         return '<span class="art-wrap" style="--ac:' + main + '">' +
-               '<svg class="art" viewBox="0 0 120 120" aria-hidden="true" focusable="false">' + fn(p, f) + '</svg></span>';
+               '<svg class="art" viewBox="0 0 120 120" aria-hidden="true" focusable="false">' + fn(p, f) + '</svg>' +
+               (img
+                   ? '<img class="photo" src="' + esc(img) + '" alt="" loading="lazy" decoding="async">'
+                   : '') +
+               '</span>';
     }
 
     /* ======================================================================
@@ -1068,6 +1121,13 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     function syncLock() {
         document.body.classList.toggle('locked', document.querySelector('.mask, .sheet-mask') !== null);
     }
+
+    /* 照片加载失败时移除 <img>，露出下层 SVG 插画（error 事件不冒泡，需捕获阶段） */
+    document.addEventListener('error', e => {
+        if (e.target && e.target.tagName === 'IMG' && e.target.classList.contains('photo')) {
+            e.target.remove();
+        }
+    }, true);
     const emptyState = (ic, title, sub) =>
         '<div class="empty"><div class="empty-art">' + icon(ic) + '</div>' +
         '<div class="title">' + esc(title) + '</div>' + (sub ? '<div class="sub">' + esc(sub) + '</div>' : '') + '</div>';
@@ -1207,7 +1267,7 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     function shopCardHTML(shop) {
         const promo = shop.discounts.map(d => '满' + d.threshold + '减' + d.cut).join(' · ');
         return '<button type="button" class="shop-card" data-go="shop/' + shop.id + '" aria-label="进入 ' + esc(shop.name) + '">' +
-            artHTML(shop.art[0], shop.art[1], shop.art[2]) +
+            artHTML(shop.art[0], shop.art[1], shop.art[2], imgURL('s' + shop.id)) +
             '<span class="shop-main">' +
                 '<span class="shop-name">' + esc(shop.name) + '</span>' +
                 '<span class="shop-stats">' +
@@ -1348,7 +1408,7 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     function dishRowHTML(dish) {
         const qty = state.cart.items[dish.id] || 0;
         return '<div class="dish" data-dish-row="' + dish.id + '">' +
-            artHTML(dish.art[0], dish.art[1], dish.art[2]) +
+            artHTML(dish.art[0], dish.art[1], dish.art[2], imgURL(dish.id)) +
             '<span class="dish-body">' +
                 '<span class="dish-name">' + esc(dish.name) + '</span>' +
                 '<span class="dish-desc">' + esc(dish.desc) + '</span>' +
@@ -1401,7 +1461,7 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                     '<button type="button" class="icon-btn" data-action="toggle-theme" aria-label="切换深色模式">' + icon('moon') + '</button>' +
                 '</div>' +
                 '<div class="shop-brief">' +
-                    artHTML(shop.art[0], shop.art[1], shop.art[2]) +
+                    artHTML(shop.art[0], shop.art[1], shop.art[2], imgURL('s' + shop.id)) +
                     '<span class="info">' +
                         '<h2>' + esc(shop.name) + '</h2>' +
                         '<span class="meta"><span class="stars">' + icon('star', 'fill') +
@@ -1633,7 +1693,7 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         const first = order.items[0];
         return '<div class="order-card">' +
             '<div class="order-card-head">' +
-                artHTML(shop.art[0], shop.art[1], shop.art[2]) +
+                artHTML(shop.art[0], shop.art[1], shop.art[2], imgURL('s' + shop.id)) +
                 '<span class="nm">' + esc(shop.name) + '</span>' +
                 '<span class="st' + (done ? ' done' : '') + '">' + ORDER_FLOW[order.status] + '</span>' +
             '</div>' +
@@ -2099,7 +2159,7 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         cartCount: cartCount, cartSubtotal: cartSubtotal,
         shops: SHOPS, coupons: COUPONS,
         shopById: id => SHOP_BY_ID.get(Number(id)), parseHash: parseHash,
-        art: artHTML, icon: icon
+        art: artHTML, icon: icon, imgURL: imgURL
     };
 })();
 </script>
