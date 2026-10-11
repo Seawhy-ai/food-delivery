@@ -4,63 +4,76 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#FFD100">
-<meta name="description" content="袋鼠外卖 · 美团风格外卖点餐演示（单文件版）">
+<meta name="description" content="袋鼠外卖 · 美团风格外卖点餐演示（单文件版，全 SVG 绘制）">
 <title>袋鼠外卖 - 美食外卖，送啥都快</title>
 <style>
 /* ==========================================================================
-   设计令牌 —— 对齐美团品牌视觉
-   主色 美团黄 #FFD100 / 近黑 #111111 / 强调红 #E60012 / 浅黄 #FFF3B0
+   设计令牌 —— 美团品牌视觉
+   美团黄 #FFD100 / 近黑 #111111 / 强调红 #E60012 / 浅黄 #FFF3B0
    ========================================================================== */
 :root {
     --mt-yellow: #FFD100;
     --mt-yellow-deep: #FFC300;
     --mt-yellow-soft: #FFF3B0;
     --mt-yellow-bg: #FFFBE6;
-    --mt-yellow-grad: linear-gradient(135deg, #FFE259 0%, #FFD100 55%, #FFC300 100%);
+    --mt-yellow-grad: linear-gradient(160deg, #FFE566 0%, #FFD100 52%, #FFBE00 100%);
 
     --mt-black: #111111;
     --mt-red: #E60012;
     --mt-red-soft: #FFEDED;
     --mt-orange: #FF6B00;
-    --mt-blue: #2B7FFF;
 
-    --mt-bg: #F4F4F4;
+    --mt-bg: #F5F5F7;
     --mt-surface: #FFFFFF;
-    --mt-surface-2: #F7F7F7;
-    --mt-border: #EEEEEE;
-    --mt-line: #F2F2F2;
+    --mt-surface-2: #F7F7F9;
+    --mt-border: #EDEDF0;
+    --mt-line: #F1F1F4;
 
-    --mt-text: #1A1A1A;
-    --mt-text-2: #6B6B70;
-    --mt-text-3: #A0A0A6;
+    --mt-text: #151519;
+    --mt-text-2: #6B6B72;
+    --mt-text-3: #9E9EA6;
 
-    --mt-shadow-sm: 0 1px 3px rgba(0, 0, 0, .06);
-    --mt-shadow: 0 2px 10px rgba(0, 0, 0, .07);
-    --mt-radius: 12px;
-    --mt-radius-lg: 16px;
+    --mt-shadow-sm: 0 1px 2px rgba(16, 16, 20, .05);
+    --mt-shadow: 0 1px 2px rgba(16, 16, 20, .04), 0 10px 26px -14px rgba(16, 16, 20, .18);
+    --mt-radius: 14px;
+    --mt-radius-lg: 18px;
 
-    --tab-h: 52px;
+    --tab-h: 54px;
     --safe-b: env(safe-area-inset-bottom, 0px);
 }
 body.dark {
-    --mt-bg: #121212;
-    --mt-surface: #1C1C1E;
-    --mt-surface-2: #262628;
-    --mt-border: #2C2C2E;
-    --mt-line: #262628;
+    --mt-bg: #101012;
+    --mt-surface: #1B1B1E;
+    --mt-surface-2: #242428;
+    --mt-border: #2A2A2F;
+    --mt-line: #242428;
 
-    --mt-text: #F2F2F2;
-    --mt-text-2: #A5A5AB;
-    --mt-text-3: #75757B;
+    --mt-text: #F1F1F4;
+    --mt-text-2: #A6A6AE;
+    --mt-text-3: #74747C;
 
     --mt-yellow-bg: #2B2600;
     --mt-red-soft: #3A1A1C;
 
-    --mt-shadow-sm: 0 1px 3px rgba(0, 0, 0, .5);
-    --mt-shadow: 0 2px 10px rgba(0, 0, 0, .45);
+    --mt-shadow-sm: 0 1px 2px rgba(0, 0, 0, .5);
+    --mt-shadow: 0 1px 2px rgba(0, 0, 0, .45), 0 12px 28px -14px rgba(0, 0, 0, .6);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+/* ---- 双击放大修复 ------------------------------------------------------
+   touch-action: manipulation 保留平移与捏合缩放，只禁掉「双击缩放」。
+   不用 user-scalable=no，避免破坏无障碍的捏合缩放能力。               */
+html, body, .app, button, [data-action], [data-go], .tab, .shop-card, .kk-item,
+.menu-row, .row, .tile, .dish-cat, .step-btn, .cart-ico-wrap, .search-bar {
+    touch-action: manipulation;
+}
+/* 双击不再选中交互元素上的文字 */
+button, .kk-item, .shop-card, .tab, .step-btn, .cart-ico-wrap, .menu-row,
+.row, .tile, .dish-cat, .tabbar, .cartbar, .subheader, .hero, .search-bar,
+.status-tab, .sort-item, .chips, .badge-dot {
+    -webkit-user-select: none; user-select: none;
+}
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Roboto, sans-serif;
@@ -68,7 +81,6 @@ body {
     color: var(--mt-text);
     font-size: 14px;
     line-height: 1.45;
-    transition: background .25s, color .25s;
     -webkit-font-smoothing: antialiased;
     overscroll-behavior-y: none;
 }
@@ -81,182 +93,226 @@ body.dark :focus-visible { outline-color: var(--mt-yellow); }
 
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-.app { max-width: 480px; margin: 0 auto; min-height: 100vh; background: var(--mt-bg); position: relative; box-shadow: 0 0 40px rgba(0, 0, 0, .06); }
-body.dark .app { box-shadow: 0 0 40px rgba(0, 0, 0, .5); }
+.app { max-width: 480px; margin: 0 auto; min-height: 100vh; background: var(--mt-bg); position: relative; }
+.page { padding-bottom: calc(var(--tab-h) + var(--safe-b) + 14px); min-height: 100vh; }
 
-.page { padding-bottom: calc(var(--tab-h) + var(--safe-b) + 12px); min-height: 100vh; }
+/* ============================ 图标 / 插画 ============================ */
+.ic {
+    width: 22px; height: 22px; display: block;
+    fill: none; stroke: currentColor; stroke-width: 1.7;
+    stroke-linecap: round; stroke-linejoin: round;
+}
+.ic.fill { fill: currentColor; stroke: none; }
+
+.art-wrap { position: relative; border-radius: var(--mt-radius); overflow: hidden; background: var(--mt-surface-2); flex-shrink: 0; }
+.art-wrap::before { content: ''; position: absolute; inset: 0; background: var(--ac, var(--mt-yellow)); opacity: .16; }
+.art { position: relative; display: block; width: 100%; height: 100%; }
 
 /* ============================ 顶部：定位 + 搜索 ============================ */
-/* 顶部黄色渐变区随页面滚走，排序条吸附在顶端（避免两者都 sticky 时互相覆盖） */
-.hero { background: var(--mt-yellow-grad); padding: 12px 14px 20px; position: relative; z-index: 40; }
-.hero-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.loc { display: flex; align-items: center; gap: 4px; max-width: 52%; font-weight: 700; color: var(--mt-black); }
-.loc .pin { font-size: 15px; flex-shrink: 0; }
+.hero { background: var(--mt-yellow-grad); padding: 12px 14px 18px; position: relative; z-index: 40; }
+.hero-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.loc { display: flex; align-items: center; gap: 4px; max-width: 56%; font-weight: 700; color: var(--mt-black); }
+.loc .ic { width: 17px; height: 17px; flex-shrink: 0; }
 .loc-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; }
-.loc .caret { font-size: 10px; opacity: .55; flex-shrink: 0; }
+.loc .caret { width: 12px; height: 12px; opacity: .6; flex-shrink: 0; }
 .hero-row .spacer { flex: 1; }
-.icon-btn { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; color: var(--mt-black); transition: background .2s; }
-.icon-btn:hover { background: rgba(0, 0, 0, .08); }
+.icon-btn {
+    width: 34px; height: 34px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; color: var(--mt-black);
+    background: rgba(255, 255, 255, .34); transition: background .2s;
+}
+.icon-btn:hover { background: rgba(255, 255, 255, .55); }
+.icon-btn .ic { width: 19px; height: 19px; }
 .badge-dot { position: relative; }
-.badge-dot::after { content: ''; position: absolute; top: 5px; right: 5px; width: 7px; height: 7px; border-radius: 50%; background: var(--mt-red); border: 1.5px solid var(--mt-yellow); }
+.badge-dot::after { content: ''; position: absolute; top: 6px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--mt-red); border: 1.5px solid var(--mt-yellow); }
 
-.search-bar { display: flex; align-items: center; gap: 8px; width: 100%; background: #fff; border-radius: 999px; padding: 9px 14px; box-shadow: 0 2px 6px rgba(0, 0, 0, .08); color: var(--mt-text-3); text-align: left; }
-.search-bar .ico { font-size: 15px; }
+.search-bar {
+    display: flex; align-items: center; gap: 9px; width: 100%;
+    background: #fff; border-radius: 999px; padding: 10px 8px 10px 15px;
+    box-shadow: 0 2px 8px rgba(90, 60, 0, .1); color: var(--mt-text-3); text-align: left;
+}
+.search-bar .ic { width: 17px; height: 17px; flex-shrink: 0; }
 .search-bar .ph { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
-.search-bar .cta { background: var(--mt-black); color: var(--mt-yellow); font-size: 12px; font-weight: 700; padding: 4px 11px; border-radius: 999px; flex-shrink: 0; }
+.search-bar .cta {
+    background: var(--mt-black); color: var(--mt-yellow);
+    font-size: 12.5px; font-weight: 700; padding: 7px 15px; border-radius: 999px; flex-shrink: 0;
+}
 
 /* ============================ 金刚区 ============================ */
-.kingkong { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px 0; padding: 14px 6px 6px; }
-.kk-item { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 4px 0; border-radius: 10px; transition: background .2s; }
-.kk-item:hover { background: var(--mt-surface-2); }
-.kk-ico { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 23px; background: var(--mt-yellow-bg); box-shadow: var(--mt-shadow-sm); }
+.kingkong { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px 0; padding: 16px 8px 8px; }
+.kk-item { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 4px 0 6px; border-radius: 12px; }
+.kk-ico {
+    width: 46px; height: 46px; border-radius: 15px; display: flex;
+    align-items: center; justify-content: center; position: relative;
+}
+.kk-ico::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: var(--k); opacity: .13; }
+.kk-ico .ic { position: relative; width: 24px; height: 24px; color: var(--k); z-index: 1; }
 .kk-name { font-size: 11.5px; color: var(--mt-text-2); white-space: nowrap; }
-.kk-item.on .kk-ico { box-shadow: 0 0 0 2px var(--mt-yellow-deep), var(--mt-shadow-sm); }
-.kk-item.on .kk-name { color: var(--mt-yellow-deep); font-weight: 700; }
+.kk-item.on .kk-ico { background: var(--k); }
+.kk-item.on .kk-ico::after { display: none; }
+.kk-item.on .kk-ico .ic { color: #fff; stroke-width: 2; }
+.kk-item.on .kk-name { color: var(--k); font-weight: 700; }
 
 /* ============================ 瓷片区 ============================ */
-.tiles { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 4px 12px 14px; }
-.tile { background: var(--mt-surface); border-radius: var(--mt-radius); padding: 10px 8px; box-shadow: var(--mt-shadow-sm); display: flex; flex-direction: column; gap: 2px; overflow: hidden; position: relative; text-align: left; }
-.tile.hot { background: linear-gradient(135deg, #FFF0F0, #FFE0E0); }
-body.dark .tile.hot { background: linear-gradient(135deg, #33191B, #2A1416); }
-.tile-title { font-size: 12.5px; font-weight: 700; color: var(--mt-text); }
-.tile-sub { font-size: 11px; color: var(--mt-red); font-weight: 600; }
-.tile-emoji { position: absolute; right: -4px; bottom: -6px; font-size: 30px; opacity: .28; }
+.tiles { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 9px; padding: 6px 12px 16px; }
+.tile {
+    background: var(--mt-surface); border-radius: var(--mt-radius);
+    padding: 11px 10px; box-shadow: var(--mt-shadow-sm);
+    display: flex; flex-direction: column; gap: 3px; overflow: hidden;
+    position: relative; text-align: left;
+}
+.tile .ic { position: absolute; right: -2px; bottom: -3px; width: 34px; height: 34px; opacity: .15; }
+.tile-title { font-size: 12.5px; font-weight: 700; }
+.tile-sub { font-size: 11px; font-weight: 700; }
+.tile.hot .tile-sub { color: var(--mt-red); }
 
 /* ============================ 排序条 ============================ */
-.sortbar { display: flex; align-items: center; gap: 4px; background: var(--mt-surface); padding: 10px 12px; position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--mt-line); }
-.sort-item { padding: 5px 10px; border-radius: 999px; font-size: 13px; color: var(--mt-text-2); white-space: nowrap; transition: all .18s; }
-.sort-item.on { background: var(--mt-yellow-soft); color: var(--mt-black); font-weight: 700; }
-body.dark .sort-item.on { background: #3D3600; color: var(--mt-yellow); }
+.sortbar { display: flex; align-items: center; gap: 4px; background: var(--mt-surface); padding: 11px 12px; position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--mt-line); }
+.sort-item { padding: 6px 11px; border-radius: 999px; font-size: 13px; color: var(--mt-text-2); white-space: nowrap; transition: all .18s; }
+.sort-item.on { background: var(--mt-black); color: var(--mt-yellow); font-weight: 700; }
 
 /* ============================ 商家卡片 ============================ */
-.shop-list { padding: 10px 12px; display: flex; flex-direction: column; gap: 10px; }
-.shop-card { background: var(--mt-surface); border-radius: var(--mt-radius); padding: 12px; display: flex; gap: 12px; width: 100%; text-align: left; box-shadow: var(--mt-shadow-sm); transition: transform .18s; }
+.shop-list { padding: 10px 12px; display: flex; flex-direction: column; gap: 11px; }
+.shop-card {
+    background: var(--mt-surface); border-radius: var(--mt-radius-lg);
+    padding: 12px; display: flex; gap: 12px; width: 100%; text-align: left;
+    box-shadow: var(--mt-shadow-sm); transition: transform .18s;
+}
 .shop-card:active { transform: scale(.985); }
-.shop-thumb { width: 74px; height: 74px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 36px; background: linear-gradient(135deg, #FFF6CC, #FFE98A); }
-body.dark .shop-thumb { background: linear-gradient(135deg, #3A3400, #2A2600); }
-.shop-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
-.shop-name { font-size: 15.5px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.shop-stats { display: flex; align-items: center; gap: 10px; font-size: 11.5px; color: var(--mt-text-3); flex-wrap: wrap; }
-.stars { color: var(--mt-orange); font-weight: 700; }
+.shop-card .art-wrap { width: 82px; height: 82px; border-radius: var(--mt-radius); }
+.shop-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.shop-name { font-size: 16px; font-weight: 700; letter-spacing: -.2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.shop-stats { display: flex; align-items: center; gap: 9px; font-size: 11.5px; color: var(--mt-text-3); flex-wrap: wrap; }
+.stars { display: inline-flex; align-items: center; gap: 2px; color: var(--mt-orange); font-weight: 700; }
+.stars .ic { width: 12px; height: 12px; }
 .stars .num { color: var(--mt-text); }
 .shop-tags { display: flex; gap: 5px; flex-wrap: wrap; }
-.tag { font-size: 10.5px; padding: 1px 5px; border-radius: 3px; line-height: 1.5; border: 1px solid currentColor; color: var(--mt-text-3); }
-.tag.red { color: var(--mt-red); background: var(--mt-red-soft); border-color: transparent; }
-.tag.yellow { color: #8A6A00; background: var(--mt-yellow-soft); border-color: transparent; }
-body.dark .tag.yellow { color: var(--mt-yellow); background: #3A3200; }
-.shop-promo { display: flex; align-items: flex-start; gap: 5px; font-size: 11.5px; }
-.shop-promo .lbl { color: var(--mt-red); background: var(--mt-red-soft); border-radius: 3px; padding: 1px 4px; flex-shrink: 0; font-weight: 600; }
+.tag { font-size: 10.5px; padding: 1.5px 5.5px; border-radius: 4px; line-height: 1.5; color: var(--mt-text-3); background: var(--mt-surface-2); }
+.tag.yellow { color: #8A6A00; background: var(--mt-yellow-soft); }
+body.dark .tag.yellow { color: var(--mt-yellow); background: #332C00; }
+.shop-promo { display: flex; align-items: center; gap: 5px; font-size: 11.5px; }
+.shop-promo .lbl { color: var(--mt-red); background: var(--mt-red-soft); border-radius: 4px; padding: 1.5px 5px; flex-shrink: 0; font-weight: 700; }
 .shop-promo .txt { color: var(--mt-red); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.shop-foot { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--mt-text-3); margin-top: 1px; flex-wrap: wrap; }
+.shop-foot { display: flex; align-items: center; gap: 9px; font-size: 11px; color: var(--mt-text-3); flex-wrap: wrap; }
 .shop-foot .deliver { color: var(--mt-text-2); }
-.distance-col { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; flex-shrink: 0; font-size: 11px; color: var(--mt-text-3); }
+.distance-col { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; flex-shrink: 0; font-size: 11px; color: var(--mt-text-3); align-self: stretch; }
 
-.empty { text-align: center; padding: 60px 24px; color: var(--mt-text-3); }
-.empty .ico { font-size: 46px; margin-bottom: 12px; opacity: .8; }
-.empty .title { font-size: 15px; color: var(--mt-text-2); margin-bottom: 4px; font-weight: 600; }
-.empty .sub { font-size: 12.5px; }
+.empty { text-align: center; padding: 56px 24px; }
+.empty-art { width: 76px; height: 76px; border-radius: 50%; background: var(--mt-surface-2); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+.empty-art .ic { width: 32px; height: 32px; color: var(--mt-text-3); stroke-width: 1.5; }
+.empty .title { font-size: 15.5px; color: var(--mt-text-2); margin-bottom: 5px; font-weight: 700; }
+.empty .sub { font-size: 12.5px; color: var(--mt-text-3); }
 
 /* ============================ 底部 Tab ============================ */
-.tabbar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; height: calc(var(--tab-h) + var(--safe-b)); padding-bottom: var(--safe-b); background: var(--mt-surface); border-top: 1px solid var(--mt-line); display: flex; z-index: 70; }
-.tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10.5px; color: var(--mt-text-3); transition: color .18s; }
-.tab .ico { font-size: 20px; line-height: 1; filter: grayscale(1); opacity: .55; transition: all .18s; }
+.tabbar {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 480px; height: calc(var(--tab-h) + var(--safe-b));
+    padding-bottom: var(--safe-b);
+    background: var(--mt-surface); border-top: 1px solid var(--mt-line);
+    display: flex; z-index: 70;
+}
+.tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 10.5px; color: var(--mt-text-3); }
+.tab .ico { width: 40px; height: 24px; border-radius: 999px; display: flex; align-items: center; justify-content: center; transition: background .18s; }
+.tab .ico .ic { width: 22px; height: 22px; }
 .tab.on { color: var(--mt-black); font-weight: 700; }
-.tab.on .ico { filter: none; opacity: 1; }
+.tab.on .ico { background: var(--mt-yellow); }
 body.dark .tab.on { color: var(--mt-yellow); }
 
 /* ============================ 子页头部 ============================ */
 .subheader { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--mt-surface); position: sticky; top: 0; z-index: 60; border-bottom: 1px solid var(--mt-line); }
-.subheader .back { font-size: 19px; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.subheader .back { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--mt-text); }
 .subheader .back:hover { background: var(--mt-surface-2); }
 .subheader h1 { font-size: 16.5px; font-weight: 700; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-/* 页面内还有第二条吸附条（如订单页的状态筛选）时，让标题随页面滚走 */
 .subheader.plain { position: static; }
 
 /* ============================ 搜索页 ============================ */
 .search-head { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--mt-yellow-grad); position: sticky; top: 0; z-index: 60; }
-.search-field { flex: 1; display: flex; align-items: center; gap: 6px; background: #fff; border-radius: 999px; padding: 8px 12px; }
+.search-head .icon-btn { background: rgba(255, 255, 255, .4); }
+.search-field { flex: 1; display: flex; align-items: center; gap: 7px; background: #fff; border-radius: 999px; padding: 9px 13px; }
+.search-field .ic { width: 17px; height: 17px; color: var(--mt-text-3); flex-shrink: 0; }
 .search-field input { flex: 1; border: none; outline: none; background: none; font-size: 14px; min-width: 0; }
-.search-field .clr { color: var(--mt-text-3); font-size: 15px; }
+.search-field .clr { color: var(--mt-text-3); display: flex; }
+.search-field .clr .ic { width: 15px; height: 15px; }
 .search-go { font-size: 14px; font-weight: 700; color: var(--mt-black); padding: 4px 2px; }
 
-.block { padding: 16px 14px 4px; }
-.block-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.block-head h2 { font-size: 14px; font-weight: 700; }
+.block { padding: 18px 14px 4px; }
+.block-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 11px; }
+.block-head h2 { font-size: 14.5px; font-weight: 700; }
 .block-head .more { font-size: 12px; color: var(--mt-text-3); }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip { padding: 7px 13px; border-radius: 999px; font-size: 13px; background: var(--mt-surface); color: var(--mt-text-2); box-shadow: var(--mt-shadow-sm); }
+.chip { padding: 8px 14px; border-radius: 999px; font-size: 13px; background: var(--mt-surface); color: var(--mt-text-2); box-shadow: var(--mt-shadow-sm); }
 .chip.hot { color: var(--mt-red); }
 .match-box { padding: 0 12px 12px; }
-.match-box .inner { background: var(--mt-yellow-bg); padding: 8px 10px; border-radius: 8px; font-size: 11.5px; display: flex; gap: 6px; }
+.match-box .inner { background: var(--mt-yellow-bg); padding: 8px 11px; border-radius: 9px; font-size: 11.5px; display: flex; gap: 7px; }
 .match-box .k { color: var(--mt-yellow-deep); font-weight: 700; flex-shrink: 0; }
 .match-box .v { color: var(--mt-text-2); overflow: hidden; }
-.wrap-card { background: var(--mt-surface); border-radius: 12px; box-shadow: var(--mt-shadow-sm); }
+.wrap-card { background: var(--mt-surface); border-radius: var(--mt-radius-lg); box-shadow: var(--mt-shadow-sm); }
 .wrap-card .shop-card { box-shadow: none; background: transparent; }
 
 /* ============================ 商家页 ============================ */
 .shop-page { position: fixed; inset: 0; max-width: 480px; margin: 0 auto; background: var(--mt-surface); display: flex; flex-direction: column; z-index: 80; }
 .shop-hero { background: var(--mt-yellow-grad); padding: 10px 14px 16px; flex-shrink: 0; }
-.shop-hero-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-.shop-hero-top .back { font-size: 19px; color: var(--mt-black); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-.shop-hero-top .back:hover { background: rgba(0, 0, 0, .08); }
+.shop-hero-top { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.shop-hero-top .back { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--mt-black); background: rgba(255, 255, 255, .34); }
 .shop-hero-top .ttl { flex: 1; font-weight: 700; color: var(--mt-black); text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .shop-brief { display: flex; gap: 12px; }
-.shop-brief .thumb { width: 64px; height: 64px; border-radius: 12px; background: rgba(255, 255, 255, .75); display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0; }
+.shop-brief .art-wrap { width: 66px; height: 66px; border-radius: var(--mt-radius); background: rgba(255, 255, 255, .8); }
 .shop-brief .info { flex: 1; min-width: 0; color: var(--mt-black); }
-.shop-brief .info h2 { font-size: 16px; margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.shop-brief .info .meta { font-size: 11.5px; opacity: .72; display: flex; gap: 9px; flex-wrap: wrap; }
-.shop-brief .info .promo { font-size: 11.5px; margin-top: 4px; display: flex; gap: 5px; align-items: flex-start; }
-.shop-brief .info .promo .k { background: var(--mt-red); color: #fff; border-radius: 3px; padding: 0 4px; flex-shrink: 0; font-weight: 600; }
+.shop-brief .info h2 { font-size: 16.5px; margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; letter-spacing: -.2px; }
+.shop-brief .info .meta { font-size: 11.5px; opacity: .74; display: flex; gap: 9px; flex-wrap: wrap; }
+.shop-brief .info .promo { font-size: 11.5px; margin-top: 4px; display: flex; gap: 5px; align-items: center; }
+.shop-brief .info .promo .k { background: var(--mt-red); color: #fff; border-radius: 4px; padding: 1px 5px; flex-shrink: 0; font-weight: 700; }
 .shop-brief .info .promo .v { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .shop-body { flex: 1; display: flex; overflow: hidden; position: relative; }
-.dish-cats { width: 88px; flex-shrink: 0; background: var(--mt-surface-2); overflow-y: auto; }
-.dish-cat { width: 100%; padding: 15px 6px; font-size: 13px; color: var(--mt-text-2); text-align: center; position: relative; transition: background .18s; }
+.dish-cats { width: 90px; flex-shrink: 0; background: var(--mt-surface-2); overflow-y: auto; }
+.dish-cat { width: 100%; padding: 16px 6px; font-size: 13px; color: var(--mt-text-2); text-align: center; position: relative; }
 .dish-cat.on { background: var(--mt-surface); color: var(--mt-text); font-weight: 700; }
-.dish-cat.on::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 16px; background: var(--mt-yellow); border-radius: 0 3px 3px 0; }
+.dish-cat.on::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 17px; background: var(--mt-yellow-deep); border-radius: 0 3px 3px 0; }
 .dish-cat .dot { position: absolute; top: 8px; right: 8px; min-width: 15px; height: 15px; border-radius: 999px; background: var(--mt-red); color: #fff; font-size: 10px; line-height: 15px; padding: 0 4px; font-weight: 700; }
 
-.dish-list { flex: 1; overflow-y: auto; position: relative; padding-bottom: 90px; }
-.dish-section-title { padding: 12px 12px 6px; font-size: 12.5px; font-weight: 700; color: var(--mt-text-2); background: var(--mt-surface); }
-.dish { display: flex; gap: 10px; padding: 12px; border-bottom: 1px solid var(--mt-line); }
-.dish-thumb { width: 66px; height: 66px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 30px; background: linear-gradient(135deg, #FFF7D6, #FFEBA0); }
-body.dark .dish-thumb { background: linear-gradient(135deg, #332D00, #262100); }
+.dish-list { flex: 1; overflow-y: auto; position: relative; padding-bottom: 96px; }
+.dish-section-title { padding: 13px 12px 7px; font-size: 12.5px; font-weight: 700; color: var(--mt-text-2); background: var(--mt-surface); }
+.dish { display: flex; gap: 11px; padding: 12px; border-bottom: 1px solid var(--mt-line); }
+.dish .art-wrap { width: 70px; height: 70px; border-radius: 11px; }
 .dish-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .dish-name { font-size: 14.5px; font-weight: 600; margin-bottom: 2px; }
 .dish-desc { font-size: 11.5px; color: var(--mt-text-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dish-sales { font-size: 11px; color: var(--mt-text-3); margin-top: 3px; }
 .dish-bottom { display: flex; align-items: flex-end; justify-content: space-between; margin-top: auto; padding-top: 6px; }
-.price { color: var(--mt-red); font-weight: 700; font-size: 16px; display: flex; align-items: baseline; gap: 1px; }
+.price { color: var(--mt-red); font-weight: 700; font-size: 16.5px; display: flex; align-items: baseline; gap: 1px; }
 .price .cur { font-size: 11px; }
 .price .orig { color: var(--mt-text-3); font-size: 11px; text-decoration: line-through; font-weight: 400; margin-left: 4px; }
 
 .stepper { display: flex; align-items: center; gap: 7px; }
-.step-btn { width: 23px; height: 23px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; }
+.step-btn { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.step-btn .ic { width: 14px; height: 14px; stroke-width: 2.4; }
 .step-add { background: var(--mt-yellow); color: var(--mt-black); }
-.step-minus { border: 1px solid var(--mt-yellow-deep); color: var(--mt-yellow-deep); }
+.step-minus { border: 1.4px solid var(--mt-yellow-deep); color: var(--mt-yellow-deep); }
 body.dark .step-minus { border-color: var(--mt-yellow); color: var(--mt-yellow); }
 .step-qty { min-width: 16px; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
 
 /* ============================ 底部购物车栏 ============================ */
-.cartbar { position: absolute; left: 0; right: 0; bottom: 0; height: 54px; display: flex; align-items: center; padding: 0 12px 0 14px; gap: 10px; background: var(--mt-black); color: #fff; z-index: 20; }
+.cartbar { position: absolute; left: 0; right: 0; bottom: 0; height: 56px; display: flex; align-items: center; padding: 0 12px 0 14px; gap: 11px; background: var(--mt-black); color: #fff; z-index: 20; }
 .cartbar.empty-state { background: var(--mt-surface); color: var(--mt-text-3); border-top: 1px solid var(--mt-line); }
-.cart-ico-wrap { position: relative; width: 46px; height: 46px; flex-shrink: 0; margin-top: -18px; }
-.cart-ico { width: 46px; height: 46px; border-radius: 50%; background: #2C2C2E; display: flex; align-items: center; justify-content: center; font-size: 23px; border: 3px solid var(--mt-black); }
+.cart-ico-wrap { position: relative; width: 48px; height: 48px; flex-shrink: 0; margin-top: -20px; }
+.cart-ico { width: 48px; height: 48px; border-radius: 50%; background: #33333A; display: flex; align-items: center; justify-content: center; border: 3.5px solid var(--mt-black); color: #9A9AA2; }
+.cart-ico .ic { width: 24px; height: 24px; }
 .cartbar.empty-state .cart-ico { background: var(--mt-surface-2); border-color: var(--mt-surface); }
-.cart-ico.has { background: var(--mt-yellow); }
-.cart-badge { position: absolute; top: -3px; right: -3px; min-width: 18px; height: 18px; border-radius: 999px; background: var(--mt-red); color: #fff; font-size: 11px; line-height: 18px; text-align: center; padding: 0 5px; font-weight: 700; border: 2px solid var(--mt-black); }
+.cart-ico.has { background: var(--mt-yellow); color: var(--mt-black); }
+.cart-badge { position: absolute; top: -4px; right: -4px; min-width: 19px; height: 19px; border-radius: 999px; background: var(--mt-red); color: #fff; font-size: 11px; line-height: 19px; text-align: center; padding: 0 5px; font-weight: 700; border: 2px solid var(--mt-black); }
 .cart-sum { flex: 1; min-width: 0; }
-.cart-sum .amt { font-size: 17px; font-weight: 700; }
-.cart-sum .hint { font-size: 11px; opacity: .7; }
+.cart-sum .amt { font-size: 17.5px; font-weight: 700; }
+.cart-sum .hint { font-size: 11px; opacity: .72; }
 .cartbar.empty-state .cart-sum .amt { color: var(--mt-text-3); }
-.checkout-btn { background: #4A4A4D; color: #9A9A9E; padding: 9px 22px; border-radius: 999px; font-weight: 700; font-size: 14.5px; flex-shrink: 0; }
+.checkout-btn { background: #43434A; color: #8E8E96; padding: 10px 22px; border-radius: 999px; font-weight: 700; font-size: 14.5px; flex-shrink: 0; }
 .checkout-btn.ready { background: var(--mt-yellow); color: var(--mt-black); }
 
-.cart-drawer { position: absolute; left: 0; right: 0; bottom: 54px; max-height: 55%; background: var(--mt-surface); z-index: 19; display: flex; flex-direction: column; transform: translateY(110%); transition: transform .26s cubic-bezier(.32, .72, 0, 1); box-shadow: 0 -8px 24px rgba(0, 0, 0, .12); }
+.cart-drawer { position: absolute; left: 0; right: 0; bottom: 56px; max-height: 55%; background: var(--mt-surface); z-index: 19; display: flex; flex-direction: column; transform: translateY(110%); transition: transform .26s cubic-bezier(.32, .72, 0, 1); box-shadow: 0 -10px 28px rgba(0, 0, 0, .13); }
 .cart-drawer.open { transform: translateY(0); }
-.cart-drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--mt-line); font-size: 13px; color: var(--mt-text-2); }
-.cart-drawer-head .clr { color: var(--mt-text-3); font-size: 12.5px; }
+.cart-drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 13px 14px; border-bottom: 1px solid var(--mt-line); font-size: 13px; color: var(--mt-text-2); }
+.cart-drawer-head .clr { color: var(--mt-text-3); font-size: 12.5px; display: flex; align-items: center; gap: 4px; }
+.cart-drawer-head .clr .ic { width: 14px; height: 14px; }
 .cart-drawer-list { overflow-y: auto; padding: 4px 14px 10px; }
 .cart-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--mt-line); }
 .cart-row:last-child { border-bottom: none; }
@@ -266,50 +322,50 @@ body.dark .step-minus { border-color: var(--mt-yellow); color: var(--mt-yellow);
 .cart-mask.open { opacity: 1; visibility: visible; }
 
 /* ============================ 结算页 ============================ */
-.card { background: var(--mt-surface); border-radius: var(--mt-radius); margin: 10px 12px; box-shadow: var(--mt-shadow-sm); overflow: hidden; }
-.row { display: flex; align-items: center; gap: 10px; padding: 14px; border-bottom: 1px solid var(--mt-line); width: 100%; text-align: left; }
+.card { background: var(--mt-surface); border-radius: var(--mt-radius-lg); margin: 10px 12px; box-shadow: var(--mt-shadow-sm); overflow: hidden; }
+.row { display: flex; align-items: center; gap: 10px; padding: 15px 14px; border-bottom: 1px solid var(--mt-line); width: 100%; text-align: left; }
 .row:last-child { border-bottom: none; }
 .row .k { color: var(--mt-text-2); font-size: 13.5px; flex-shrink: 0; }
 .row .v { flex: 1; text-align: right; font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.row .caret { color: var(--mt-text-3); font-size: 12px; flex-shrink: 0; }
+.row .caret { width: 15px; height: 15px; color: var(--mt-text-3); flex-shrink: 0; }
 .row .val-red { color: var(--mt-red); font-weight: 700; }
 
-.addr-line { display: flex; gap: 10px; align-items: flex-start; }
-.addr-line .pin { font-size: 17px; }
+.addr-line { display: flex; gap: 11px; align-items: flex-start; }
+.addr-line .ic { width: 18px; height: 18px; color: var(--mt-yellow-deep); margin-top: 2px; flex-shrink: 0; }
+body.dark .addr-line .ic { color: var(--mt-yellow); }
 .addr-line .txt { flex: 1; min-width: 0; }
-.addr-line .nm { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.addr-line .nm { font-weight: 700; font-size: 15.5px; display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
 .addr-line .nm .phone { color: var(--mt-text-2); font-weight: 400; font-size: 13px; }
 .addr-line .detail { font-size: 12.5px; color: var(--mt-text-2); margin-top: 3px; line-height: 1.5; }
 
 .bill-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 14px; font-size: 13px; color: var(--mt-text-2); }
 .bill-row .amt { color: var(--mt-text); font-variant-numeric: tabular-nums; }
 .bill-row.cut .amt { color: var(--mt-red); }
-.bill-row.total { border-top: 1px solid var(--mt-line); margin-top: 6px; padding-top: 11px; font-size: 14.5px; color: var(--mt-text); font-weight: 700; }
-.bill-row.total .amt { color: var(--mt-red); font-size: 17px; }
+.bill-row.total { border-top: 1px solid var(--mt-line); margin-top: 6px; padding-top: 12px; font-size: 14.5px; color: var(--mt-text); font-weight: 700; }
+.bill-row.total .amt { color: var(--mt-red); font-size: 17.5px; }
 
 .order-items { padding: 4px 14px 12px; }
 .oi { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 13.5px; }
 .oi .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .oi .qt { color: var(--mt-text-3); font-size: 12.5px; }
 
-.submit-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; padding: 10px 14px calc(10px + var(--safe-b)); background: var(--mt-surface); border-top: 1px solid var(--mt-line); display: flex; align-items: center; gap: 12px; z-index: 70; }
+.submit-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; padding: 11px 14px calc(11px + var(--safe-b)); background: var(--mt-surface); border-top: 1px solid var(--mt-line); display: flex; align-items: center; gap: 12px; z-index: 70; }
 .submit-bar .sum { flex: 1; }
 .submit-bar .sum .amt { color: var(--mt-red); font-weight: 700; font-size: 19px; }
 .submit-bar .sum .hint { font-size: 11px; color: var(--mt-text-3); }
-.btn-primary { background: var(--mt-yellow); color: var(--mt-black); font-weight: 700; padding: 11px 30px; border-radius: 999px; font-size: 15px; }
+.btn-primary { background: var(--mt-yellow); color: var(--mt-black); font-weight: 700; padding: 12px 30px; border-radius: 999px; font-size: 15px; }
 .btn-primary:disabled { background: var(--mt-surface-2); color: var(--mt-text-3); }
-.btn-sm { padding: 6px 15px; border-radius: 999px; font-size: 13px; border: 1px solid var(--mt-border); color: var(--mt-text-2); }
+.btn-sm { padding: 7px 16px; border-radius: 999px; font-size: 13px; border: 1px solid var(--mt-border); color: var(--mt-text-2); }
 .btn-sm.solid { background: var(--mt-yellow); color: var(--mt-black); border-color: transparent; font-weight: 700; }
 
 /* ============================ 订单页 ============================ */
 .status-tabs { display: flex; gap: 4px; padding: 10px 12px; background: var(--mt-surface); position: sticky; top: 0; z-index: 55; border-bottom: 1px solid var(--mt-line); }
-.status-tab { padding: 6px 13px; border-radius: 999px; font-size: 13px; color: var(--mt-text-2); }
-.status-tab.on { background: var(--mt-yellow-soft); color: var(--mt-black); font-weight: 700; }
-body.dark .status-tab.on { background: #3D3600; color: var(--mt-yellow); }
+.status-tab { padding: 6px 14px; border-radius: 999px; font-size: 13px; color: var(--mt-text-2); }
+.status-tab.on { background: var(--mt-black); color: var(--mt-yellow); font-weight: 700; }
 
-.order-card { background: var(--mt-surface); border-radius: var(--mt-radius); margin: 10px 12px; padding: 14px; box-shadow: var(--mt-shadow-sm); }
-.order-card-head { display: flex; align-items: center; gap: 9px; margin-bottom: 11px; }
-.order-card-head .thumb { width: 34px; height: 34px; border-radius: 8px; background: var(--mt-yellow-bg); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.order-card { background: var(--mt-surface); border-radius: var(--mt-radius-lg); margin: 10px 12px; padding: 15px; box-shadow: var(--mt-shadow-sm); }
+.order-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.order-card-head .art-wrap { width: 34px; height: 34px; border-radius: 9px; }
 .order-card-head .nm { flex: 1; font-weight: 700; font-size: 14.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .order-card-head .st { font-size: 12.5px; color: var(--mt-yellow-deep); font-weight: 700; }
 body.dark .order-card-head .st { color: var(--mt-yellow); }
@@ -317,16 +373,16 @@ body.dark .order-card-head .st { color: var(--mt-yellow); }
 .order-line { display: flex; justify-content: space-between; gap: 10px; padding: 3px 0; font-size: 13px; color: var(--mt-text-2); }
 .order-line .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .order-line .qt { color: var(--mt-text-3); flex-shrink: 0; }
-.order-card-foot { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 12px; padding-top: 11px; border-top: 1px solid var(--mt-line); }
+.order-card-foot { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 13px; padding-top: 12px; border-top: 1px solid var(--mt-line); }
 .order-total { margin-right: auto; font-size: 13px; color: var(--mt-text-2); }
 .order-total em { font-style: normal; color: var(--mt-red); font-weight: 700; font-size: 16px; }
 
 .timeline { padding: 6px 0 2px; }
-.tl-item { display: flex; gap: 12px; position: relative; padding-bottom: 18px; }
+.tl-item { display: flex; gap: 13px; position: relative; padding-bottom: 19px; }
 .tl-item:last-child { padding-bottom: 0; }
-.tl-item::before { content: ''; position: absolute; left: 9px; top: 18px; bottom: -2px; width: 2px; background: var(--mt-line); }
+.tl-item::before { content: ''; position: absolute; left: 10px; top: 19px; bottom: -2px; width: 2px; background: var(--mt-line); }
 .tl-item:last-child::before { display: none; }
-.tl-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--mt-line); flex-shrink: 0; margin-top: 2px; z-index: 1; border: 3px solid var(--mt-surface); }
+.tl-dot { width: 15px; height: 15px; border-radius: 50%; background: var(--mt-line); flex-shrink: 0; margin-top: 2px; z-index: 1; border: 3px solid var(--mt-surface); }
 .tl-item.done .tl-dot { background: var(--mt-yellow); }
 .tl-item.now .tl-dot { background: var(--mt-yellow); box-shadow: 0 0 0 3px var(--mt-yellow-soft); }
 .tl-body { flex: 1; min-width: 0; }
@@ -336,31 +392,34 @@ body.dark .tl-item.now .tl-title { color: var(--mt-yellow); }
 .tl-item:not(.done):not(.now) .tl-title { color: var(--mt-text-3); font-weight: 400; }
 .tl-time { font-size: 11.5px; color: var(--mt-text-3); margin-top: 1px; }
 
-.rider { display: flex; align-items: center; gap: 11px; padding: 12px 14px; background: var(--mt-surface); border-radius: var(--mt-radius); margin: 10px 12px; box-shadow: var(--mt-shadow-sm); }
-.rider .av { width: 42px; height: 42px; border-radius: 50%; background: var(--mt-yellow); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.rider { display: flex; align-items: center; gap: 12px; padding: 13px 14px; background: var(--mt-surface); border-radius: var(--mt-radius-lg); margin: 10px 12px; box-shadow: var(--mt-shadow-sm); }
+.rider .av { width: 42px; height: 42px; border-radius: 50%; background: var(--mt-yellow); color: var(--mt-black); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rider .av .ic { width: 23px; height: 23px; }
 .rider .nm { font-weight: 700; font-size: 14px; }
 .rider .sub { font-size: 11.5px; color: var(--mt-text-3); }
 
 /* ============================ 我的 ============================ */
-.profile-hero { background: var(--mt-yellow-grad); padding: 20px 16px 46px; }
-.profile-hero .u { display: flex; align-items: center; gap: 13px; }
-.profile-hero .u .av { width: 58px; height: 58px; border-radius: 50%; background: rgba(255, 255, 255, .85); display: flex; align-items: center; justify-content: center; font-size: 30px; }
+.profile-hero { background: var(--mt-yellow-grad); padding: 22px 16px 48px; }
+.profile-hero .u { display: flex; align-items: center; gap: 14px; }
+.profile-hero .u .av { width: 60px; height: 60px; border-radius: 50%; background: rgba(255, 255, 255, .85); color: var(--mt-black); display: flex; align-items: center; justify-content: center; }
+.profile-hero .u .av .ic { width: 30px; height: 30px; }
 .profile-hero .u .nm { font-size: 18px; font-weight: 700; color: var(--mt-black); }
 .profile-hero .u .sub { font-size: 12px; color: rgba(17, 17, 17, .6); margin-top: 2px; }
 
-.assets { display: grid; grid-template-columns: repeat(3, 1fr); margin: -34px 12px 0; background: var(--mt-surface); border-radius: var(--mt-radius); box-shadow: var(--mt-shadow); padding: 15px 0; }
+.assets { display: grid; grid-template-columns: repeat(3, 1fr); margin: -36px 12px 0; background: var(--mt-surface); border-radius: var(--mt-radius-lg); box-shadow: var(--mt-shadow); padding: 16px 0; }
 .asset { text-align: center; }
 .asset .n { font-size: 18px; font-weight: 700; }
 .asset .n em { font-style: normal; font-size: 11px; margin-left: 1px; }
 .asset .l { font-size: 11.5px; color: var(--mt-text-3); margin-top: 2px; }
 
 .menu-list { margin-top: 12px; }
-.menu-row { display: flex; align-items: center; gap: 11px; padding: 15px 14px; border-bottom: 1px solid var(--mt-line); width: 100%; text-align: left; }
+.menu-row { display: flex; align-items: center; gap: 12px; padding: 15.5px 14px; border-bottom: 1px solid var(--mt-line); width: 100%; text-align: left; }
 .menu-row:last-child { border-bottom: none; }
-.menu-row .mi { font-size: 18px; width: 22px; text-align: center; }
+.menu-row .mi { width: 22px; display: flex; justify-content: center; color: var(--mt-text-2); flex-shrink: 0; }
+.menu-row .mi .ic { width: 19px; height: 19px; }
 .menu-row .mt { flex: 1; font-size: 14px; }
 .menu-row .mv { font-size: 12.5px; color: var(--mt-text-3); }
-.menu-row .caret { color: var(--mt-text-3); font-size: 12px; }
+.menu-row .caret { width: 15px; height: 15px; color: var(--mt-text-3); }
 
 .switch { width: 44px; height: 26px; border-radius: 999px; background: var(--mt-line); position: relative; transition: background .2s; flex-shrink: 0; }
 .switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .25); transition: transform .2s; }
@@ -368,34 +427,35 @@ body.dark .tl-item.now .tl-title { color: var(--mt-yellow); }
 .switch.on::after { transform: translateX(18px); }
 
 /* ============================ 地址 ============================ */
-.addr-card { background: var(--mt-surface); border-radius: var(--mt-radius); margin: 10px 12px; padding: 14px; box-shadow: var(--mt-shadow-sm); }
+.addr-card { background: var(--mt-surface); border-radius: var(--mt-radius-lg); margin: 10px 12px; padding: 15px; box-shadow: var(--mt-shadow-sm); }
 .addr-card .h { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
 .addr-card .h .nm { font-weight: 700; font-size: 15px; }
 .addr-card .h .phone { color: var(--mt-text-2); font-size: 13px; }
-.addr-card .h .tag { color: var(--mt-yellow-deep); border-color: var(--mt-yellow-deep); }
-body.dark .addr-card .h .tag { color: var(--mt-yellow); border-color: var(--mt-yellow); }
+.addr-card .h .tag { color: var(--mt-yellow-deep); background: var(--mt-yellow-soft); }
+body.dark .addr-card .h .tag { color: var(--mt-yellow); background: #332C00; }
+.addr-card .h .tag.red { color: var(--mt-red); background: var(--mt-red-soft); }
 .addr-card .d { font-size: 13px; color: var(--mt-text-2); line-height: 1.5; }
-.addr-card .f { display: flex; align-items: center; gap: 14px; margin-top: 11px; padding-top: 11px; border-top: 1px solid var(--mt-line); font-size: 12.5px; color: var(--mt-text-3); }
+.addr-card .f { display: flex; align-items: center; gap: 15px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--mt-line); font-size: 12.5px; color: var(--mt-text-3); }
 .addr-card .f .sp { flex: 1; }
 .addr-card .f .del { color: var(--mt-red); }
 
-.field { padding: 12px 14px; border-bottom: 1px solid var(--mt-line); display: flex; align-items: center; gap: 12px; }
+.field { padding: 13px 14px; border-bottom: 1px solid var(--mt-line); display: flex; align-items: center; gap: 12px; }
 .field:last-child { border-bottom: none; }
 .field label { width: 62px; color: var(--mt-text-2); font-size: 13.5px; flex-shrink: 0; }
 .field input, .field select { flex: 1; border: none; outline: none; background: none; font-size: 14px; }
 .field input::placeholder { color: var(--mt-text-3); }
 
 /* ============================ Toast / Dialog / Sheet ============================ */
-.toast-box { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); z-index: 300; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
-.toast { background: rgba(17, 17, 17, .9); color: #fff; padding: 9px 18px; border-radius: 999px; font-size: 13px; max-width: 78vw; animation: toastIn .22s ease both; }
+.toast-box { position: fixed; left: 50%; bottom: 100px; transform: translateX(-50%); z-index: 300; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+.toast { background: rgba(17, 17, 19, .92); color: #fff; padding: 10px 19px; border-radius: 999px; font-size: 13px; max-width: 78vw; animation: toastIn .22s ease both; }
 @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
 .mask { position: fixed; inset: 0; background: rgba(0, 0, 0, .5); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; animation: fadeIn .18s ease both; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.dialog { background: var(--mt-surface); border-radius: var(--mt-radius-lg); width: 100%; max-width: 300px; padding: 22px 20px 0; text-align: center; animation: popIn .2s cubic-bezier(.3, 1.3, .6, 1) both; }
+.dialog { background: var(--mt-surface); border-radius: var(--mt-radius-lg); width: 100%; max-width: 300px; padding: 24px 20px 0; text-align: center; animation: popIn .2s cubic-bezier(.3, 1.3, .6, 1) both; }
 @keyframes popIn { from { opacity: 0; transform: scale(.92); } to { opacity: 1; transform: none; } }
 .dialog .dt { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-.dialog .dd { font-size: 13.5px; color: var(--mt-text-2); line-height: 1.55; margin-bottom: 20px; }
+.dialog .dd { font-size: 13.5px; color: var(--mt-text-2); line-height: 1.55; margin-bottom: 21px; }
 .dialog-actions { display: flex; border-top: 1px solid var(--mt-line); margin: 0 -20px; }
 .dialog-actions button { flex: 1; padding: 14px; font-size: 15px; }
 .dialog-actions button + button { border-left: 1px solid var(--mt-line); }
@@ -406,23 +466,61 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
 .sheet-mask { position: fixed; inset: 0; background: rgba(0, 0, 0, .5); z-index: 210; display: flex; align-items: flex-end; justify-content: center; animation: fadeIn .18s ease both; }
 .sheet { background: var(--mt-surface); width: 100%; max-width: 480px; border-radius: var(--mt-radius-lg) var(--mt-radius-lg) 0 0; max-height: 76vh; display: flex; flex-direction: column; padding-bottom: var(--safe-b); animation: sheetUp .26s cubic-bezier(.32, .72, 0, 1) both; }
 @keyframes sheetUp { from { transform: translateY(100%); } to { transform: none; } }
-.sheet-head { padding: 16px; font-size: 15.5px; font-weight: 700; text-align: center; border-bottom: 1px solid var(--mt-line); position: relative; }
-.sheet-head .close { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--mt-text-3); font-size: 17px; }
+.sheet-head { padding: 17px; font-size: 15.5px; font-weight: 700; text-align: center; border-bottom: 1px solid var(--mt-line); position: relative; }
+.sheet-head .close { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); color: var(--mt-text-3); display: flex; }
 .sheet-body { overflow-y: auto; padding: 6px 0; }
 
-.coupon { display: flex; align-items: stretch; gap: 12px; margin: 10px 14px; border-radius: 10px; overflow: hidden; border: 1px solid var(--mt-line); width: calc(100% - 28px); text-align: left; }
-.coupon .l { width: 92px; background: linear-gradient(135deg, #FFE259, #FFC300); color: var(--mt-black); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 0; flex-shrink: 0; }
+.coupon { display: flex; align-items: stretch; gap: 12px; margin: 10px 14px; border-radius: 11px; overflow: hidden; border: 1px solid var(--mt-line); width: calc(100% - 28px); text-align: left; }
+.coupon .l { width: 92px; background: var(--mt-yellow-grad); color: var(--mt-black); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 0; flex-shrink: 0; }
 .coupon .l .amt { font-size: 22px; font-weight: 800; line-height: 1; }
 .coupon .l .amt em { font-style: normal; font-size: 12px; }
 .coupon .l .th { font-size: 10.5px; margin-top: 3px; opacity: .75; }
-.coupon .r { flex: 1; padding: 11px 12px; display: flex; flex-direction: column; justify-content: center; }
+.coupon .r { flex: 1; padding: 12px; display: flex; flex-direction: column; justify-content: center; }
 .coupon .r .t { font-size: 13.5px; font-weight: 600; }
 .coupon .r .e { font-size: 11px; color: var(--mt-text-3); margin-top: 3px; }
 .coupon.used { opacity: .45; }
-.coupon.picked { border-color: var(--mt-yellow-deep); box-shadow: 0 0 0 1px var(--mt-yellow-deep); }
+.coupon.picked { border-color: var(--mt-yellow-deep); box-shadow: 0 0 0 1.5px var(--mt-yellow-deep); }
+
+@media (min-width: 481px) {
+    .tabbar, .submit-bar { box-shadow: 0 0 0 1px var(--mt-line), 0 0 40px rgba(0, 0, 0, .05); }
+}
 </style>
 </head>
 <body>
+
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.6 12 3.2l9 7.4"/><path d="M5.4 9.6V20.4h13.2V9.6"/><path d="M9.6 20.4v-5.6h4.8v5.6"/></symbol>
+<symbol id="i-receipt" viewBox="0 0 24 24"><path d="M6 3.2h12v17.6l-3-2-3 2-3-2-3 2z"/><path d="M9.2 8h5.6M9.2 11.6h5.6M9.2 15.2h3.4"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.1"/><path d="M4.2 21c0-4.4 3.6-7.1 7.8-7.1S19.8 16.6 19.8 21"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.4 16.4 4.2 4.2"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21.6s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10.6" r="2.6"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M18.2 9.2a6.2 6.2 0 1 0-12.4 0c0 5.2-2.2 6.4-2.2 6.4h16.8s-2.2-1.2-2.2-6.4"/><path d="M13.8 20.2a2.1 2.1 0 0 1-3.6 0"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.4 14.4A8.6 8.6 0 0 1 9.6 3.6a8.6 8.6 0 1 0 10.8 10.8z"/></symbol>
+<symbol id="i-cart" viewBox="0 0 24 24"><path d="M2.8 4h2.1l2.5 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.5L20.8 8H5.6"/><circle cx="9.6" cy="20" r="1.5"/><circle cx="17.4" cy="20" r="1.5"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5.2v13.6M5.2 12h13.6"/></symbol>
+<symbol id="i-minus" viewBox="0 0 24 24"><path d="M5.2 12h13.6"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9.4 7V4.8h5.2V7M6.4 7l1 13h9.2l1-13"/><path d="M10.2 11v5.4M13.8 11v5.4"/></symbol>
+<symbol id="i-chev-r" viewBox="0 0 24 24"><path d="m9.2 5.2 6.8 6.8-6.8 6.8"/></symbol>
+<symbol id="i-chev-d" viewBox="0 0 24 24"><path d="m5.2 9.2 6.8 6.8 6.8-6.8"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="M19.2 12H4.8M11 5.2 4.2 12l6.8 6.8"/></symbol>
+<symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m4.8 12.8 4.8 4.8L19.2 7"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6.8v5.6l3.6 2"/></symbol>
+<symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3 8.4A2.4 2.4 0 0 0 5.4 6h13.2A2.4 2.4 0 0 0 21 8.4v1a2.6 2.6 0 0 0 0 5.2v1a2.4 2.4 0 0 0-2.4 2.4H5.4A2.4 2.4 0 0 0 3 15.6v-1a2.6 2.6 0 0 0 0-5.2z"/><path d="M14.4 6.4v11.2" stroke-dasharray="2.2 2.4"/></symbol>
+<symbol id="i-store" viewBox="0 0 24 24"><path d="M4.4 9.4h15.2V20H4.4z"/><path d="M2.6 9.4 5.4 4h13.2l2.8 5.4"/><path d="M9.4 20v-5.8h5.2V20"/></symbol>
+<symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.8" cy="17" r="3.3"/><circle cx="18.2" cy="17" r="3.3"/><path d="M9.1 17h4.3l3-8h2.8M12.6 9.2 10.6 6H7.8"/><path d="M13.4 9.2h3.2"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24"><path d="M4.4 19.6h4L20 8 16.4 4.4 4.4 16.4z"/><path d="m14.2 6.2 3.6 3.6"/></symbol>
+<symbol id="i-gift" viewBox="0 0 24 24"><path d="M4.2 11h15.6v9H4.2z"/><path d="M2.8 7.2h18.4V11H2.8z"/><path d="M12 7.2V20"/><path d="M12 7.2S10.4 3.2 8.4 3.2 6 6.2 8 7.2M12 7.2s1.6-4 3.6-4S18 6.2 16 7.2"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-13.6-4.5L4 9"/><path d="M4 4v5h5"/><path d="M4 13a8 8 0 0 0 13.6 4.5L20 15"/><path d="M20 20v-5h-5"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5L2.6 9.4l6.5-.9z"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3.4" y="3.4" width="7.2" height="7.2" rx="2.2"/><rect x="13.4" y="3.4" width="7.2" height="7.2" rx="2.2"/><rect x="3.4" y="13.4" width="7.2" height="7.2" rx="2.2"/><rect x="13.4" y="13.4" width="7.2" height="7.2" rx="2.2"/></symbol>
+<symbol id="i-noodle" viewBox="0 0 24 24"><path d="M3.6 11.4h16.8"/><path d="M5 11.4a7 7 0 0 0 14 0"/><path d="M8.4 11.4V4.6M12 11.4V4.6M15.6 11.4V4.6"/></symbol>
+<symbol id="i-cup" viewBox="0 0 24 24"><path d="M6 8.4h12l-1.2 10.8a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8z"/><path d="M18 10.4 20.4 4"/><path d="M6.6 12.4h10.8"/></symbol>
+<symbol id="i-leaf" viewBox="0 0 24 24"><path d="M20.4 4.4c0 9.4-5.6 14.6-12.4 14.6H4.8c0-8.4 5-14.6 15.6-14.6z"/><path d="M4.8 19c3-6.2 7-10.4 13-12.6"/></symbol>
+<symbol id="i-redpacket" viewBox="0 0 24 24"><rect x="4" y="3.6" width="16" height="16.8" rx="2.6"/><path d="M8 4.4c1.2 3.6 2.4 5.2 4 5.2s2.8-1.6 4-5.2"/><circle cx="12" cy="13.4" r="2.8"/></symbol>
+<symbol id="i-trophy" viewBox="0 0 24 24"><path d="M7 3.8h10v5.4a5 5 0 0 1-10 0z"/><path d="M7 6H4.4v1.8A3.6 3.6 0 0 0 7 11.4M17 6h2.6v1.8A3.6 3.6 0 0 1 17 11.4"/><path d="M12 14.2v3.6M8.4 20.2h7.2"/></symbol>
+</defs></svg>
+
 <div class="app" id="app"></div>
 <div class="toast-box" id="toastBox" aria-live="polite"></div>
 <div id="layerRoot"></div>
@@ -432,149 +530,438 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     'use strict';
 
     /* ======================================================================
-     * 1. 数据层
+     * 1. 图标 & 插画系统（全 SVG，无 emoji）
      * ==================================================================== */
+    const icon = (name, cls) =>
+        '<svg class="ic' + (cls ? ' ' + cls : '') + '" aria-hidden="true" focusable="false"><use href="#i-' + name + '"></use></svg>';
 
+    function shade(hex, amt) {
+        const n = parseInt(hex.slice(1), 16);
+        let r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+        const t = amt < 0 ? 0 : 255;
+        const k = Math.abs(amt);
+        r = Math.round((t - r) * k + r);
+        g = Math.round((t - g) * k + g);
+        b = Math.round((t - b) * k + b);
+        return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+    function mkPal(main) {
+        return { main: main, dark: shade(main, -0.26), deep: shade(main, -0.46), light: shade(main, 0.62), tint: shade(main, 0.86) };
+    }
+
+    const shadowOf = (p, rx, cy) =>
+        '<ellipse cx="60" cy="' + (cy || 100) + '" rx="' + (rx || 34) + '" ry="6" fill="' + p.deep + '" opacity=".13"/>';
+    const steamOf = (p, y) =>
+        '<path d="M46 ' + (y || 32) + 'c0-5.4 4.6-6.4 4.6-11.6M60 ' + ((y || 32) - 4) + 'c0-5.4 4.6-6.4 4.6-11.6M74 ' + (y || 32) + 'c0-5.4 4.6-6.4 4.6-11.6" stroke="' + p.light + '" stroke-width="3.3" stroke-linecap="round" fill="none" opacity=".95"/>';
+
+    const ART = {
+        pot(p, f) {
+            return shadowOf(p, 36) +
+                '<path d="M28 62h64v14a20 20 0 0 1-20 20H48a20 20 0 0 1-20-20z" fill="' + p.dark + '"/>' +
+                '<rect x="19" y="52" width="82" height="13" rx="6.5" fill="' + p.main + '"/>' +
+                '<ellipse cx="60" cy="54" rx="37" ry="9.5" fill="' + f.main + '"/>' +
+                '<ellipse cx="60" cy="54" rx="29" ry="7" fill="' + f.light + '" opacity=".5"/>' +
+                '<circle cx="47" cy="52" r="5" fill="' + f.deep + '" opacity=".55"/>' +
+                '<circle cx="69" cy="57" r="4.4" fill="' + f.deep + '" opacity=".45"/>' +
+                '<circle cx="59" cy="50" r="3.4" fill="' + f.deep + '" opacity=".5"/>' +
+                steamOf(p) +
+                '<rect x="11" y="55" width="9" height="5" rx="2.5" fill="' + p.main + '"/>' +
+                '<rect x="100" y="55" width="9" height="5" rx="2.5" fill="' + p.main + '"/>';
+        },
+        noodles(p, f) {
+            return shadowOf(p, 36) +
+                '<path d="M22 58h76a38 38 0 0 1-76 0z" fill="' + p.dark + '"/>' +
+                '<ellipse cx="60" cy="58" rx="38" ry="11" fill="' + p.main + '"/>' +
+                '<ellipse cx="60" cy="58" rx="30" ry="7.5" fill="' + f.main + '"/>' +
+                '<path d="M36 56q8-6.5 16 0t16 0q8 6.5 16 0" stroke="' + f.dark + '" stroke-width="3" stroke-linecap="round" fill="none" opacity=".72"/>' +
+                '<path d="M40 61q8-6 16 0t16 0" stroke="' + f.light + '" stroke-width="3" stroke-linecap="round" fill="none" opacity=".9"/>' +
+                '<circle cx="49" cy="54" r="3.4" fill="' + f.deep + '" opacity=".45"/>' +
+                '<circle cx="71" cy="56" r="3" fill="' + f.deep + '" opacity=".4"/>' +
+                steamOf(p, 36);
+        },
+        ricebowl(p, f) {
+            return shadowOf(p, 34) +
+                '<path d="M24 60h72a36 36 0 0 1-72 0z" fill="' + p.dark + '"/>' +
+                '<ellipse cx="60" cy="60" rx="36" ry="10" fill="' + p.main + '"/>' +
+                '<ellipse cx="60" cy="57" rx="29" ry="7.5" fill="#FFF6E8"/>' +
+                '<circle cx="49" cy="54" r="4.4" fill="' + f.main + '"/>' +
+                '<circle cx="62" cy="56" r="4.8" fill="' + f.light + '"/>' +
+                '<circle cx="72" cy="53" r="3.6" fill="' + f.dark + '"/>' +
+                steamOf(p, 34);
+        },
+        soupbowl(p, f) {
+            return shadowOf(p, 32) +
+                '<path d="M26 58h68a34 34 0 0 1-68 0z" fill="' + p.dark + '"/>' +
+                '<ellipse cx="60" cy="58" rx="34" ry="9.5" fill="' + p.main + '"/>' +
+                '<ellipse cx="60" cy="58" rx="26" ry="6.5" fill="' + f.main + '"/>' +
+                '<path d="M44 57q8-5 16 0t16 0" stroke="' + f.light + '" stroke-width="2.6" stroke-linecap="round" fill="none" opacity=".7"/>' +
+                steamOf(p, 34);
+        },
+        sushi(p, f) {
+            return shadowOf(p, 40, 92) +
+                '<rect x="16" y="62" width="88" height="24" rx="12" fill="' + p.tint + '"/>' +
+                '<ellipse cx="60" cy="62" rx="44" ry="7" fill="' + p.light + '"/>' +
+                '<rect x="24" y="48" width="30" height="17" rx="8.5" fill="#FFF6E4"/>' +
+                '<path d="M21 42h36a3.5 3.5 0 0 1 3.5 3.5v1A3.5 3.5 0 0 1 57 50H21a3.5 3.5 0 0 1-3.5-3.5v-1A3.5 3.5 0 0 1 21 42z" fill="' + f.main + '"/>' +
+                '<path d="M23 47h32" stroke="' + f.light + '" stroke-width="2.4" stroke-linecap="round"/>' +
+                '<circle cx="82" cy="52" r="14" fill="' + f.dark + '"/>' +
+                '<circle cx="82" cy="52" r="10" fill="#FFF6E4"/>' +
+                '<circle cx="82" cy="52" r="4.4" fill="' + f.main + '"/>';
+        },
+        sashimi(p, f) {
+            return shadowOf(p, 40, 92) +
+                '<rect x="16" y="64" width="88" height="22" rx="11" fill="' + p.tint + '"/>' +
+                '<ellipse cx="60" cy="64" rx="44" ry="7" fill="' + p.light + '"/>' +
+                '<path d="M28 62l25-13 6.5 10.5-25 13z" fill="' + f.main + '"/>' +
+                '<path d="M47 62l25-13 6.5 10.5-25 13z" fill="' + f.light + '"/>' +
+                '<path d="M66 62l25-13 6.5 10.5-25 13z" fill="' + f.main + '"/>' +
+                '<circle cx="34" cy="72" r="3.4" fill="#5E9E4A"/>' +
+                '<circle cx="86" cy="72" r="3.4" fill="#5E9E4A"/>';
+        },
+        burger(p, f) {
+            return shadowOf(p, 38, 96) +
+                '<path d="M22 53a38 23 0 0 1 76 0v2H22z" fill="' + p.main + '"/>' +
+                '<circle cx="40" cy="41" r="2.7" fill="' + p.light + '"/>' +
+                '<circle cx="58" cy="37.5" r="2.7" fill="' + p.light + '"/>' +
+                '<circle cx="76" cy="42" r="2.7" fill="' + p.light + '"/>' +
+                '<rect x="22" y="55" width="76" height="6.5" rx="3.25" fill="#8BC34A"/>' +
+                '<rect x="24" y="63" width="72" height="5" rx="2.5" fill="' + f.main + '"/>' +
+                '<rect x="22" y="69" width="76" height="9" rx="4.5" fill="' + f.dark + '"/>' +
+                '<rect x="24" y="78" width="72" height="11" rx="5.5" fill="' + p.main + '"/>';
+        },
+        bucket(p, f) {
+            return shadowOf(p, 36) +
+                '<circle cx="43" cy="38" r="10" fill="' + f.main + '"/>' +
+                '<circle cx="61" cy="33" r="11" fill="' + f.light + '"/>' +
+                '<circle cx="78" cy="39" r="9.5" fill="' + f.dark + '"/>' +
+                '<path d="M32 50h56l-6.5 38a6 6 0 0 1-6 5H44.5a6 6 0 0 1-6-5z" fill="' + p.main + '"/>' +
+                '<path d="M34 62h52" stroke="' + p.light + '" stroke-width="3.4"/>' +
+                '<path d="M37 76h46" stroke="' + p.light + '" stroke-width="3.4"/>' +
+                '<rect x="28" y="44" width="64" height="11" rx="5.5" fill="' + p.dark + '"/>';
+        },
+        fries(p, f) {
+            return shadowOf(p, 32) +
+                '<rect x="41" y="32" width="7" height="32" rx="3.5" fill="' + f.main + '" transform="rotate(-13 44 48)"/>' +
+                '<rect x="52" y="27" width="7" height="37" rx="3.5" fill="' + f.light + '"/>' +
+                '<rect x="62" y="31" width="7" height="33" rx="3.5" fill="' + f.main + '" transform="rotate(9 65 47)"/>' +
+                '<rect x="72" y="35" width="7" height="29" rx="3.5" fill="' + f.light + '" transform="rotate(17 75 49)"/>' +
+                '<path d="M36 56h48l-4.6 34a6 6 0 0 1-6 5H46.6a6 6 0 0 1-6-5z" fill="' + p.main + '"/>' +
+                '<path d="M38.5 68h43" stroke="' + p.tint + '" stroke-width="4.5"/>' +
+                '<path d="M40 80h40" stroke="' + p.tint + '" stroke-width="4.5" opacity=".7"/>';
+        },
+        drumstick(p, f) {
+            return shadowOf(p, 32) +
+                '<ellipse cx="63" cy="43" rx="26" ry="24" fill="' + f.main + '"/>' +
+                '<ellipse cx="54" cy="36" rx="10" ry="6.5" fill="' + f.light + '" opacity=".65"/>' +
+                '<path d="M50 60 34 76" stroke="#FFF3DC" stroke-width="12" stroke-linecap="round"/>' +
+                '<circle cx="27" cy="86" r="8" fill="#FFF3DC"/>' +
+                '<circle cx="42" cy="90" r="8" fill="#FFF3DC"/>';
+        },
+        skewer(p, f) {
+            return shadowOf(p, 36) +
+                '<rect x="36" y="26" width="3.2" height="66" rx="1.6" fill="#C8A26A"/>' +
+                '<rect x="58.4" y="22" width="3.2" height="70" rx="1.6" fill="#C8A26A"/>' +
+                '<rect x="80.8" y="26" width="3.2" height="66" rx="1.6" fill="#C8A26A"/>' +
+                '<rect x="27" y="34" width="21" height="17" rx="6" fill="' + f.main + '"/>' +
+                '<rect x="27" y="54" width="21" height="17" rx="6" fill="' + f.light + '"/>' +
+                '<rect x="49.5" y="30" width="21" height="17" rx="6" fill="' + f.light + '"/>' +
+                '<rect x="49.5" y="50" width="21" height="17" rx="6" fill="' + f.main + '"/>' +
+                '<rect x="72" y="34" width="21" height="17" rx="6" fill="' + f.main + '"/>' +
+                '<rect x="72" y="54" width="21" height="17" rx="6" fill="' + f.dark + '"/>';
+        },
+        grill(p, f) {
+            return shadowOf(p, 40) +
+                '<path d="M18 60h84l-6 20a8 8 0 0 1-8 6H32a8 8 0 0 1-8-6z" fill="' + p.dark + '"/>' +
+                '<rect x="13" y="52" width="94" height="10" rx="5" fill="' + p.main + '"/>' +
+                '<ellipse cx="60" cy="52" rx="40" ry="6" fill="' + f.light + '" opacity=".55"/>' +
+                '<path d="M33 47l21-9 6.5 9z" fill="' + f.main + '"/>' +
+                '<path d="M61 45l19-7 5.5 8z" fill="' + f.main + '"/>' +
+                '<circle cx="88" cy="42" r="5" fill="#5E9E4A"/>' +
+                '<circle cx="30" cy="43" r="4.6" fill="#5E9E4A"/>';
+        },
+        cake(p, f) {
+            return shadowOf(p, 34) +
+                '<path d="M28 50h64v28a9 9 0 0 1-9 9H37a9 9 0 0 1-9-9z" fill="' + f.main + '"/>' +
+                '<path d="M28 58h64" stroke="' + f.light + '" stroke-width="4"/>' +
+                '<path d="M28 68h64" stroke="' + f.dark + '" stroke-width="3.4" opacity=".45"/>' +
+                '<path d="M28 50h64v-7a7 7 0 0 0-7-7H35a7 7 0 0 0-7 7z" fill="#FFF6E4"/>' +
+                '<circle cx="60" cy="28" r="6.4" fill="#E5484D"/>';
+        },
+        coffee(p, f) {
+            return shadowOf(p, 28) +
+                '<path d="M36 34h44l-4 44a8 8 0 0 1-8 7H48a8 8 0 0 1-8-7z" fill="#FFF6E4"/>' +
+                '<path d="M39 44h38l-3.4 34a8 8 0 0 1-8 7H50.4a8 8 0 0 1-8-7z" fill="' + f.main + '"/>' +
+                '<path d="M39 44h38l-1 8.5H40z" fill="' + f.tint + '" opacity=".6"/>' +
+                '<rect x="31" y="28" width="54" height="8" rx="4" fill="' + p.main + '"/>' +
+                '<path d="M82 38l8-15" stroke="' + p.dark + '" stroke-width="4.5" stroke-linecap="round"/>';
+        },
+        glass(p, f) {
+            return shadowOf(p, 26) +
+                '<path d="M38 28h44l-5 60a8 8 0 0 1-8 7H51a8 8 0 0 1-8-7z" fill="#FFF6E4"/>' +
+                '<path d="M41 44h38l-3.4 44a8 8 0 0 1-8 7H52.4a8 8 0 0 1-8-7z" fill="' + f.main + '"/>' +
+                '<path d="M41 44h38l-.8 9H41.8z" fill="' + f.light + '"/>' +
+                '<rect x="65" y="16" width="7" height="48" rx="3.5" fill="' + p.main + '" transform="rotate(14 68 40)"/>' +
+                '<circle cx="51" cy="52" r="4" fill="#FFF" opacity=".65"/>' +
+                '<circle cx="64" cy="60" r="3.5" fill="#FFF" opacity=".55"/>';
+        },
+        cup(p, f) {
+            return shadowOf(p, 26) +
+                '<path d="M36 40h48l-5 48a8 8 0 0 1-8 7H49a8 8 0 0 1-8-7z" fill="' + p.main + '"/>' +
+                '<path d="M39 52h42l-3 36a8 8 0 0 1-8 7H50a8 8 0 0 1-8-7z" fill="' + f.main + '"/>' +
+                '<rect x="32" y="32" width="56" height="10" rx="5" fill="' + p.dark + '"/>' +
+                '<path d="M63 10l4 22" stroke="' + p.deep + '" stroke-width="5" stroke-linecap="round"/>' +
+                '<ellipse cx="60" cy="76" rx="15" ry="9" fill="' + f.light + '" opacity=".45"/>';
+        },
+        dumpling(p, f) {
+            return shadowOf(p, 42, 84) +
+                '<ellipse cx="60" cy="74" rx="44" ry="10" fill="' + p.tint + '"/>' +
+                '<path d="M20 66c0-9.5 6.4-17 15.5-17S51 56.5 51 66z" fill="' + f.main + '"/>' +
+                '<path d="M44 66c0-9.5 6.4-17 15.5-17S75 56.5 75 66z" fill="' + f.light + '"/>' +
+                '<path d="M68 66c0-9.5 6.4-17 15.5-17S99 56.5 99 66z" fill="' + f.main + '"/>' +
+                '<path d="M28 66h14M52 66h14M76 66h14" stroke="' + f.dark + '" stroke-width="2.2" opacity=".45"/>';
+        },
+        veggie(p, f) {
+            return shadowOf(p, 34) +
+                '<rect x="28" y="74" width="64" height="17" rx="8.5" fill="' + f.dark + '"/>' +
+                '<circle cx="43" cy="50" r="17" fill="' + f.main + '"/>' +
+                '<circle cx="43" cy="50" r="12.5" fill="' + f.light + '"/>' +
+                '<circle cx="43" cy="50" r="4.5" fill="' + f.tint + '"/>' +
+                '<circle cx="78" cy="50" r="17" fill="' + f.main + '"/>' +
+                '<circle cx="78" cy="50" r="12.5" fill="' + f.light + '"/>' +
+                '<circle cx="78" cy="50" r="4.5" fill="' + f.tint + '"/>';
+        },
+        custard(p, f) {
+            return shadowOf(p, 30) +
+                '<path d="M28 56h64v10a20 20 0 0 1-20 20H48a20 20 0 0 1-20-20z" fill="' + p.main + '"/>' +
+                '<ellipse cx="60" cy="56" rx="32" ry="9" fill="' + p.dark + '"/>' +
+                '<ellipse cx="60" cy="52" rx="26" ry="7" fill="' + f.main + '"/>' +
+                '<circle cx="52" cy="50" r="3.2" fill="' + f.dark + '"/>' +
+                '<circle cx="68" cy="52" r="2.6" fill="#5E9E4A"/>' +
+                steamOf(p, 30);
+        },
+        grapes(p) {
+            const berry = (x, y, c) => '<circle cx="' + x + '" cy="' + y + '" r="9" fill="' + c + '"/>';
+            const hi = (x, y) => '<ellipse cx="' + x + '" cy="' + y + '" rx="2.6" ry="4" fill="#FFF" opacity=".55"/>';
+            return shadowOf(p, 30) +
+                '<path d="M60 20c-2-8 4-13 11-13-1 8-5 11-11 13z" fill="#5E9E4A"/>' +
+                '<path d="M60 24v10" stroke="#8A6A2E" stroke-width="3" stroke-linecap="round"/>' +
+                berry(60, 30, p.dark) + berry(46, 38, p.main) + berry(74, 38, p.main) +
+                berry(60, 44, p.dark) + berry(46, 54, p.main) + berry(74, 54, p.main) +
+                berry(60, 62, p.main) + berry(60, 76, p.dark) +
+                hi(46, 35) + hi(60, 41) + hi(74, 51);
+        },
+        fruit(p) {
+            return shadowOf(p, 32) +
+                '<circle cx="60" cy="60" r="30" fill="' + p.main + '"/>' +
+                '<path d="M36 48a30 30 0 0 1 24-18" stroke="' + p.light + '" stroke-width="5.5" fill="none" stroke-linecap="round" opacity=".65"/>' +
+                '<path d="M60 28c4-10 12-14 21-12-2 10-10 14-21 12z" fill="#5E9E4A"/>' +
+                '<path d="M60 28v-8" stroke="#8A6A2E" stroke-width="3" stroke-linecap="round"/>';
+        },
+        kiwi(p) {
+            let seeds = '';
+            for (let i = 0; i < 10; i++) {
+                const a = (i / 10) * Math.PI * 2;
+                seeds += '<circle cx="' + (60 + Math.cos(a) * 17).toFixed(1) + '" cy="' + (60 + Math.sin(a) * 17).toFixed(1) + '" r="1.9" fill="#2E2E33"/>';
+            }
+            return shadowOf(p, 32) +
+                '<circle cx="60" cy="60" r="30" fill="' + p.main + '"/>' +
+                '<circle cx="60" cy="60" r="25" fill="#C9E06A"/>' +
+                '<circle cx="60" cy="60" r="9" fill="#F5F0C8"/>' + seeds;
+        },
+        melon(p) {
+            return shadowOf(p, 34) +
+                '<path d="M22 60a38 38 0 0 1 76 0z" fill="#3E7C3A"/>' +
+                '<path d="M28 60a32 32 0 0 1 64 0z" fill="#F5F0C8"/>' +
+                '<path d="M33 60a27 27 0 0 1 54 0z" fill="' + p.main + '"/>' +
+                '<circle cx="47" cy="53" r="2.2" fill="#2E2E33"/>' +
+                '<circle cx="60" cy="48" r="2.2" fill="#2E2E33"/>' +
+                '<circle cx="73" cy="53" r="2.2" fill="#2E2E33"/>';
+        },
+        can(p) {
+            return shadowOf(p, 28) +
+                '<rect x="38" y="28" width="44" height="64" rx="9" fill="' + p.main + '"/>' +
+                '<rect x="38" y="28" width="44" height="15" rx="7.5" fill="' + p.light + '"/>' +
+                '<rect x="34" y="23" width="52" height="8" rx="4" fill="' + p.dark + '"/>' +
+                '<ellipse cx="60" cy="26" rx="23" ry="4.6" fill="' + p.tint + '"/>' +
+                '<rect x="44" y="50" width="32" height="22" rx="4" fill="#FFF" opacity=".92"/>';
+        },
+        bottle(p) {
+            return shadowOf(p, 26) +
+                '<rect x="44" y="34" width="32" height="58" rx="10" fill="' + p.main + '" opacity=".32"/>' +
+                '<rect x="45.5" y="35.5" width="29" height="55" rx="9" fill="none" stroke="' + p.main + '" stroke-width="3"/>' +
+                '<rect x="51" y="18" width="18" height="19" rx="5" fill="' + p.main + '" opacity=".32"/>' +
+                '<rect x="52.5" y="19.5" width="15" height="16" rx="4" fill="none" stroke="' + p.main + '" stroke-width="3"/>' +
+                '<rect x="46" y="23" width="28" height="12" rx="3" fill="' + p.main + '"/>' +
+                '<rect x="46" y="52" width="28" height="17" rx="3" fill="' + p.main + '" opacity=".72"/>';
+        },
+        pack(p, f) {
+            return shadowOf(p, 30) +
+                '<path d="M32 26h56l-4 66a8 8 0 0 1-8 7H44a8 8 0 0 1-8-7z" fill="' + p.main + '"/>' +
+                '<path d="M32 26h56l-1 13H33z" fill="' + p.light + '"/>' +
+                '<ellipse cx="60" cy="58" rx="19" ry="15" fill="#FFF" opacity=".9"/>' +
+                '<path d="M52 58h16M60 50v16" stroke="' + f.dark + '" stroke-width="3.2" stroke-linecap="round"/>';
+        },
+        tissue(p, f) {
+            return shadowOf(p, 34) +
+                '<path d="M40 44c2-14 10-22 20-22s18 8 20 22z" fill="#FFF6E4"/>' +
+                '<path d="M47 42c1-9 6.5-14 13-14s12 5 13 14" fill="none" stroke="' + f.light + '" stroke-width="3"/>' +
+                '<rect x="22" y="42" width="76" height="46" rx="10" fill="' + p.main + '"/>' +
+                '<rect x="22" y="42" width="76" height="13" rx="6.5" fill="' + p.dark + '" opacity=".2"/>';
+        },
+        battery(p) {
+            return shadowOf(p, 26) +
+                '<rect x="42" y="24" width="36" height="70" rx="7" fill="' + p.main + '"/>' +
+                '<rect x="52" y="16" width="16" height="10" rx="3" fill="' + p.dark + '"/>' +
+                '<rect x="42" y="24" width="36" height="16" rx="7" fill="' + p.light + '"/>' +
+                '<path d="M64 44 52 62h9l-5 16 16-21h-9.5z" fill="#FFD100"/>';
+        },
+        goods(p, f) {
+            return shadowOf(p, 40) +
+                '<path d="M18 52h84l-7 32a9 9 0 0 1-9 7H34a9 9 0 0 1-9-7z" fill="' + p.main + '"/>' +
+                '<path d="M12 44h96v9H12z" fill="' + p.dark + '"/>' +
+                '<path d="M38 44 50 20M82 44 70 20" stroke="' + p.deep + '" stroke-width="4.6" stroke-linecap="round" fill="none"/>' +
+                '<rect x="42" y="24" width="12" height="20" rx="3" fill="' + f.main + '"/>' +
+                '<rect x="57" y="19" width="12" height="25" rx="3" fill="' + f.light + '"/>' +
+                '<circle cx="77" cy="34" r="8.5" fill="#E5484D"/>';
+        }
+    };
+
+    function artHTML(kind, main, food) {
+        const p = mkPal(main);
+        const f = mkPal(food || shade(main, 0.78));
+        const fn = ART[kind] || ART.soupbowl;
+        return '<span class="art-wrap" style="--ac:' + main + '">' +
+               '<svg class="art" viewBox="0 0 120 120" aria-hidden="true" focusable="false">' + fn(p, f) + '</svg></span>';
+    }
+
+    /* ======================================================================
+     * 2. 数据层
+     * ==================================================================== */
     const CATEGORIES = [
-        { id: 'all',     name: '全部分类', emoji: '🗂️' },
-        { id: 'food',    name: '美食',     emoji: '🍜' },
-        { id: 'dessert', name: '甜品饮品', emoji: '🧋' },
-        { id: 'market',  name: '超市便利', emoji: '🏪' },
-        { id: 'fruit',   name: '果蔬生鲜', emoji: '🥬' },
-        { id: 'group',   name: '团购',     emoji: '🎫' },
-        { id: 'errand',  name: '跑腿代购', emoji: '🛵' },
-        { id: 'coupon',  name: '领红包',   emoji: '🧧' },
-        { id: 'ranking', name: '排行榜',   emoji: '🏆' },
-        { id: 'more',    name: '全部',     emoji: '➕' }
+        { id: 'all',     name: '全部分类', ic: 'grid',      c: '#5B6470' },
+        { id: 'food',    name: '美食',     ic: 'noodle',    c: '#E8622C' },
+        { id: 'dessert', name: '甜品饮品', ic: 'cup',       c: '#E0568E' },
+        { id: 'market',  name: '超市便利', ic: 'store',     c: '#2E8FE0' },
+        { id: 'fruit',   name: '果蔬生鲜', ic: 'leaf',      c: '#3E9E4A' },
+        { id: 'group',   name: '团购',     ic: 'ticket',    c: '#D93B3B' },
+        { id: 'errand',  name: '跑腿代购', ic: 'bike',      c: '#7A5CD6' },
+        { id: 'coupon',  name: '领红包',   ic: 'redpacket', c: '#C98A1B' },
+        { id: 'ranking', name: '排行榜',   ic: 'trophy',    c: '#C98A1B' },
+        { id: 'more',    name: '全部服务', ic: 'grid',      c: '#5B6470' }
     ];
 
+    /* art = [插画类型, 容器主色, 食物色] */
     const SHOPS = [
-        {
-            id: 1, name: '麻辣烫天堂', emoji: '🌶️', cat: 'food',
-            rating: 4.8, monthSales: 2531, distance: 2.3, minutes: 32,
-            minPrice: 20, deliveryFee: 3, packingFee: 1,
-            tags: ['品质联盟', '准时达'],
-            discounts: [{ threshold: 30, cut: 5 }, { threshold: 60, cut: 12 }, { threshold: 100, cut: 25 }],
-            desc: '正宗四川麻辣烫，每日新鲜食材',
-            menu: [
-                { id: 101, name: '经典麻辣烫套餐', price: 28, orig: 32, cat: '热销', sales: 1286, desc: '丸子、蔬菜、豆制品组合', emoji: '🍲' },
-                { id: 102, name: '午餐特价盖饭', price: 18, cat: '热销', sales: 942, desc: '米饭 + 菜品 + 例汤', emoji: '🍛' },
-                { id: 103, name: '双人麻辣烫锅', price: 68, orig: 78, cat: '热销', sales: 307, desc: '2 人份，配 2 碗米饭', emoji: '🥘' },
-                { id: 104, name: '米饭', price: 2, cat: '主食', sales: 3201, desc: '东北珍珠米', emoji: '🍚' },
-                { id: 105, name: '手工宽粉', price: 6, cat: '主食', sales: 1580, desc: '红薯宽粉，久煮不烂', emoji: '🍜' },
-                { id: 106, name: '冰镇酸梅汤', price: 6, cat: '饮品', sales: 2103, desc: '解辣解腻', emoji: '🥤' },
-                { id: 107, name: '鲜榨西瓜汁', price: 12, cat: '饮品', sales: 611, desc: '当日鲜榨，无添加', emoji: '🍉' },
-                { id: 108, name: '蒜香鸡爪', price: 16, cat: '小吃', sales: 428, desc: '脱骨鸡爪，微辣', emoji: '🍗' }
-            ]
-        },
-        {
-            id: 2, name: '寿司工坊', emoji: '🍣', cat: 'food',
-            rating: 4.9, monthSales: 3217, distance: 1.8, minutes: 28,
-            minPrice: 30, deliveryFee: 4, packingFee: 1,
-            tags: ['品质联盟', '品牌商家'],
-            discounts: [{ threshold: 50, cut: 8 }, { threshold: 88, cut: 18 }],
-            desc: '日本料理主厨精心制作',
-            menu: [
-                { id: 201, name: '综合生鱼片盖饭', price: 58, cat: '热销', sales: 812, desc: '三文鱼、金枪鱼、海胆', emoji: '🍣' },
-                { id: 202, name: '加州卷 6P', price: 32, cat: '热销', sales: 1033, desc: '蟹肉、牛油果、黄瓜', emoji: '🍥' },
-                { id: 203, name: '握寿司套餐', price: 48, orig: 56, cat: '热销', sales: 566, desc: '10 贯寿司 + 味噌汤', emoji: '🍱' },
-                { id: 204, name: '三文鱼刺身 5 片', price: 62, cat: '刺身', sales: 341, desc: '挪威冰鲜三文鱼', emoji: '🐟' },
-                { id: 205, name: '甜虾刺身', price: 45, cat: '刺身', sales: 209, desc: '北极甜虾，鲜甜回甘', emoji: '🦐' },
-                { id: 206, name: '味噌汤', price: 6, cat: '汤品', sales: 1502, desc: '豆腐海带味噌汤', emoji: '🍲' },
-                { id: 207, name: '日式茶碗蒸', price: 14, cat: '汤品', sales: 733, desc: '滑嫩蛋羹', emoji: '🥚' }
-            ]
-        },
-        {
-            id: 3, name: '汉堡快餐', emoji: '🍔', cat: 'food',
-            rating: 4.6, monthSales: 4120, distance: 0.9, minutes: 22,
-            minPrice: 15, deliveryFee: 2, packingFee: 1,
-            tags: ['准时达'],
-            discounts: [{ threshold: 25, cut: 4 }, { threshold: 45, cut: 9 }],
-            desc: '新鲜汉堡，现点现做',
-            menu: [
-                { id: 301, name: '豪华牛肉汉堡', price: 28, cat: '热销', sales: 2011, desc: '100% 牛肉饼 + 新鲜蔬菜', emoji: '🍔' },
-                { id: 302, name: '炸鸡桶 3 块', price: 22, cat: '热销', sales: 1744, desc: '香脆炸鸡 + 薯条 + 饮料', emoji: '🍗' },
-                { id: 303, name: '鸡肉汉堡套餐', price: 25, orig: 30, cat: '热销', sales: 986, desc: '汉堡 + 薯条 + 可乐', emoji: '🍟' },
-                { id: 304, name: '黄金薯条（大）', price: 12, cat: '小食', sales: 2280, desc: '外脆里嫩', emoji: '🍟' },
-                { id: 305, name: '洋葱圈 8 个', price: 11, cat: '小食', sales: 640, desc: '酥脆洋葱圈', emoji: '🧅' },
-                { id: 306, name: '可口可乐（中杯）', price: 8, cat: '饮品', sales: 3021, desc: '冰镇碳酸饮料', emoji: '🥤' }
-            ]
-        },
-        {
-            id: 4, name: '面馆一绝', emoji: '🍜', cat: 'food',
-            rating: 4.7, monthSales: 1823, distance: 3.1, minutes: 38,
-            minPrice: 18, deliveryFee: 3, packingFee: 1,
-            tags: ['品质联盟'],
-            discounts: [{ threshold: 20, cut: 3 }, { threshold: 40, cut: 8 }],
-            desc: '传统手工面，汤头秘制',
-            menu: [
-                { id: 401, name: '红烧牛肉面', price: 18, cat: '热销', sales: 1320, desc: '嫩牛肉 + 特制汤底', emoji: '🍜' },
-                { id: 402, name: '番茄鸡蛋面', price: 15, cat: '热销', sales: 1108, desc: '清汤面 + 番茄蛋花', emoji: '🍅' },
-                { id: 403, name: '麻辣拌面套餐', price: 22, cat: '热销', sales: 502, desc: '拌面 + 配菜 + 饮料', emoji: '🥢' },
-                { id: 404, name: '手工小馄饨', price: 13, cat: '小吃', sales: 867, desc: '皮薄馅大，12 只', emoji: '🥟' },
-                { id: 405, name: '凉拌黄瓜', price: 8, cat: '小吃', sales: 990, desc: '蒜香爽口', emoji: '🥒' }
-            ]
-        },
-        {
-            id: 5, name: '烤肉部落', emoji: '🍖', cat: 'food',
-            rating: 4.8, monthSales: 2904, distance: 2.5, minutes: 35,
-            minPrice: 40, deliveryFee: 5, packingFee: 2,
-            tags: ['品质联盟', '准时达'],
-            discounts: [{ threshold: 60, cut: 10 }, { threshold: 120, cut: 25 }],
-            desc: '精选肉类，火焰烤制',
-            menu: [
-                { id: 501, name: '韩式烤肉套餐', price: 128, orig: 148, cat: '热销', sales: 421, desc: '5 种肉类 + 小菜 + 米饭', emoji: '🍖' },
-                { id: 502, name: '羊肉串 10 串', price: 35, cat: '热销', sales: 1502, desc: '新鲜羊肉，现烤现吃', emoji: '🍢' },
-                { id: 503, name: '烤鸡腿套餐', price: 32, cat: '热销', sales: 733, desc: '2 条烤鸡腿 + 薯条 + 饮料', emoji: '🍗' },
-                { id: 504, name: '锡纸金针菇', price: 16, cat: '素菜', sales: 655, desc: '蒜香浓郁', emoji: '🍄' },
-                { id: 505, name: '烤韭菜', price: 10, cat: '素菜', sales: 430, desc: '秘制酱料', emoji: '🌿' }
-            ]
-        },
-        {
-            id: 6, name: '甜品工房', emoji: '🍰', cat: 'dessert',
-            rating: 4.9, monthSales: 3612, distance: 1.2, minutes: 25,
-            minPrice: 20, deliveryFee: 3, packingFee: 1,
-            tags: ['品牌商家', '准时达'],
-            discounts: [{ threshold: 30, cut: 5 }, { threshold: 68, cut: 15 }],
-            desc: '精致甜品，每日现烤',
-            menu: [
-                { id: 601, name: '提拉米苏', price: 15, cat: '热销', sales: 2201, desc: '意大利经典甜品', emoji: '🍰' },
-                { id: 602, name: '芒果千层蛋糕', price: 28, orig: 32, cat: '热销', sales: 1411, desc: '8 层芒果奶油蛋糕', emoji: '🥭' },
-                { id: 603, name: '咖啡甜品套餐', price: 38, cat: '热销', sales: 622, desc: '甜品 + 咖啡 + 饮料', emoji: '☕' },
-                { id: 604, name: '杨枝甘露', price: 22, cat: '饮品', sales: 1088, desc: '芒果西柚西米', emoji: '🥤' },
-                { id: 605, name: '冰美式', price: 16, cat: '饮品', sales: 903, desc: '深烘豆，微苦回甘', emoji: '🧊' }
-            ]
-        },
-        {
-            id: 7, name: '鲜果集市', emoji: '🍇', cat: 'fruit',
-            rating: 4.7, monthSales: 1580, distance: 4.2, minutes: 45,
-            minPrice: 25, deliveryFee: 4, packingFee: 0,
-            tags: ['坏果包赔'],
-            discounts: [{ threshold: 39, cut: 6 }, { threshold: 79, cut: 15 }],
-            desc: '当日现采，坏果包赔',
-            menu: [
-                { id: 701, name: '阳光玫瑰葡萄 500g', price: 39, orig: 49, cat: '热销', sales: 522, desc: '云南高原玫瑰香', emoji: '🍇' },
-                { id: 702, name: '海南小台农芒果 1kg', price: 26, cat: '热销', sales: 811, desc: '皮薄核小，香甜多汁', emoji: '🥭' },
-                { id: 703, name: '沃柑 2kg', price: 32, cat: '热销', sales: 640, desc: '武鸣沃柑，酸甜适口', emoji: '🍊' },
-                { id: 704, name: '麒麟西瓜 4-5kg', price: 45, cat: '时令', sales: 288, desc: '沙瓤爆汁', emoji: '🍉' },
-                { id: 705, name: '新西兰奇异果 6 个', price: 29, cat: '进口', sales: 144, desc: '金奇异果', emoji: '🥝' }
-            ]
-        },
-        {
-            id: 8, name: '24h 便利超市', emoji: '🏪', cat: 'market',
-            rating: 4.8, monthSales: 5320, distance: 0.6, minutes: 18,
-            minPrice: 20, deliveryFee: 2, packingFee: 0,
-            tags: ['24 小时', '准时达'],
-            discounts: [{ threshold: 29, cut: 4 }, { threshold: 59, cut: 10 }],
-            desc: '半夜也能送，日用百货齐全',
-            menu: [
-                { id: 801, name: '冰镇啤酒 330ml×6', price: 29, cat: '酒水', sales: 1902, desc: '整箱装，冰镇直送', emoji: '🍺' },
-                { id: 802, name: '矿泉水 550ml×12', price: 19, cat: '酒水', sales: 2411, desc: '整箱装', emoji: '💧' },
-                { id: 803, name: '薯片大包装', price: 9, cat: '零食', sales: 3320, desc: '原味 / 番茄味随机', emoji: '🍟' },
-                { id: 804, name: '抽纸 3 包', price: 16, cat: '日用', sales: 1201, desc: '原木浆，柔韧亲肤', emoji: '🧻' },
-                { id: 805, name: '电池 5 号 8 粒', price: 22, cat: '日用', sales: 402, desc: '碱性电池', emoji: '🔋' }
-            ]
-        }
+        { id: 1, name: '麻辣烫天堂', art: ['pot', '#8C3A2E', '#E5484D'], cat: 'food',
+          rating: 4.8, monthSales: 2531, distance: 2.3, minutes: 32,
+          minPrice: 20, deliveryFee: 3, packingFee: 1,
+          tags: ['品质联盟', '准时达'],
+          discounts: [{ threshold: 30, cut: 5 }, { threshold: 60, cut: 12 }, { threshold: 100, cut: 25 }],
+          desc: '正宗四川麻辣烫，每日新鲜食材',
+          menu: [
+            { id: 101, name: '经典麻辣烫套餐', price: 28, orig: 32, cat: '热销', sales: 1286, desc: '丸子、蔬菜、豆制品组合', art: ['pot', '#8C3A2E', '#E5484D'] },
+            { id: 102, name: '午餐特价盖饭', price: 18, cat: '热销', sales: 942, desc: '米饭 + 菜品 + 例汤', art: ['ricebowl', '#A0522D', '#E8A33D'] },
+            { id: 103, name: '双人麻辣烫锅', price: 68, orig: 78, cat: '热销', sales: 307, desc: '2 人份，配 2 碗米饭', art: ['pot', '#7E3526', '#F2664B'] },
+            { id: 104, name: '米饭', price: 2, cat: '主食', sales: 3201, desc: '东北珍珠米', art: ['ricebowl', '#B08968', '#FFF6E8'] },
+            { id: 105, name: '手工宽粉', price: 6, cat: '主食', sales: 1580, desc: '红薯宽粉，久煮不烂', art: ['noodles', '#A0522D', '#F0D9A8'] },
+            { id: 106, name: '冰镇酸梅汤', price: 6, cat: '饮品', sales: 2103, desc: '解辣解腻', art: ['glass', '#6B4A5C', '#7A3E5C'] },
+            { id: 107, name: '鲜榨西瓜汁', price: 12, cat: '饮品', sales: 611, desc: '当日鲜榨，无添加', art: ['glass', '#3E7C3A', '#E8555E'] },
+            { id: 108, name: '蒜香鸡爪', price: 16, cat: '小吃', sales: 428, desc: '脱骨鸡爪，微辣', art: ['drumstick', '#A0522D', '#D98324'] }
+          ] },
+        { id: 2, name: '寿司工坊', art: ['sushi', '#5C6B7A', '#EE7F4E'], cat: 'food',
+          rating: 4.9, monthSales: 3217, distance: 1.8, minutes: 28,
+          minPrice: 30, deliveryFee: 4, packingFee: 1,
+          tags: ['品质联盟', '品牌商家'],
+          discounts: [{ threshold: 50, cut: 8 }, { threshold: 88, cut: 18 }],
+          desc: '日本料理主厨精心制作',
+          menu: [
+            { id: 201, name: '综合生鱼片盖饭', price: 58, cat: '热销', sales: 812, desc: '三文鱼、金枪鱼、海胆', art: ['ricebowl', '#5C6B7A', '#EE7F4E'] },
+            { id: 202, name: '加州卷 6P', price: 32, cat: '热销', sales: 1033, desc: '蟹肉、牛油果、黄瓜', art: ['sushi', '#4A5560', '#8BC34A'] },
+            { id: 203, name: '握寿司套餐', price: 48, orig: 56, cat: '热销', sales: 566, desc: '10 贯寿司 + 味噌汤', art: ['sushi', '#5C6B7A', '#EE7F4E'] },
+            { id: 204, name: '三文鱼刺身 5 片', price: 62, cat: '刺身', sales: 341, desc: '挪威冰鲜三文鱼', art: ['sashimi', '#5C6B7A', '#F08A5D'] },
+            { id: 205, name: '甜虾刺身', price: 45, cat: '刺身', sales: 209, desc: '北极甜虾，鲜甜回甘', art: ['sashimi', '#5C6B7A', '#EE8A8A'] },
+            { id: 206, name: '味噌汤', price: 6, cat: '汤品', sales: 1502, desc: '豆腐海带味噌汤', art: ['soupbowl', '#A9764A', '#E0A860'] },
+            { id: 207, name: '日式茶碗蒸', price: 14, cat: '汤品', sales: 733, desc: '滑嫩蛋羹', art: ['custard', '#5C6B7A', '#F0C05A'] }
+          ] },
+        { id: 3, name: '汉堡快餐', art: ['burger', '#E8A33D', '#B4472A'], cat: 'food',
+          rating: 4.6, monthSales: 4120, distance: 0.9, minutes: 22,
+          minPrice: 15, deliveryFee: 2, packingFee: 1,
+          tags: ['准时达'],
+          discounts: [{ threshold: 25, cut: 4 }, { threshold: 45, cut: 9 }],
+          desc: '新鲜汉堡，现点现做',
+          menu: [
+            { id: 301, name: '豪华牛肉汉堡', price: 28, cat: '热销', sales: 2011, desc: '100% 牛肉饼 + 新鲜蔬菜', art: ['burger', '#E8A33D', '#B4472A'] },
+            { id: 302, name: '炸鸡桶 3 块', price: 22, cat: '热销', sales: 1744, desc: '香脆炸鸡 + 薯条 + 饮料', art: ['bucket', '#C0392B', '#D98324'] },
+            { id: 303, name: '鸡肉汉堡套餐', price: 25, orig: 30, cat: '热销', sales: 986, desc: '汉堡 + 薯条 + 可乐', art: ['burger', '#EF9C2E', '#C2410C'] },
+            { id: 304, name: '黄金薯条（大）', price: 12, cat: '小食', sales: 2280, desc: '外脆里嫩', art: ['fries', '#C0392B', '#F2B33D'] },
+            { id: 305, name: '洋葱圈 8 个', price: 11, cat: '小食', sales: 640, desc: '酥脆洋葱圈', art: ['fries', '#E8A33D', '#E8B96A'] },
+            { id: 306, name: '可口可乐（中杯）', price: 8, cat: '饮品', sales: 3021, desc: '冰镇碳酸饮料', art: ['cup', '#2E2E33', '#B4472A'] }
+          ] },
+        { id: 4, name: '面馆一绝', art: ['noodles', '#A0522D', '#F0D9A8'], cat: 'food',
+          rating: 4.7, monthSales: 1823, distance: 3.1, minutes: 38,
+          minPrice: 18, deliveryFee: 3, packingFee: 1,
+          tags: ['品质联盟'],
+          discounts: [{ threshold: 20, cut: 3 }, { threshold: 40, cut: 8 }],
+          desc: '传统手工面，汤头秘制',
+          menu: [
+            { id: 401, name: '红烧牛肉面', price: 18, cat: '热销', sales: 1320, desc: '嫩牛肉 + 特制汤底', art: ['noodles', '#B04A2E', '#F0D9A8'] },
+            { id: 402, name: '番茄鸡蛋面', price: 15, cat: '热销', sales: 1108, desc: '清汤面 + 番茄蛋花', art: ['noodles', '#E5544B', '#F0D9A8'] },
+            { id: 403, name: '麻辣拌面套餐', price: 22, cat: '热销', sales: 502, desc: '拌面 + 配菜 + 饮料', art: ['noodles', '#D9772E', '#F0D9A8'] },
+            { id: 404, name: '手工小馄饨', price: 13, cat: '小吃', sales: 867, desc: '皮薄馅大，12 只', art: ['dumpling', '#E8E0D0', '#F5EDD8'] },
+            { id: 405, name: '凉拌黄瓜', price: 8, cat: '小吃', sales: 990, desc: '蒜香爽口', art: ['veggie', '#4E8A4E', '#7CB342'] }
+          ] },
+        { id: 5, name: '烤肉部落', art: ['skewer', '#7E3526', '#C2410C'], cat: 'food',
+          rating: 4.8, monthSales: 2904, distance: 2.5, minutes: 35,
+          minPrice: 40, deliveryFee: 5, packingFee: 2,
+          tags: ['品质联盟', '准时达'],
+          discounts: [{ threshold: 60, cut: 10 }, { threshold: 120, cut: 25 }],
+          desc: '精选肉类，火焰烤制',
+          menu: [
+            { id: 501, name: '韩式烤肉套餐', price: 128, orig: 148, cat: '热销', sales: 421, desc: '5 种肉类 + 小菜 + 米饭', art: ['grill', '#5C4033', '#C2410C'] },
+            { id: 502, name: '羊肉串 10 串', price: 35, cat: '热销', sales: 1502, desc: '新鲜羊肉，现烤现吃', art: ['skewer', '#7E3526', '#C2410C'] },
+            { id: 503, name: '烤鸡腿套餐', price: 32, cat: '热销', sales: 733, desc: '2 条烤鸡腿 + 薯条 + 饮料', art: ['drumstick', '#A0522D', '#CC7A24'] },
+            { id: 504, name: '锡纸金针菇', price: 16, cat: '素菜', sales: 655, desc: '蒜香浓郁', art: ['grill', '#8C8C94', '#C9A15C'] },
+            { id: 505, name: '烤韭菜', price: 10, cat: '素菜', sales: 430, desc: '秘制酱料', art: ['skewer', '#4E7A3E', '#5E9E4A'] }
+          ] },
+        { id: 6, name: '甜品工房', art: ['cake', '#E8A0B4', '#A9704A'], cat: 'dessert',
+          rating: 4.9, monthSales: 3612, distance: 1.2, minutes: 25,
+          minPrice: 20, deliveryFee: 3, packingFee: 1,
+          tags: ['品牌商家', '准时达'],
+          discounts: [{ threshold: 30, cut: 5 }, { threshold: 68, cut: 15 }],
+          desc: '精致甜品，每日现烤',
+          menu: [
+            { id: 601, name: '提拉米苏', price: 15, cat: '热销', sales: 2201, desc: '意大利经典甜品', art: ['cake', '#E8A0B4', '#A9704A'] },
+            { id: 602, name: '芒果千层蛋糕', price: 28, orig: 32, cat: '热销', sales: 1411, desc: '8 层芒果奶油蛋糕', art: ['cake', '#F0C05A', '#F2A93B'] },
+            { id: 603, name: '咖啡甜品套餐', price: 38, cat: '热销', sales: 622, desc: '甜品 + 咖啡 + 饮料', art: ['coffee', '#8A5A3B', '#6B4A32'] },
+            { id: 604, name: '杨枝甘露', price: 22, cat: '饮品', sales: 1088, desc: '芒果西柚西米', art: ['glass', '#F2C14E', '#F2A93B'] },
+            { id: 605, name: '冰美式', price: 16, cat: '饮品', sales: 903, desc: '深烘豆，微苦回甘', art: ['coffee', '#4A4A52', '#6B4A32'] }
+          ] },
+        { id: 7, name: '鲜果集市', art: ['grapes', '#8FAE3E'], cat: 'fruit',
+          rating: 4.7, monthSales: 1580, distance: 4.2, minutes: 45,
+          minPrice: 25, deliveryFee: 4, packingFee: 0,
+          tags: ['坏果包赔'],
+          discounts: [{ threshold: 39, cut: 6 }, { threshold: 79, cut: 15 }],
+          desc: '当日现采，坏果包赔',
+          menu: [
+            { id: 701, name: '阳光玫瑰葡萄 500g', price: 39, orig: 49, cat: '热销', sales: 522, desc: '云南高原玫瑰香', art: ['grapes', '#8FAE3E'] },
+            { id: 702, name: '海南小台农芒果 1kg', price: 26, cat: '热销', sales: 811, desc: '皮薄核小，香甜多汁', art: ['fruit', '#F2B01E'] },
+            { id: 703, name: '沃柑 2kg', price: 32, cat: '热销', sales: 640, desc: '武鸣沃柑，酸甜适口', art: ['fruit', '#F08A2E'] },
+            { id: 704, name: '麒麟西瓜 4-5kg', price: 45, cat: '时令', sales: 288, desc: '沙瓤爆汁', art: ['melon', '#E8555E'] },
+            { id: 705, name: '新西兰奇异果 6 个', price: 29, cat: '进口', sales: 144, desc: '金奇异果', art: ['kiwi', '#8A6A3E'] }
+          ] },
+        { id: 8, name: '24h 便利超市', art: ['goods', '#2E8FE0', '#4FA3E0'], cat: 'market',
+          rating: 4.8, monthSales: 5320, distance: 0.6, minutes: 18,
+          minPrice: 20, deliveryFee: 2, packingFee: 0,
+          tags: ['24 小时', '准时达'],
+          discounts: [{ threshold: 29, cut: 4 }, { threshold: 59, cut: 10 }],
+          desc: '半夜也能送，日用百货齐全',
+          menu: [
+            { id: 801, name: '冰镇啤酒 330ml×6', price: 29, cat: '酒水', sales: 1902, desc: '整箱装，冰镇直送', art: ['can', '#E0A32E'] },
+            { id: 802, name: '矿泉水 550ml×12', price: 19, cat: '酒水', sales: 2411, desc: '整箱装', art: ['bottle', '#4FA3E0'] },
+            { id: 803, name: '薯片大包装', price: 9, cat: '零食', sales: 3320, desc: '原味 / 番茄味随机', art: ['pack', '#E8973C', '#C0392B'] },
+            { id: 804, name: '抽纸 3 包', price: 16, cat: '日用', sales: 1201, desc: '原木浆，柔韧亲肤', art: ['tissue', '#7FA8D6', '#5B8DB8'] },
+            { id: 805, name: '电池 5 号 8 粒', price: 22, cat: '日用', sales: 402, desc: '碱性电池', art: ['battery', '#4A4A52'] }
+          ] }
     ];
 
     const COUPONS = [
@@ -594,18 +981,14 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     const TIME_SLOTS = ['尽快送达（约 30 分钟）', '11:30 - 12:00', '12:00 - 12:30', '18:00 - 18:30', '19:00 - 19:30', '20:00 - 20:30'];
 
     const SEED_ORDERS = [
-        {
-            id: 'FD2609810377', shopId: 2, status: 3, createdAt: '2026-10-09 12:24', eta: '12:52',
-            distance: '1.8', address: '四川省成都市武侯区天府大道 1000 号 写字楼 A 座 18F', remark: '',
-            items: [{ id: 201, name: '综合生鱼片盖饭', price: 58, qty: 1 }, { id: 206, name: '味噌汤', price: 6, qty: 2 }],
-            subtotal: 70, packing: 3, delivery: 4, discount: 8, couponCut: 0, total: 69, reviewed: true
-        },
-        {
-            id: 'FD2610125540', shopId: 3, status: 3, createdAt: '2026-10-10 19:41', eta: '20:03',
-            distance: '0.9', address: '四川省成都市锦江区春熙路 88 号 3 栋 1801', remark: '不要洋葱',
-            items: [{ id: 301, name: '豪华牛肉汉堡', price: 28, qty: 2 }, { id: 304, name: '黄金薯条（大）', price: 12, qty: 1 }],
-            subtotal: 68, packing: 3, delivery: 2, discount: 9, couponCut: 5, total: 59, reviewed: false
-        }
+        { id: 'FD2609810377', shopId: 2, status: 3, createdAt: '2026-10-09 12:24', eta: '12:52',
+          distance: '1.8', address: '四川省成都市武侯区天府大道 1000 号 写字楼 A 座 18F', remark: '',
+          items: [{ id: 201, name: '综合生鱼片盖饭', price: 58, qty: 1 }, { id: 206, name: '味噌汤', price: 6, qty: 2 }],
+          subtotal: 70, packing: 3, delivery: 4, discount: 8, couponCut: 0, total: 69, reviewed: true },
+        { id: 'FD2610125540', shopId: 3, status: 3, createdAt: '2026-10-10 19:41', eta: '20:03',
+          distance: '0.9', address: '四川省成都市锦江区春熙路 88 号 3 栋 1801', remark: '不要洋葱',
+          items: [{ id: 301, name: '豪华牛肉汉堡', price: 28, qty: 2 }, { id: 304, name: '黄金薯条（大）', price: 12, qty: 1 }],
+          subtotal: 68, packing: 3, delivery: 2, discount: 9, couponCut: 5, total: 59, reviewed: false }
     ];
 
     const DISH_INDEX = new Map();
@@ -614,13 +997,11 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     const COUPON_BY_ID = new Map(COUPONS.map(c => [c.id, c]));
 
     /* ======================================================================
-     * 2. 通用工具
+     * 3. 通用工具
      * ==================================================================== */
     const $ = sel => document.querySelector(sel);
-
     const ESC_MAP = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
     const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ESC_MAP[c]);
-
     const money = n => '¥' + (Number.isInteger(n) ? n : Number(n).toFixed(2));
     const priceHTML = n => '<span class="cur">¥</span>' + (Number.isInteger(n) ? n : Number(n).toFixed(2));
 
@@ -633,12 +1014,9 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         return null;
     }
     function readJSON(key, fallback) {
-        try {
-            const v = JSON.parse(store(key));
-            return v == null ? fallback : v;
-        } catch (e) { return fallback; }
+        try { const v = JSON.parse(store(key)); return v == null ? fallback : v; }
+        catch (e) { return fallback; }
     }
-
     function toast(msg) {
         const el = document.createElement('div');
         el.className = 'toast';
@@ -646,7 +1024,6 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         $('#toastBox').appendChild(el);
         setTimeout(() => el.remove(), 1800);
     }
-
     function confirmDialog(opts) {
         return new Promise(resolve => {
             const layer = document.createElement('div');
@@ -670,72 +1047,60 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             syncLock();
         });
     }
-
     function openSheet(title, bodyHTML, onClick) {
         const layer = document.createElement('div');
         layer.className = 'sheet-mask';
         layer.innerHTML =
             '<div class="sheet" role="dialog" aria-modal="true">' +
                 '<div class="sheet-head">' + esc(title) +
-                    '<button type="button" class="close" data-sheet="close" aria-label="关闭">✕</button>' +
+                    '<button type="button" class="close" data-sheet="close" aria-label="关闭">' + icon('close') + '</button>' +
                 '</div>' +
                 '<div class="sheet-body">' + bodyHTML + '</div>' +
             '</div>';
         layer.addEventListener('click', e => {
-            if (e.target.closest('[data-sheet="close"]') || e.target === layer) {
-                layer.remove(); syncLock(); return;
-            }
+            if (e.target.closest('[data-sheet="close"]') || e.target === layer) { layer.remove(); syncLock(); return; }
             if (onClick) onClick(e, () => { layer.remove(); syncLock(); });
         });
         $('#layerRoot').appendChild(layer);
         syncLock();
         return layer;
     }
-
     function syncLock() {
         document.body.classList.toggle('locked', document.querySelector('.mask, .sheet-mask') !== null);
     }
+    const emptyState = (ic, title, sub) =>
+        '<div class="empty"><div class="empty-art">' + icon(ic) + '</div>' +
+        '<div class="title">' + esc(title) + '</div>' + (sub ? '<div class="sub">' + esc(sub) + '</div>' : '') + '</div>';
 
     /* ======================================================================
-     * 3. 状态与持久化
+     * 4. 状态与持久化
      * ==================================================================== */
     const state = {
-        cart: { shopId: null, items: {} },   // 单店下单：items 形如 { dishId: qty }
-        addresses: [],
-        orders: [],
-        couponId: null,
-        addressId: null,
-        timeSlot: TIME_SLOTS[0],
-        remark: '',
-        searchHistory: [],
-        searchKeyword: '',
-        category: 'all',
-        sort: 'recommend',
-        orderFilter: 'all'
+        cart: { shopId: null, items: {} },
+        addresses: [], orders: [],
+        couponId: null, addressId: null,
+        timeSlot: TIME_SLOTS[0], remark: '',
+        searchHistory: [], searchKeyword: '',
+        category: 'all', sort: 'recommend', orderFilter: 'all'
     };
 
     function loadState() {
-        const rawCart = readJSON('kd.cart', null);
-        if (rawCart && typeof rawCart === 'object') {
+        const raw = readJSON('kd.cart', null);
+        if (raw && typeof raw === 'object') {
             const items = {};
-            Object.keys(rawCart.items || {}).forEach(k => {
-                const id = Number(k);
-                const qty = Math.floor(Number(rawCart.items[k]));
+            Object.keys(raw.items || {}).forEach(k => {
+                const id = Number(k), qty = Math.floor(Number(raw.items[k]));
                 if (DISH_INDEX.has(id) && qty > 0) items[id] = qty;
             });
-            state.cart = { shopId: Object.keys(items).length ? rawCart.shopId : null, items: items };
+            state.cart = { shopId: Object.keys(items).length ? raw.shopId : null, items: items };
         }
-
         const addrs = readJSON('kd.addresses', null);
         state.addresses = (Array.isArray(addrs) && addrs.length) ? addrs : DEFAULT_ADDRESSES.slice();
         if (!state.addresses.some(a => a.isDefault)) state.addresses[0].isDefault = true;
-
         const orders = readJSON('kd.orders', null);
         state.orders = (Array.isArray(orders) && orders.length) ? orders : SEED_ORDERS.slice();
-
         const hist = readJSON('kd.searchHistory', null);
         state.searchHistory = Array.isArray(hist) ? hist.slice(0, 10) : [];
-
         state.addressId = (state.addresses.find(a => a.isDefault) || state.addresses[0]).id;
     }
     const saveCart = () => store('kd.cart', JSON.stringify(state.cart));
@@ -744,14 +1109,13 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     const saveHistory = () => store('kd.searchHistory', JSON.stringify(state.searchHistory));
 
     /* ======================================================================
-     * 4. 购物车 & 费用计算
+     * 5. 购物车 & 费用
      * ==================================================================== */
     const cartShop = () => (state.cart.shopId ? SHOP_BY_ID.get(state.cart.shopId) : null);
-
     function cartLines() {
         return Object.keys(state.cart.items).map(id => {
-            const entry = DISH_INDEX.get(Number(id));
-            return { dish: entry.dish, qty: state.cart.items[id] };
+            const e = DISH_INDEX.get(Number(id));
+            return { dish: e.dish, qty: state.cart.items[id] };
         });
     }
     const cartCount = () => Object.keys(state.cart.items).reduce((s, id) => s + state.cart.items[id], 0);
@@ -763,7 +1127,6 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         shop.discounts.forEach(d => { if (subtotal >= d.threshold && d.cut > best) best = d.cut; });
         return best;
     }
-
     function bill(shop, lines, couponId) {
         const subtotal = lines.reduce((s, l) => s + l.dish.price * l.qty, 0);
         const qty = lines.reduce((s, l) => s + l.qty, 0);
@@ -773,35 +1136,24 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         const coupon = couponId ? COUPON_BY_ID.get(couponId) : null;
         const couponCut = (coupon && subtotal >= coupon.threshold) ? coupon.amount : 0;
         const total = Math.max(subtotal + packing + delivery - discount - couponCut, 0);
-        return { subtotal: subtotal, qty: qty, packing: packing, delivery: delivery,
-                 discount: discount, couponCut: couponCut, total: total };
+        return { subtotal: subtotal, qty: qty, packing: packing, delivery: delivery, discount: discount, couponCut: couponCut, total: total };
     }
 
     function addDish(id) {
         const entry = DISH_INDEX.get(id);
         if (!entry) return;
         const shop = entry.shop;
-
         if (state.cart.shopId && state.cart.shopId !== shop.id && cartCount() > 0) {
             const other = SHOP_BY_ID.get(state.cart.shopId);
-            confirmDialog({
-                title: '更换商家',
-                message: '购物车中已有「' + other.name + '」的商品，切换商家需要先清空购物车。',
-                okText: '清空并添加'
-            }).then(ok => {
-                if (!ok) return;
-                state.cart = { shopId: shop.id, items: {} };
-                addDish(id);
-            });
+            confirmDialog({ title: '更换商家', message: '购物车中已有「' + other.name + '」的商品，切换商家需要先清空购物车。', okText: '清空并添加' })
+                .then(ok => { if (!ok) return; state.cart = { shopId: shop.id, items: {} }; addDish(id); });
             return;
         }
-
         state.cart.shopId = shop.id;
         state.cart.items[id] = (state.cart.items[id] || 0) + 1;
         saveCart();
         refreshShopUI();
     }
-
     function minusDish(id) {
         if (!state.cart.items[id]) return;
         state.cart.items[id] -= 1;
@@ -810,53 +1162,40 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         saveCart();
         refreshShopUI();
     }
-
-    function clearCart() {
-        state.cart = { shopId: null, items: {} };
-        state.couponId = null;
-        saveCart();
-        refreshShopUI();
-    }
+    function clearCart() { state.cart = { shopId: null, items: {} }; state.couponId = null; saveCart(); refreshShopUI(); }
 
     /* ======================================================================
-     * 5. 路由
+     * 6. 路由
      * ==================================================================== */
     function parseHash() {
         const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
         return { path: parts[0] || 'home', args: parts.slice(1) };
     }
     const go = path => { location.hash = '#/' + path; };
-
     const TABS = [
-        { id: 'home',    name: '首页', icon: '🏠', path: 'home' },
-        { id: 'orders',  name: '订单', icon: '📋', path: 'orders' },
-        { id: 'profile', name: '我的', icon: '👤', path: 'profile' }
+        { id: 'home', name: '首页', ic: 'home', path: 'home' },
+        { id: 'orders', name: '订单', ic: 'receipt', path: 'orders' },
+        { id: 'profile', name: '我的', ic: 'user', path: 'profile' }
     ];
-
     function tabbarHTML(active) {
         return '<nav class="tabbar" aria-label="主导航">' + TABS.map(t =>
             '<button type="button" class="tab' + (t.id === active ? ' on' : '') + '" data-go="' + t.path + '"' +
             ' aria-current="' + (t.id === active ? 'page' : 'false') + '">' +
-                '<span class="ico" aria-hidden="true">' + t.icon + '</span><span>' + t.name + '</span>' +
+                '<span class="ico">' + icon(t.ic) + '</span><span>' + t.name + '</span>' +
             '</button>').join('') + '</nav>';
     }
 
     /* ======================================================================
-     * 6. 商家卡片 & 首页
+     * 7. 首页
      * ==================================================================== */
     const currentAddress = () => state.addresses.find(a => a.isDefault) || state.addresses[0];
-
     const SORTS = [
-        { id: 'recommend', name: '综合排序' },
-        { id: 'sales',     name: '销量最高' },
-        { id: 'distance',  name: '距离最近' },
-        { id: 'rating',    name: '评分最高' }
+        { id: 'recommend', name: '综合排序' }, { id: 'sales', name: '销量最高' },
+        { id: 'distance', name: '距离最近' }, { id: 'rating', name: '评分最高' }
     ];
-
     function visibleShops() {
         let list = SHOPS.slice();
-        if (state.category !== 'all' && state.category !== 'coupon' &&
-            state.category !== 'ranking' && state.category !== 'more') {
+        if (state.category !== 'all' && state.category !== 'coupon' && state.category !== 'ranking' && state.category !== 'more') {
             list = list.filter(s => s.cat === state.category);
         }
         if (state.sort === 'sales') list.sort((a, b) => b.monthSales - a.monthSales);
@@ -865,21 +1204,18 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         else list.sort((a, b) => (b.rating * 500 + b.monthSales / 10) - (a.rating * 500 + a.monthSales / 10));
         return list;
     }
-
     function shopCardHTML(shop) {
         const promo = shop.discounts.map(d => '满' + d.threshold + '减' + d.cut).join(' · ');
         return '<button type="button" class="shop-card" data-go="shop/' + shop.id + '" aria-label="进入 ' + esc(shop.name) + '">' +
-            '<span class="shop-thumb" aria-hidden="true">' + shop.emoji + '</span>' +
+            artHTML(shop.art[0], shop.art[1], shop.art[2]) +
             '<span class="shop-main">' +
                 '<span class="shop-name">' + esc(shop.name) + '</span>' +
                 '<span class="shop-stats">' +
-                    '<span class="stars">★ <span class="num">' + shop.rating.toFixed(1) + '</span></span>' +
+                    '<span class="stars">' + icon('star', 'fill') + '<span class="num">' + shop.rating.toFixed(1) + '</span></span>' +
                     '<span>月售 ' + shop.monthSales + '</span>' +
                     '<span>' + shop.minutes + ' 分钟</span>' +
                 '</span>' +
-                '<span class="shop-tags">' +
-                    shop.tags.map(t => '<span class="tag yellow">' + esc(t) + '</span>').join('') +
-                '</span>' +
+                '<span class="shop-tags">' + shop.tags.map(t => '<span class="tag yellow">' + esc(t) + '</span>').join('') + '</span>' +
                 '<span class="shop-promo"><span class="lbl">满减</span><span class="txt">' + esc(promo) + '</span></span>' +
                 '<span class="shop-foot">' +
                     '<span class="deliver">起送 ' + money(shop.minPrice) + '</span>' +
@@ -890,75 +1226,63 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             '<span class="distance-col"><span>' + shop.distance + 'km</span><span>' + shop.minutes + 'min</span></span>' +
         '</button>';
     }
-
     function renderHome() {
         const addr = currentAddress();
         const list = visibleShops();
         const n = cartCount();
-
+        const cat = CATEGORIES.find(c => c.id === state.category);
         return '<div class="page">' +
             '<header class="hero">' +
                 '<div class="hero-row">' +
                     '<button type="button" class="loc" data-go="address">' +
-                        '<span class="pin" aria-hidden="true">📍</span>' +
+                        icon('pin') +
                         '<span class="loc-text">' + esc(addr ? addr.detail : '选择收货地址') + '</span>' +
-                        '<span class="caret" aria-hidden="true">▾</span>' +
+                        icon('chev-d', 'caret') +
                     '</button>' +
                     '<span class="spacer"></span>' +
-                    '<button type="button" class="icon-btn" data-action="toggle-theme" aria-label="切换深色模式">🌓</button>' +
-                    '<button type="button" class="icon-btn badge-dot" data-action="open-notice" aria-label="消息中心">🔔</button>' +
+                    '<button type="button" class="icon-btn" data-action="toggle-theme" aria-label="切换深色模式">' + icon('moon') + '</button>' +
+                    '<button type="button" class="icon-btn badge-dot" data-action="open-notice" aria-label="消息中心">' + icon('bell') + '</button>' +
                 '</div>' +
                 '<button type="button" class="search-bar" data-go="search">' +
-                    '<span class="ico" aria-hidden="true">🔍</span>' +
+                    icon('search') +
                     '<span class="ph">麻辣烫｜满 30 减 5，新客再减 5 元</span>' +
                     '<span class="cta">搜索</span>' +
                 '</button>' +
             '</header>' +
-
             '<section aria-label="功能入口"><div class="kingkong">' +
                 CATEGORIES.map(c =>
                     '<button type="button" class="kk-item' + (state.category === c.id ? ' on' : '') + '"' +
-                    ' data-action="pick-category" data-cat="' + c.id + '">' +
-                        '<span class="kk-ico" aria-hidden="true">' + c.emoji + '</span>' +
+                    ' style="--k:' + c.c + '" data-action="pick-category" data-cat="' + c.id + '">' +
+                        '<span class="kk-ico">' + icon(c.ic) + '</span>' +
                         '<span class="kk-name">' + esc(c.name) + '</span>' +
                     '</button>').join('') +
             '</div></section>' +
-
             '<section class="tiles" aria-label="活动专区">' +
                 '<button type="button" class="tile hot" data-action="open-coupons">' +
-                    '<span class="tile-title">天天神券</span><span class="tile-sub">最高减 30</span>' +
-                    '<span class="tile-emoji" aria-hidden="true">🧧</span></button>' +
+                    '<span class="tile-title">天天神券</span><span class="tile-sub">最高减 30</span>' + icon('ticket') + '</button>' +
                 '<button type="button" class="tile" data-go="orders">' +
-                    '<span class="tile-title">准时达</span><span class="tile-sub">超时赔付</span>' +
-                    '<span class="tile-emoji" aria-hidden="true">⏱️</span></button>' +
+                    '<span class="tile-title">准时达</span><span class="tile-sub">超时赔付</span>' + icon('clock') + '</button>' +
                 '<button type="button" class="tile" data-action="pick-category" data-cat="fruit">' +
-                    '<span class="tile-title">果蔬生鲜</span><span class="tile-sub">坏果包赔</span>' +
-                    '<span class="tile-emoji" aria-hidden="true">🥬</span></button>' +
+                    '<span class="tile-title">果蔬生鲜</span><span class="tile-sub">坏果包赔</span>' + icon('leaf') + '</button>' +
             '</section>' +
-
             '<div class="sortbar">' +
                 SORTS.map(s => '<button type="button" class="sort-item' + (state.sort === s.id ? ' on' : '') + '"' +
                     ' data-action="pick-sort" data-sort="' + s.id + '">' + s.name + '</button>').join('') +
             '</div>' +
-
             (list.length
                 ? '<div class="shop-list">' + list.map(shopCardHTML).join('') + '</div>'
-                : '<div class="empty"><div class="ico" aria-hidden="true">🏪</div>' +
-                  '<div class="title">该分类下暂无商家</div><div class="sub">换个分类看看吧</div></div>') +
-
-            (n ? '<div style="position:fixed;bottom:calc(var(--tab-h) + var(--safe-b) + 14px);left:50%;transform:translateX(-50%);z-index:65">' +
+                : emptyState('store', '该分类下暂无商家', cat ? '「' + cat.name + '」还没有商家，换个分类看看' : '换个分类看看吧')) +
+            (n ? '<div style="position:fixed;bottom:calc(var(--tab-h) + var(--safe-b) + 16px);left:50%;transform:translateX(-50%);z-index:65">' +
                  '<button type="button" class="checkout-btn ready" data-go="' + (state.cart.shopId ? 'shop/' + state.cart.shopId : 'home') + '">' +
-                 '🛒 购物车 ' + n + ' 件</button></div>' : '') +
-
+                 '购物车 ' + n + ' 件</button></div>' : '') +
             tabbarHTML('home') +
         '</div>';
     }
 
     /* ======================================================================
-     * 7. 搜索页
+     * 8. 搜索
      * ==================================================================== */
     const HOT_WORDS = ['麻辣烫', '寿司', '汉堡', '烤肉', '提拉米苏', '刺身', '薯条', '葡萄'];
-
     function searchResults(keyword) {
         const kw = keyword.trim().toLowerCase();
         if (!kw) return null;
@@ -970,22 +1294,18 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             return { shop: shop, dishes: dishes };
         }).filter(Boolean);
     }
-
     function renderSearch() {
         const kw = state.searchKeyword || '';
         const results = searchResults(kw);
-
         const head = '<div class="search-head">' +
-            '<button type="button" class="icon-btn" data-go="home" aria-label="返回" style="color:#111">←</button>' +
-            '<div class="search-field">' +
-                '<span aria-hidden="true">🔍</span>' +
+            '<button type="button" class="icon-btn" data-go="home" aria-label="返回">' + icon('back') + '</button>' +
+            '<div class="search-field">' + icon('search') +
                 '<label class="sr-only" for="kw">搜索商家或菜品</label>' +
                 '<input id="kw" type="search" placeholder="搜索商家或菜品" autocomplete="off" value="' + esc(kw) + '">' +
-                (kw ? '<button type="button" class="clr" data-action="clear-kw" aria-label="清空">✕</button>' : '') +
+                (kw ? '<button type="button" class="clr" data-action="clear-kw" aria-label="清空">' + icon('close') + '</button>' : '') +
             '</div>' +
             '<button type="button" class="search-go" data-action="do-search">搜索</button>' +
         '</div>';
-
         if (results === null) {
             return '<div class="page">' + head +
                 '<div class="block"><div class="block-head"><h2>热门搜索</h2></div><div class="chips">' +
@@ -1001,18 +1321,14 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                 '<div class="shop-list">' + SHOPS.slice(0, 3).map(shopCardHTML).join('') + '</div>' +
             '</div>';
         }
-
         if (!results.length) {
             return '<div class="page">' + head +
-                '<div class="empty"><div class="ico" aria-hidden="true">🔍</div>' +
-                    '<div class="title">没有找到「' + esc(kw) + '」</div>' +
-                    '<div class="sub">换个关键词，或试试热门搜索</div></div>' +
+                emptyState('search', '没有找到「' + kw + '」', '换个关键词，或试试热门搜索') +
                 '<div class="block"><div class="chips">' +
                     HOT_WORDS.map(w => '<button type="button" class="chip hot" data-action="use-word" data-word="' + esc(w) + '">' + esc(w) + '</button>').join('') +
                 '</div></div>' +
             '</div>';
         }
-
         return '<div class="page">' + head +
             '<div class="block"><div class="block-head"><h2>找到 ' + results.length + ' 家相关商家</h2></div></div>' +
             '<div class="shop-list">' + results.map(r =>
@@ -1027,12 +1343,12 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     }
 
     /* ======================================================================
-     * 8. 商家页
+     * 9. 商家页
      * ==================================================================== */
     function dishRowHTML(dish) {
         const qty = state.cart.items[dish.id] || 0;
         return '<div class="dish" data-dish-row="' + dish.id + '">' +
-            '<span class="dish-thumb" aria-hidden="true">' + dish.emoji + '</span>' +
+            artHTML(dish.art[0], dish.art[1], dish.art[2]) +
             '<span class="dish-body">' +
                 '<span class="dish-name">' + esc(dish.name) + '</span>' +
                 '<span class="dish-desc">' + esc(dish.desc) + '</span>' +
@@ -1042,61 +1358,54 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                         (dish.orig ? '<span class="orig">' + money(dish.orig) + '</span>' : '') + '</span>' +
                     '<span class="stepper">' +
                         (qty > 0
-                            ? '<button type="button" class="step-btn step-minus" data-action="minus-dish" data-id="' + dish.id + '" aria-label="减少 ' + esc(dish.name) + '">−</button>' +
+                            ? '<button type="button" class="step-btn step-minus" data-action="minus-dish" data-id="' + dish.id + '" aria-label="减少 ' + esc(dish.name) + '">' + icon('minus') + '</button>' +
                               '<span class="step-qty" data-qty="' + dish.id + '" aria-live="polite">' + qty + '</span>'
                             : '') +
-                        '<button type="button" class="step-btn step-add" data-action="add-dish" data-id="' + dish.id + '" aria-label="增加 ' + esc(dish.name) + '">+</button>' +
+                        '<button type="button" class="step-btn step-add" data-action="add-dish" data-id="' + dish.id + '" aria-label="增加 ' + esc(dish.name) + '">' + icon('plus') + '</button>' +
                     '</span>' +
                 '</span>' +
             '</span>' +
         '</div>';
     }
-
     function cartBarHTML(shop) {
         const n = cartCount();
         const subtotal = cartSubtotal();
         const enough = shop ? subtotal >= shop.minPrice : false;
         const lack = shop ? Math.max(shop.minPrice - subtotal, 0) : 0;
-        let hint = '购物车是空的';
-        if (n) hint = enough ? '已满 ' + money(shop.minPrice) + ' 起送' : '差 ' + money(lack) + ' 起送';
-
+        const hint = n ? (enough ? '已满 ' + money(shop.minPrice) + ' 起送' : '差 ' + money(lack) + ' 起送') : '购物车是空的';
         return '<div class="cartbar' + (n ? '' : ' empty-state') + '" id="cartBar">' +
             '<button type="button" class="cart-ico-wrap" data-action="toggle-drawer" aria-label="展开购物车">' +
-                '<span class="cart-ico' + (n ? ' has' : '') + '" aria-hidden="true">🛒</span>' +
+                '<span class="cart-ico' + (n ? ' has' : '') + '">' + icon('cart') + '</span>' +
                 (n ? '<span class="cart-badge" data-cart-badge>' + n + '</span>' : '') +
             '</button>' +
-            '<div class="cart-sum">' +
-                '<div class="amt">' + money(subtotal) + '</div>' +
-                '<div class="hint">' + hint + '</div>' +
-            '</div>' +
+            '<div class="cart-sum"><div class="amt">' + money(subtotal) + '</div><div class="hint">' + hint + '</div></div>' +
             '<button type="button" class="checkout-btn' + (enough ? ' ready' : '') + '" data-action="go-checkout"' +
                 (enough ? '' : ' disabled') + '>' + (enough ? '去结算' : money(shop.minPrice) + ' 起送') + '</button>' +
         '</div>';
     }
-
     function renderShop(id) {
         const shop = SHOP_BY_ID.get(Number(id));
         if (!shop) {
-            return '<div class="page"><div class="empty"><div class="ico" aria-hidden="true">😕</div>' +
-                '<div class="title">商家不存在</div></div>' + tabbarHTML('home') + '</div>';
+            return '<div class="page"><div class="subheader">' +
+                '<button type="button" class="back" data-go="home" aria-label="返回">' + icon('back') + '</button><h1>商家详情</h1></div>' +
+                emptyState('store', '商家不存在', '该商家可能已下线') + tabbarHTML('home') + '</div>';
         }
-
         const cats = [];
         shop.menu.forEach(d => { if (cats.indexOf(d.cat) === -1) cats.push(d.cat); });
         const promo = shop.discounts.map(d => '满' + d.threshold + '减' + d.cut).join('，');
-
         return '<div class="shop-page">' +
             '<div class="shop-hero">' +
                 '<div class="shop-hero-top">' +
-                    '<button type="button" class="back" data-go="home" aria-label="返回">←</button>' +
+                    '<button type="button" class="back" data-go="home" aria-label="返回">' + icon('back') + '</button>' +
                     '<span class="ttl">' + esc(shop.name) + '</span>' +
-                    '<button type="button" class="icon-btn" data-action="toggle-theme" aria-label="切换深色模式" style="color:#111">🌓</button>' +
+                    '<button type="button" class="icon-btn" data-action="toggle-theme" aria-label="切换深色模式">' + icon('moon') + '</button>' +
                 '</div>' +
                 '<div class="shop-brief">' +
-                    '<span class="thumb" aria-hidden="true">' + shop.emoji + '</span>' +
+                    artHTML(shop.art[0], shop.art[1], shop.art[2]) +
                     '<span class="info">' +
                         '<h2>' + esc(shop.name) + '</h2>' +
-                        '<span class="meta"><span>★ ' + shop.rating.toFixed(1) + '</span>' +
+                        '<span class="meta"><span class="stars">' + icon('star', 'fill') +
+                            '<span class="num">' + shop.rating.toFixed(1) + '</span></span>' +
                             '<span>月售 ' + shop.monthSales + '</span>' +
                             '<span>' + shop.minutes + ' 分钟</span>' +
                             '<span>' + shop.distance + 'km</span></span>' +
@@ -1106,7 +1415,6 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                     '</span>' +
                 '</div>' +
             '</div>' +
-
             '<div class="shop-body">' +
                 '<nav class="dish-cats" aria-label="菜品分类">' +
                     cats.map((cat, i) =>
@@ -1122,25 +1430,21 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                         '</section>').join('') +
                 '</div>' +
             '</div>' +
-
             '<div class="cart-mask" id="cartMask" data-action="close-drawer"></div>' +
             '<div class="cart-drawer" id="cartDrawer">' +
                 '<div class="cart-drawer-head">' +
                     '<span data-drawer-title>已选商品</span>' +
-                    '<button type="button" class="clr" data-action="clear-cart">🗑 清空</button>' +
+                    '<button type="button" class="clr" data-action="clear-cart">' + icon('trash') + '清空</button>' +
                 '</div>' +
                 '<div class="cart-drawer-list" data-drawer-list></div>' +
             '</div>' +
             cartBarHTML(shop) +
         '</div>';
     }
-
-    /* 局部刷新：只更新数量/底栏/抽屉，整页不重绘，保住滚动位置 */
     function refreshShopUI() {
         if (!document.querySelector('.shop-page')) return;
         const shop = cartShop() || SHOP_BY_ID.get(Number(parseHash().args[0]));
         if (!shop) return;
-
         document.querySelectorAll('[data-dish-row]').forEach(row => {
             const id = Number(row.dataset.dishRow);
             const qty = state.cart.items[id] || 0;
@@ -1149,26 +1453,23 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             if (qty > 0) {
                 if (exist) exist.textContent = qty;
                 else stepper.insertAdjacentHTML('afterbegin',
-                    '<button type="button" class="step-btn step-minus" data-action="minus-dish" data-id="' + id + '" aria-label="减少">−</button>' +
+                    '<button type="button" class="step-btn step-minus" data-action="minus-dish" data-id="' + id + '" aria-label="减少">' + icon('minus') + '</button>' +
                     '<span class="step-qty" data-qty="' + id + '" aria-live="polite">' + qty + '</span>');
             } else if (exist) {
                 exist.previousElementSibling.remove();
                 exist.remove();
             }
         });
-
         document.querySelectorAll('[data-cat-dot]').forEach(dot => {
             const total = shop.menu.filter(d => d.cat === dot.dataset.catDot)
                 .reduce((s, d) => s + (state.cart.items[d.id] || 0), 0);
             dot.hidden = total === 0;
             dot.textContent = total;
         });
-
         const bar = document.getElementById('cartBar');
         if (bar) bar.outerHTML = cartBarHTML(shop);
         renderDrawer();
     }
-
     function renderDrawer() {
         const drawer = document.getElementById('cartDrawer');
         if (!drawer) return;
@@ -1180,14 +1481,13 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         list.innerHTML = lines.length
             ? lines.map(l =>
                 '<div class="cart-row">' +
-                    '<button type="button" class="step-btn step-minus" data-action="minus-dish" data-id="' + l.dish.id + '" aria-label="减少">−</button>' +
+                    '<button type="button" class="step-btn step-minus" data-action="minus-dish" data-id="' + l.dish.id + '" aria-label="减少">' + icon('minus') + '</button>' +
                     '<span class="nm">' + esc(l.dish.name) + '</span>' +
                     '<span class="pr">' + money(l.dish.price * l.qty) + '</span>' +
-                    '<button type="button" class="step-btn step-add" data-action="add-dish" data-id="' + l.dish.id + '" aria-label="增加">+</button>' +
+                    '<button type="button" class="step-btn step-add" data-action="add-dish" data-id="' + l.dish.id + '" aria-label="增加">' + icon('plus') + '</button>' +
                 '</div>').join('')
             : '<div style="padding:28px;text-align:center;color:var(--mt-text-3)">还没有选择菜品</div>';
     }
-
     function toggleDrawer(force) {
         const drawer = document.getElementById('cartDrawer');
         const mask = document.getElementById('cartMask');
@@ -1196,19 +1496,16 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         drawer.classList.toggle('open', open);
         if (mask) mask.classList.toggle('open', open);
     }
-
     function afterRenderShop() {
         const list = document.getElementById('dishList');
         if (!list) return;
         const navBtns = Array.prototype.slice.call(document.querySelectorAll('[data-cat-nav]'));
-
         navBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const section = list.querySelector('[data-cat-section="' + btn.dataset.catNav + '"]');
                 if (section) list.scrollTop = section.offsetTop;
             });
         });
-
         list.addEventListener('scroll', () => {
             const sections = Array.prototype.slice.call(list.querySelectorAll('[data-cat-section]'));
             if (!sections.length) return;
@@ -1217,60 +1514,51 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             sections.forEach(s => { if (s.offsetTop <= top) current = s; });
             navBtns.forEach(b => b.classList.toggle('on', b.dataset.catNav === current.dataset.catSection));
         });
-
         renderDrawer();
     }
 
     /* ======================================================================
-     * 9. 结算页
+     * 10. 结算
      * ==================================================================== */
     function renderCheckout() {
         const shop = cartShop();
         const lines = cartLines();
         if (!shop || !lines.length) {
             return '<div class="page"><div class="subheader">' +
-                    '<button type="button" class="back" data-go="home" aria-label="返回">←</button><h1>确认订单</h1></div>' +
-                '<div class="empty"><div class="ico" aria-hidden="true">🛒</div>' +
-                    '<div class="title">购物车是空的</div><div class="sub">先去挑点好吃的吧</div></div>' +
+                '<button type="button" class="back" data-go="home" aria-label="返回">' + icon('back') + '</button><h1>确认订单</h1></div>' +
+                emptyState('cart', '购物车是空的', '先去挑点好吃的吧') +
                 '<div style="padding:0 24px"><button type="button" class="btn-primary" style="width:100%" data-go="home">去逛逛</button></div>' +
             '</div>';
         }
-
         const addr = state.addresses.find(a => a.id === state.addressId) || currentAddress();
         const b = bill(shop, lines, state.couponId);
         const coupon = state.couponId ? COUPON_BY_ID.get(state.couponId) : null;
         const usable = COUPONS.filter(c => b.subtotal >= c.threshold).length;
-
-        return '<div class="page" style="padding-bottom:90px">' +
+        return '<div class="page" style="padding-bottom:96px">' +
             '<div class="subheader">' +
-                '<button type="button" class="back" data-go="shop/' + shop.id + '" aria-label="返回">←</button>' +
+                '<button type="button" class="back" data-go="shop/' + shop.id + '" aria-label="返回">' + icon('back') + '</button>' +
                 '<h1>确认订单</h1>' +
             '</div>' +
-
             '<div class="card">' +
                 '<button type="button" class="row" data-action="choose-address">' +
-                    '<span style="font-size:17px" aria-hidden="true">📍</span>' +
-                    '<span class="addr-line" style="flex:1"><span class="txt">' +
-                        '<span class="nm">' + esc(addr.name) + '<span class="phone">' + esc(addr.phone) + '</span></span>' +
-                        '<span class="detail">' + esc(addr.detail) + '</span>' +
-                    '</span></span>' +
-                    '<span class="caret" aria-hidden="true">›</span>' +
+                    '<span class="addr-line">' + icon('pin') +
+                        '<span class="txt">' +
+                            '<span class="nm">' + esc(addr.name) + '<span class="phone">' + esc(addr.phone) + '</span></span>' +
+                            '<span class="detail">' + esc(addr.detail) + '</span>' +
+                        '</span></span>' +
+                    icon('chev-r', 'caret') +
                 '</button>' +
                 '<button type="button" class="row" data-action="choose-time">' +
                     '<span class="k">送达时间</span>' +
                     '<span class="v">' + esc(state.timeSlot) + '</span>' +
-                    '<span class="caret" aria-hidden="true">›</span>' +
+                    icon('chev-r', 'caret') +
                 '</button>' +
-                '<div class="row">' +
-                    '<span class="k">商家</span>' +
-                    '<span class="v">' + shop.emoji + ' ' + esc(shop.name) + '</span>' +
-                '</div>' +
+                '<div class="row"><span class="k">商家</span><span class="v">' + esc(shop.name) + '</span></div>' +
             '</div>' +
-
             '<div class="card">' +
                 '<div class="order-items">' +
                     lines.map(l =>
-                        '<div class="oi"><span class="nm">' + l.dish.emoji + ' ' + esc(l.dish.name) + '</span>' +
+                        '<div class="oi"><span class="nm">' + esc(l.dish.name) + '</span>' +
                         '<span class="qt">×' + l.qty + '</span>' +
                         '<span>' + money(l.dish.price * l.qty) + '</span></div>').join('') +
                 '</div>' +
@@ -1279,15 +1567,11 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                     '<span class="v">' + (coupon
                         ? '<span class="val-red">' + esc(coupon.title) + ' −' + money(coupon.amount) + '</span>'
                         : (usable ? usable + ' 个可用' : '暂无可用')) + '</span>' +
-                    '<span class="caret" aria-hidden="true">›</span>' +
+                    icon('chev-r', 'caret') +
                 '</button>' +
-                '<div class="field">' +
-                    '<label for="remark">备注</label>' +
-                    '<input id="remark" type="text" placeholder="口味、忌口、餐具需求…" maxlength="40" ' +
-                        'value="' + esc(state.remark) + '" data-remark>' +
-                '</div>' +
+                '<div class="field"><label for="remark">备注</label>' +
+                    '<input id="remark" type="text" placeholder="口味、忌口、餐具需求…" maxlength="40" value="' + esc(state.remark) + '" data-remark></div>' +
             '</div>' +
-
             '<div class="card" style="padding:8px 0 12px">' +
                 '<div class="bill-row"><span>商品小计</span><span class="amt">' + money(b.subtotal) + '</span></div>' +
                 '<div class="bill-row"><span>打包费（' + b.qty + ' 件）</span><span class="amt">' + money(b.packing) + '</span></div>' +
@@ -1296,61 +1580,52 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                 (b.couponCut ? '<div class="bill-row cut"><span>红包抵扣</span><span class="amt">−' + money(b.couponCut) + '</span></div>' : '') +
                 '<div class="bill-row total"><span>实付</span><span class="amt">' + money(b.total) + '</span></div>' +
             '</div>' +
-
             '<div style="padding:0 14px 20px;font-size:11.5px;color:var(--mt-text-3);line-height:1.6">' +
                 '满减规则：' + esc(shop.discounts.map(d => '满' + d.threshold + '减' + d.cut).join('，')) +
                 '，按最高档位计算，可与红包叠加。<br>' +
                 '本页为演示环境，提交后仅生成一条本地模拟订单，不产生真实交易。' +
             '</div>' +
-
             '<div class="submit-bar">' +
-                '<div class="sum">' +
-                    '<div class="amt">' + money(b.total) + '</div>' +
-                    '<div class="hint">' + ((b.discount + b.couponCut) ? '已优惠 ' + money(b.discount + b.couponCut) : '暂无优惠') + '</div>' +
-                '</div>' +
+                '<div class="sum"><div class="amt">' + money(b.total) + '</div>' +
+                    '<div class="hint">' + ((b.discount + b.couponCut) ? '已优惠 ' + money(b.discount + b.couponCut) : '暂无优惠') + '</div></div>' +
                 '<button type="button" class="btn-primary" data-action="submit-order">提交订单</button>' +
             '</div>' +
         '</div>';
     }
-
     function renderSuccess(orderId) {
         const order = state.orders.find(o => o.id === orderId);
         if (!order) return renderHome();
         const shop = SHOP_BY_ID.get(order.shopId);
         return '<div class="page">' +
             '<div class="subheader"><h1>下单成功</h1></div>' +
-            '<div class="card" style="text-align:center;padding:32px 20px">' +
-                '<div style="font-size:56px;margin-bottom:12px">🎉</div>' +
+            '<div class="card" style="text-align:center;padding:34px 20px">' +
+                '<div class="empty-art" style="background:var(--mt-yellow-soft)">' + icon('check') + '</div>' +
                 '<div style="font-size:19px;font-weight:700;margin-bottom:6px">订单已提交</div>' +
                 '<div style="color:var(--mt-text-3);font-size:13px">预计 ' + esc(order.eta) + ' 送达</div>' +
-                '<div style="margin-top:18px;padding-top:18px;border-top:1px solid var(--mt-line);font-size:13px;color:var(--mt-text-2);text-align:left">' +
+                '<div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--mt-line);font-size:13px;color:var(--mt-text-2);text-align:left">' +
                     '<div class="order-line"><span>订单号</span><span>' + esc(order.id) + '</span></div>' +
-                    '<div class="order-line"><span>商家</span><span>' + shop.emoji + ' ' + esc(shop.name) + '</span></div>' +
+                    '<div class="order-line"><span>商家</span><span>' + esc(shop.name) + '</span></div>' +
                     '<div class="order-line"><span>实付</span><span style="color:var(--mt-red);font-weight:700">' + money(order.total) + '</span></div>' +
                 '</div>' +
                 '<div style="display:flex;gap:10px;margin-top:24px">' +
-                    '<button type="button" class="btn-sm" style="flex:1;padding:11px" data-go="home">返回首页</button>' +
-                    '<button type="button" class="btn-sm solid" style="flex:1;padding:11px" data-go="order/' + order.id + '">查看订单</button>' +
+                    '<button type="button" class="btn-sm" style="flex:1;padding:12px" data-go="home">返回首页</button>' +
+                    '<button type="button" class="btn-sm solid" style="flex:1;padding:12px" data-go="order/' + order.id + '">查看订单</button>' +
                 '</div>' +
             '</div>' +
         '</div>';
     }
 
     /* ======================================================================
-     * 10. 订单页
+     * 11. 订单
      * ==================================================================== */
     const ORDER_FILTERS = [
-        { id: 'all',    name: '全部' },
-        { id: 'active', name: '进行中' },
-        { id: 'done',   name: '已完成' }
+        { id: 'all', name: '全部' }, { id: 'active', name: '进行中' }, { id: 'done', name: '已完成' }
     ];
-
     function filteredOrders() {
         if (state.orderFilter === 'active') return state.orders.filter(o => o.status < 3);
         if (state.orderFilter === 'done') return state.orders.filter(o => o.status >= 3);
         return state.orders.slice();
     }
-
     function orderCardHTML(order) {
         const shop = SHOP_BY_ID.get(order.shopId);
         const done = order.status >= 3;
@@ -1358,7 +1633,7 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         const first = order.items[0];
         return '<div class="order-card">' +
             '<div class="order-card-head">' +
-                '<span class="thumb" aria-hidden="true">' + shop.emoji + '</span>' +
+                artHTML(shop.art[0], shop.art[1], shop.art[2]) +
                 '<span class="nm">' + esc(shop.name) + '</span>' +
                 '<span class="st' + (done ? ' done' : '') + '">' + ORDER_FLOW[order.status] + '</span>' +
             '</div>' +
@@ -1376,7 +1651,6 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             '</div>' +
         '</div>';
     }
-
     function renderOrders() {
         const list = filteredOrders();
         return '<div class="page">' +
@@ -1385,45 +1659,36 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                 ORDER_FILTERS.map(f => '<button type="button" class="status-tab' + (state.orderFilter === f.id ? ' on' : '') + '"' +
                     ' data-action="filter-orders" data-filter="' + f.id + '">' + f.name + '</button>').join('') +
             '</div>' +
-            (list.length
-                ? list.map(orderCardHTML).join('')
-                : '<div class="empty"><div class="ico" aria-hidden="true">📋</div>' +
-                  '<div class="title">还没有订单</div><div class="sub">去首页点一份吧</div></div>') +
+            (list.length ? list.map(orderCardHTML).join('')
+                : emptyState('receipt', '还没有订单', '去首页点一份吧')) +
             tabbarHTML('orders') +
         '</div>';
     }
-
     function renderOrderDetail(orderId) {
         const order = state.orders.find(o => o.id === orderId);
         if (!order) {
             return '<div class="page"><div class="subheader">' +
-                '<button type="button" class="back" data-go="orders" aria-label="返回">←</button><h1>订单详情</h1></div>' +
-                '<div class="empty"><div class="ico" aria-hidden="true">😕</div><div class="title">订单不存在</div></div></div>';
+                '<button type="button" class="back" data-go="orders" aria-label="返回">' + icon('back') + '</button><h1>订单详情</h1></div>' +
+                emptyState('receipt', '订单不存在', '这条订单可能已被清除') + '</div>';
         }
         const shop = SHOP_BY_ID.get(order.shopId);
-
         const timeline = ORDER_FLOW.map((name, i) => {
             const cls = i < order.status ? 'done' : (i === order.status ? 'now' : '');
             return '<div class="tl-item ' + cls + '">' +
                 '<span class="tl-dot" aria-hidden="true"></span>' +
-                '<span class="tl-body">' +
-                    '<div class="tl-title">' + name + '</div>' +
-                    (i === order.status ? '<div class="tl-time">' + esc(order.eta || '') + '</div>' : '') +
-                '</span>' +
-            '</div>';
+                '<span class="tl-body"><div class="tl-title">' + name + '</div>' +
+                (i === order.status ? '<div class="tl-time">' + esc(order.eta || '') + '</div>' : '') +
+                '</span></div>';
         }).join('');
-
         return '<div class="page">' +
             '<div class="subheader">' +
-                '<button type="button" class="back" data-go="orders" aria-label="返回">←</button>' +
+                '<button type="button" class="back" data-go="orders" aria-label="返回">' + icon('back') + '</button>' +
                 '<h1>订单详情</h1>' +
             '</div>' +
-
             '<div class="card" style="padding:16px 14px"><div class="timeline">' + timeline + '</div></div>' +
-
             (order.status < 3
                 ? '<div class="rider">' +
-                    '<span class="av" aria-hidden="true">🛵</span>' +
+                    '<span class="av">' + icon('bike') + '</span>' +
                     '<span style="flex:1">' +
                         '<div class="nm">李师傅 <span style="font-weight:400;color:var(--mt-text-3);font-size:12px">美团骑手</span></div>' +
                         '<div class="sub">预计 ' + esc(order.eta || '30 分钟内') + ' 送达 · 已骑行 ' + esc(order.distance) + 'km</div>' +
@@ -1431,9 +1696,8 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                     '<button type="button" class="btn-sm" data-action="urge" data-id="' + order.id + '">催单</button>' +
                   '</div>'
                 : '') +
-
             '<div class="card">' +
-                '<div class="row"><span style="font-size:15px">' + shop.emoji + ' <b>' + esc(shop.name) + '</b></span></div>' +
+                '<div class="row"><span style="font-size:15px"><b>' + esc(shop.name) + '</b></span></div>' +
                 '<div class="order-items">' +
                     order.items.map(i => '<div class="oi"><span class="nm">' + esc(i.name) + '</span>' +
                         '<span class="qt">×' + i.qty + '</span>' +
@@ -1446,15 +1710,13 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                 (order.couponCut ? '<div class="bill-row cut"><span>红包抵扣</span><span class="amt">−' + money(order.couponCut) + '</span></div>' : '') +
                 '<div class="bill-row total"><span>实付</span><span class="amt">' + money(order.total) + '</span></div>' +
             '</div>' +
-
-            '<div class="card" style="padding:14px;font-size:13px;color:var(--mt-text-2)">' +
+            '<div class="card" style="padding:15px;font-size:13px;color:var(--mt-text-2)">' +
                 '<div class="order-line"><span>订单号</span><span>' + esc(order.id) + '</span></div>' +
                 '<div class="order-line"><span>下单时间</span><span>' + esc(order.createdAt) + '</span></div>' +
                 '<div class="order-line" style="align-items:flex-start"><span>配送地址</span>' +
                     '<span style="max-width:64%;text-align:right">' + esc(order.address || '') + '</span></div>' +
                 (order.remark ? '<div class="order-line"><span>备注</span><span style="max-width:64%;text-align:right">' + esc(order.remark) + '</span></div>' : '') +
             '</div>' +
-
             '<div style="display:flex;gap:10px;padding:6px 12px 24px">' +
                 '<button type="button" class="btn-sm" style="flex:1;padding:12px" data-go="orders">返回订单列表</button>' +
                 '<button type="button" class="btn-sm solid" style="flex:1;padding:12px" data-action="reorder" data-id="' + order.id + '">再来一单</button>' +
@@ -1463,20 +1725,17 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     }
 
     /* ======================================================================
-     * 11. 我的 / 地址
+     * 12. 我的 / 地址
      * ==================================================================== */
     function renderProfile() {
         const doneCount = state.orders.filter(o => o.status >= 3).length;
         const addr = currentAddress();
         return '<div class="page">' +
             '<div class="profile-hero"><div class="u">' +
-                '<span class="av" aria-hidden="true">🐨</span>' +
-                '<span>' +
-                    '<div class="nm">袋鼠用户</div>' +
-                    '<div class="sub">' + esc(addr ? addr.detail.slice(0, 16) + '…' : '未设置收货地址') + '</div>' +
-                '</span>' +
+                '<span class="av">' + icon('user') + '</span>' +
+                '<span><div class="nm">袋鼠用户</div>' +
+                '<div class="sub">' + esc(addr ? addr.detail.slice(0, 16) + '…' : '未设置收货地址') + '</div></span>' +
             '</div></div>' +
-
             '<div class="assets">' +
                 '<button type="button" class="asset" data-action="open-coupons">' +
                     '<div class="n">' + COUPONS.length + '<em>张</em></div><div class="l">红包</div></button>' +
@@ -1484,40 +1743,35 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                 '<button type="button" class="asset" data-go="orders">' +
                     '<div class="n">' + doneCount + '<em>单</em></div><div class="l">已完成</div></button>' +
             '</div>' +
-
             '<div class="card menu-list">' +
                 '<button type="button" class="menu-row" data-go="address">' +
-                    '<span class="mi" aria-hidden="true">📍</span><span class="mt">收货地址</span>' +
-                    '<span class="mv">' + state.addresses.length + ' 个</span><span class="caret">›</span></button>' +
+                    '<span class="mi">' + icon('pin') + '</span><span class="mt">收货地址</span>' +
+                    '<span class="mv">' + state.addresses.length + ' 个</span><span class="caret">' + icon('chev-r') + '</span></button>' +
                 '<button type="button" class="menu-row" data-action="open-coupons">' +
-                    '<span class="mi" aria-hidden="true">🧧</span><span class="mt">我的红包</span>' +
-                    '<span class="mv">' + COUPONS.length + ' 张可用</span><span class="caret">›</span></button>' +
+                    '<span class="mi">' + icon('gift') + '</span><span class="mt">我的红包</span>' +
+                    '<span class="mv">' + COUPONS.length + ' 张可用</span><span class="caret">' + icon('chev-r') + '</span></button>' +
                 '<button type="button" class="menu-row" data-go="orders">' +
-                    '<span class="mi" aria-hidden="true">📋</span><span class="mt">全部订单</span>' +
-                    '<span class="mv">' + state.orders.length + ' 单</span><span class="caret">›</span></button>' +
+                    '<span class="mi">' + icon('receipt') + '</span><span class="mt">全部订单</span>' +
+                    '<span class="mv">' + state.orders.length + ' 单</span><span class="caret">' + icon('chev-r') + '</span></button>' +
                 '<button type="button" class="menu-row" data-action="toggle-theme">' +
-                    '<span class="mi" aria-hidden="true">🌓</span><span class="mt">深色模式</span>' +
+                    '<span class="mi">' + icon('moon') + '</span><span class="mt">深色模式</span>' +
                     '<span class="switch' + (isDark() ? ' on' : '') + '" aria-hidden="true"></span></button>' +
                 '<button type="button" class="menu-row" data-action="reset-demo">' +
-                    '<span class="mi" aria-hidden="true">🧹</span><span class="mt">重置演示数据</span>' +
-                    '<span class="caret">›</span></button>' +
+                    '<span class="mi">' + icon('refresh') + '</span><span class="mt">重置演示数据</span>' +
+                    '<span class="caret">' + icon('chev-r') + '</span></button>' +
             '</div>' +
-
-            '<div style="text-align:center;padding:22px 0 8px;font-size:11.5px;color:var(--mt-text-3)">' +
-                '袋鼠外卖 · 美团风格演示项目<br>&copy; ' + new Date().getFullYear() + ' · 数据均为本地模拟' +
+            '<div style="text-align:center;padding:24px 0 8px;font-size:11.5px;color:var(--mt-text-3)">' +
+                '袋鼠外卖 · 美团风格演示项目<br>&copy; ' + new Date().getFullYear() + ' · 数据均为本地模拟 · 全站 SVG 绘制' +
             '</div>' +
-
             tabbarHTML('profile') +
         '</div>';
     }
-
     function renderAddress() {
         return '<div class="page" style="padding-bottom:40px">' +
             '<div class="subheader">' +
-                '<button type="button" class="back" data-go="profile" aria-label="返回">←</button>' +
+                '<button type="button" class="back" data-go="profile" aria-label="返回">' + icon('back') + '</button>' +
                 '<h1>收货地址</h1>' +
             '</div>' +
-
             (state.addresses.length
                 ? state.addresses.map(a =>
                     '<div class="addr-card">' +
@@ -1530,20 +1784,18 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                         '<div class="d">' + esc(a.detail) + '</div>' +
                         '<div class="f">' +
                             '<button type="button" data-action="set-default" data-id="' + a.id + '">' +
-                                (a.isDefault ? '✓ 默认地址' : '设为默认') + '</button>' +
+                                (a.isDefault ? '默认地址' : '设为默认') + '</button>' +
                             '<span class="sp"></span>' +
                             '<button type="button" class="del" data-action="del-address" data-id="' + a.id + '">删除</button>' +
                         '</div>' +
                     '</div>').join('')
-                : '<div class="empty"><div class="ico" aria-hidden="true">📍</div><div class="title">还没有收货地址</div></div>') +
-
+                : emptyState('pin', '还没有收货地址', '添加一个地址，外卖才能送到')) +
             '<div class="card">' +
                 '<div class="field"><label for="a-name">联系人</label><input id="a-name" type="text" placeholder="收货人姓名" maxlength="10"></div>' +
                 '<div class="field"><label for="a-phone">手机号</label><input id="a-phone" type="tel" placeholder="11 位手机号" maxlength="11"></div>' +
                 '<div class="field"><label for="a-detail">详细地址</label><input id="a-detail" type="text" placeholder="街道、门牌号、楼层" maxlength="50"></div>' +
                 '<div class="field"><label for="a-tag">标签</label>' +
-                    '<select id="a-tag"><option>家</option><option>公司</option><option>学校</option><option>其他</option></select>' +
-                '</div>' +
+                    '<select id="a-tag"><option>家</option><option>公司</option><option>学校</option><option>其他</option></select></div>' +
             '</div>' +
             '<div style="padding:0 14px 20px">' +
                 '<button type="button" class="btn-primary" style="width:100%" data-action="add-address">保存新地址</button>' +
@@ -1552,14 +1804,14 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     }
 
     /* ======================================================================
-     * 12. 主题
+     * 13. 主题
      * ==================================================================== */
     const isDark = () => document.body.classList.contains('dark');
     function applyTheme(dark) {
         document.body.classList.toggle('dark', dark);
         store('kd.dark', dark ? '1' : '0');
         const meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', dark ? '#1C1C1E' : '#FFD100');
+        if (meta) meta.setAttribute('content', dark ? '#1B1B1E' : '#FFD100');
     }
     function initTheme() {
         const saved = store('kd.dark');
@@ -1568,12 +1820,11 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     }
 
     /* ======================================================================
-     * 13. 渲染分发
+     * 14. 渲染分发
      * ==================================================================== */
     function renderApp() {
         const route = parseHash();
         let html;
-
         switch (route.path) {
             case 'search':   html = renderSearch(); break;
             case 'shop':     html = renderShop(route.args[0]); break;
@@ -1585,87 +1836,64 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             case 'address':  html = renderAddress(); break;
             default:         html = renderHome();
         }
-
         document.getElementById('app').innerHTML = html;
         window.scrollTo(0, 0);
-
         if (route.path === 'shop') afterRenderShop();
         if (route.path === 'checkout') {
             const remark = document.querySelector('[data-remark]');
-            if (remark) {
-                remark.addEventListener('input', e => { state.remark = e.target.value; });
-            }
+            if (remark) remark.addEventListener('input', e => { state.remark = e.target.value; });
         }
         if (route.path === 'search') {
             const input = document.getElementById('kw');
-            if (input) {
-                input.focus();
-                input.setSelectionRange(input.value.length, input.value.length);
-            }
+            if (input) { input.focus(); input.setSelectionRange(input.value.length, input.value.length); }
         }
     }
 
     /* ======================================================================
-     * 14. 业务动作
+     * 15. 业务动作
      * ==================================================================== */
     function submitOrder() {
         const shop = cartShop();
         const lines = cartLines();
         if (!shop || !lines.length) { toast('购物车是空的'); return; }
-
         const b = bill(shop, lines, state.couponId);
         const addr = state.addresses.find(a => a.id === state.addressId) || currentAddress();
         const now = new Date();
         const pad = n => String(n).padStart(2, '0');
         const eta = pad((now.getHours() + Math.floor((now.getMinutes() + shop.minutes) / 60)) % 24) +
                     ':' + pad((now.getMinutes() + shop.minutes) % 60);
-
         const order = {
             id: 'FD' + String(Date.now()).slice(-10),
-            shopId: shop.id,
-            status: 1,
+            shopId: shop.id, status: 1,
             createdAt: now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) +
                        ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes()),
-            eta: eta,
-            distance: (Math.random() * 3 + 0.8).toFixed(1),
-            address: addr ? addr.detail : '',
-            remark: state.remark,
+            eta: eta, distance: (Math.random() * 3 + 0.8).toFixed(1),
+            address: addr ? addr.detail : '', remark: state.remark,
             items: lines.map(l => ({ id: l.dish.id, name: l.dish.name, price: l.dish.price, qty: l.qty })),
             subtotal: b.subtotal, packing: b.packing, delivery: b.delivery,
             discount: b.discount, couponCut: b.couponCut, total: b.total, reviewed: false
         };
-
         state.orders.unshift(order);
         saveOrders();
-
         state.cart = { shopId: null, items: {} };
-        state.couponId = null;
-        state.remark = '';
-        state.timeSlot = TIME_SLOTS[0];
+        state.couponId = null; state.remark = ''; state.timeSlot = TIME_SLOTS[0];
         saveCart();
-
         go('success/' + order.id);
     }
-
     function reorder(orderId) {
         const order = state.orders.find(o => o.id === orderId);
         if (!order) return;
         const shop = SHOP_BY_ID.get(order.shopId);
         const items = {};
         let skipped = 0;
-        order.items.forEach(i => {
-            if (DISH_INDEX.has(i.id)) items[i.id] = i.qty;
-            else skipped++;
-        });
+        order.items.forEach(i => { if (DISH_INDEX.has(i.id)) items[i.id] = i.qty; else skipped++; });
         if (!Object.keys(items).length) { toast('该商家菜品已全部下架'); return; }
-
         state.cart = { shopId: shop.id, items: items };
         state.couponId = null;
         saveCart();
         toast(skipped ? skipped + ' 件商品已下架，其余已加入购物车' : '已加入购物车');
         go('shop/' + shop.id);
     }
-
     function doSearch() {
         const input = document.getElementById('kw');
         const kw = input ? input.value.trim() : '';
@@ -1676,8 +1904,6 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         }
         renderApp();
     }
-
-    /* ---- 选择面板 ---- */
     function showAddressSheet() {
         const body = state.addresses.map(a =>
             '<button type="button" class="row" data-pick-address="' + a.id + '">' +
@@ -1686,12 +1912,11 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                     ' <span style="font-weight:400;color:var(--mt-text-3);font-size:12.5px">' + esc(a.phone) + '</span></span>' +
                     '<div style="font-size:12.5px;color:var(--mt-text-2);margin-top:3px">' + esc(a.detail) + '</div>' +
                 '</span>' +
-                (a.id === state.addressId ? '<span style="color:var(--mt-yellow-deep);font-weight:700">✓</span>' : '') +
+                (a.id === state.addressId ? '<span style="color:var(--mt-yellow-deep)">' + icon('check') + '</span>' : '') +
             '</button>').join('') +
             '<div style="padding:12px 14px 18px">' +
                 '<button type="button" class="btn-sm" style="width:100%;padding:12px" data-pick-address="__manage">管理收货地址</button>' +
             '</div>';
-
         openSheet('选择收货地址', body, (ev, close) => {
             const btn = ev.target.closest('[data-pick-address]');
             if (!btn) return;
@@ -1702,12 +1927,11 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             renderApp();
         });
     }
-
     function showTimeSheet() {
         const body = TIME_SLOTS.map(s =>
             '<button type="button" class="row" data-pick-time="' + esc(s) + '">' +
                 '<span style="flex:1">' + esc(s) + '</span>' +
-                (s === state.timeSlot ? '<span style="color:var(--mt-yellow-deep);font-weight:700">✓</span>' : '') +
+                (s === state.timeSlot ? '<span style="color:var(--mt-yellow-deep)">' + icon('check') + '</span>' : '') +
             '</button>').join('');
         openSheet('选择送达时间', body, (ev, close) => {
             const btn = ev.target.closest('[data-pick-time]');
@@ -1717,7 +1941,6 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             renderApp();
         });
     }
-
     function showCouponSheet(selectedId) {
         const subtotal = cartSubtotal();
         const body = COUPONS.map(c => {
@@ -1732,7 +1955,6 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         }).join('') +
         (selectedId ? '<div style="padding:6px 14px 18px">' +
             '<button type="button" class="btn-sm" style="width:100%;padding:12px" data-pick-coupon="__none">不使用红包</button></div>' : '');
-
         openSheet(subtotal ? '红包（商品小计 ' + money(subtotal) + '）' : '我的红包', body, (ev, close) => {
             const btn = ev.target.closest('[data-pick-coupon]');
             if (!btn) return;
@@ -1745,107 +1967,92 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     }
 
     /* ======================================================================
-     * 15. 事件
+     * 16. 事件
      * ==================================================================== */
-    /* 每次点击时构造动作表，el 作为闭包参数绑定；
-       否则异步回调（如确认弹窗）执行时，共享变量已被后续点击覆盖 */
     function makeActions(el) {
         return {
-        'toggle-theme': () => { applyTheme(!isDark()); renderApp(); },
-        'pick-category': () => { state.category = el.dataset.cat; renderApp(); },
-        'pick-sort': () => { state.sort = el.dataset.sort; renderApp(); },
-        'open-notice': () => toast('暂无新消息'),
-        'open-coupons': () => showCouponSheet(null),
+            'toggle-theme': () => { applyTheme(!isDark()); renderApp(); },
+            'pick-category': () => { state.category = el.dataset.cat; renderApp(); },
+            'pick-sort': () => { state.sort = el.dataset.sort; renderApp(); },
+            'open-notice': () => toast('暂无新消息'),
+            'open-coupons': () => showCouponSheet(null),
 
-        'add-dish': () => addDish(Number(el.dataset.id)),
-        'minus-dish': () => minusDish(Number(el.dataset.id)),
-        'toggle-drawer': () => toggleDrawer(),
-        'close-drawer': () => toggleDrawer(false),
-        'clear-cart': () => {
-            if (!cartCount()) { toast('购物车已经是空的'); return; }
-            confirmDialog({ title: '清空购物车', message: '确定要清空购物车吗？', okText: '清空' })
-                .then(ok => { if (ok) { clearCart(); toast('已清空'); } });
-        },
-        'go-checkout': () => {
-            const shop = cartShop();
-            if (!shop) { toast('购物车是空的'); return; }
-            if (cartSubtotal() < shop.minPrice) {
-                toast('还差 ' + money(shop.minPrice - cartSubtotal()) + ' 起送');
-                return;
+            'add-dish': () => addDish(Number(el.dataset.id)),
+            'minus-dish': () => minusDish(Number(el.dataset.id)),
+            'toggle-drawer': () => toggleDrawer(),
+            'close-drawer': () => toggleDrawer(false),
+            'clear-cart': () => {
+                if (!cartCount()) { toast('购物车已经是空的'); return; }
+                confirmDialog({ title: '清空购物车', message: '确定要清空购物车吗？', okText: '清空' })
+                    .then(ok => { if (ok) { clearCart(); toast('已清空'); } });
+            },
+            'go-checkout': () => {
+                const shop = cartShop();
+                if (!shop) { toast('购物车是空的'); return; }
+                if (cartSubtotal() < shop.minPrice) { toast('还差 ' + money(shop.minPrice - cartSubtotal()) + ' 起送'); return; }
+                toggleDrawer(false);
+                go('checkout');
+            },
+
+            'choose-address': () => showAddressSheet(),
+            'choose-time': () => showTimeSheet(),
+            'choose-coupon': () => showCouponSheet(state.couponId),
+            'submit-order': () => submitOrder(),
+
+            'filter-orders': () => { state.orderFilter = el.dataset.filter; renderApp(); },
+            'reorder': () => reorder(el.dataset.id),
+            'urge': () => toast('已提醒商家，请耐心等待'),
+
+            'set-default': () => {
+                state.addresses.forEach(a => { a.isDefault = a.id === el.dataset.id; });
+                saveAddresses(); toast('已设为默认地址'); renderApp();
+            },
+            'del-address': () => {
+                const id = el.dataset.id;
+                confirmDialog({ title: '删除地址', message: '确定删除这条收货地址吗？', okText: '删除' }).then(ok => {
+                    if (!ok) return;
+                    state.addresses = state.addresses.filter(a => a.id !== id);
+                    if (state.addresses.length && !state.addresses.some(a => a.isDefault)) state.addresses[0].isDefault = true;
+                    saveAddresses(); toast('已删除'); renderApp();
+                });
+            },
+            'add-address': () => {
+                const name = (document.getElementById('a-name') || {}).value || '';
+                const phone = (document.getElementById('a-phone') || {}).value || '';
+                const detail = (document.getElementById('a-detail') || {}).value || '';
+                const tag = (document.getElementById('a-tag') || {}).value || '家';
+                if (!name.trim()) { toast('请填写联系人'); return; }
+                if (!/^1\d{10}$/.test(phone.trim())) { toast('手机号格式不正确'); return; }
+                if (detail.trim().length < 5) { toast('详细地址太短了'); return; }
+                state.addresses.push({
+                    id: 'a' + Date.now(), name: name.trim(),
+                    phone: phone.trim().slice(0, 3) + '****' + phone.trim().slice(-4),
+                    tag: tag, detail: detail.trim(), isDefault: false
+                });
+                saveAddresses(); toast('地址已保存'); renderApp();
+            },
+
+            'use-word': () => {
+                state.searchKeyword = el.dataset.word;
+                state.searchHistory = [el.dataset.word].concat(state.searchHistory.filter(w => w !== el.dataset.word)).slice(0, 10);
+                saveHistory(); renderApp();
+            },
+            'clear-kw': () => { state.searchKeyword = ''; renderApp(); },
+            'do-search': () => doSearch(),
+            'clear-history': () => { state.searchHistory = []; saveHistory(); renderApp(); },
+
+            'reset-demo': () => {
+                confirmDialog({ title: '重置演示数据', message: '将清空购物车、订单、地址与偏好，恢复初始状态。', okText: '重置' }).then(ok => {
+                    if (!ok) return;
+                    ['kd.cart', 'kd.orders', 'kd.addresses', 'kd.searchHistory'].forEach(k => store(k, null));
+                    state.cart = { shopId: null, items: {} };
+                    state.orders = SEED_ORDERS.slice();
+                    state.addresses = DEFAULT_ADDRESSES.slice();
+                    state.searchHistory = []; state.searchKeyword = '';
+                    state.couponId = null; state.addressId = 'a1';
+                    toast('已重置'); go('home'); renderApp();
+                });
             }
-            toggleDrawer(false);
-            go('checkout');
-        },
-
-        'choose-address': () => showAddressSheet(),
-        'choose-time': () => showTimeSheet(),
-        'choose-coupon': () => showCouponSheet(state.couponId),
-        'submit-order': () => submitOrder(),
-
-        'filter-orders': () => { state.orderFilter = el.dataset.filter; renderApp(); },
-        'reorder': () => reorder(el.dataset.id),
-        'urge': () => toast('已提醒商家，请耐心等待'),
-
-        'set-default': () => {
-            state.addresses.forEach(a => { a.isDefault = a.id === el.dataset.id; });
-            saveAddresses();
-            toast('已设为默认地址');
-            renderApp();
-        },
-        'del-address': () => {
-            confirmDialog({ title: '删除地址', message: '确定删除这条收货地址吗？', okText: '删除' }).then(ok => {
-                if (!ok) return;
-                state.addresses = state.addresses.filter(a => a.id !== el.dataset.id);
-                if (state.addresses.length && !state.addresses.some(a => a.isDefault)) state.addresses[0].isDefault = true;
-                saveAddresses();
-                toast('已删除');
-                renderApp();
-            });
-        },
-        'add-address': () => {
-            const name = (document.getElementById('a-name') || {}).value || '';
-            const phone = (document.getElementById('a-phone') || {}).value || '';
-            const detail = (document.getElementById('a-detail') || {}).value || '';
-            const tag = (document.getElementById('a-tag') || {}).value || '家';
-            if (!name.trim()) { toast('请填写联系人'); return; }
-            if (!/^1\d{10}$/.test(phone.trim())) { toast('手机号格式不正确'); return; }
-            if (detail.trim().length < 5) { toast('详细地址太短了'); return; }
-            state.addresses.push({
-                id: 'a' + Date.now(), name: name.trim(),
-                phone: phone.trim().slice(0, 3) + '****' + phone.trim().slice(-4),
-                tag: tag, detail: detail.trim(), isDefault: false
-            });
-            saveAddresses();
-            toast('地址已保存');
-            renderApp();
-        },
-
-        'use-word': () => {
-            state.searchKeyword = el.dataset.word;
-            state.searchHistory = [el.dataset.word].concat(state.searchHistory.filter(w => w !== el.dataset.word)).slice(0, 10);
-            saveHistory();
-            renderApp();
-        },
-        'clear-kw': () => { state.searchKeyword = ''; renderApp(); },
-        'do-search': () => doSearch(),
-        'clear-history': () => { state.searchHistory = []; saveHistory(); renderApp(); },
-
-        'reset-demo': () => {
-            confirmDialog({ title: '重置演示数据', message: '将清空购物车、订单、地址与偏好，恢复初始状态。', okText: '重置' }).then(ok => {
-                if (!ok) return;
-                ['kd.cart', 'kd.orders', 'kd.addresses', 'kd.searchHistory'].forEach(k => store(k, null));
-                state.cart = { shopId: null, items: {} };
-                state.orders = SEED_ORDERS.slice();
-                state.addresses = DEFAULT_ADDRESSES.slice();
-                state.searchHistory = [];
-                state.searchKeyword = '';
-                state.couponId = null;
-                state.addressId = 'a1';
-                toast('已重置');
-                go('home');
-                renderApp();
-            });
-        }
         };
     }
 
@@ -1858,10 +2065,9 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             if (curPath === target) renderApp(); else go(target);
             return;
         }
-
-        const actionEl = e.target.closest('[data-action]');
-        if (!actionEl) return;
-        const handler = makeActions(actionEl)[actionEl.dataset.action];
+        const el = e.target.closest('[data-action]');
+        if (!el) return;
+        const handler = makeActions(el)[el.dataset.action];
         if (handler) handler();
     });
 
@@ -1880,27 +2086,20 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     });
 
     /* ======================================================================
-     * 16. 启动
+     * 17. 启动
      * ==================================================================== */
     initTheme();
     loadState();
-
     window.addEventListener('hashchange', renderApp);
     if (!location.hash) location.hash = '#/home';
     renderApp();
 
-    // 供自动化测试使用的最小接口
     window.__app = {
-        state: state,
-        go: go,
-        renderApp: renderApp,
-        bill: bill,
-        cartCount: cartCount,
-        cartSubtotal: cartSubtotal,
-        shops: SHOPS,
-        coupons: COUPONS,
-        shopById: id => SHOP_BY_ID.get(Number(id)),
-        parseHash: parseHash
+        state: state, go: go, renderApp: renderApp, bill: bill,
+        cartCount: cartCount, cartSubtotal: cartSubtotal,
+        shops: SHOPS, coupons: COUPONS,
+        shopById: id => SHOP_BY_ID.get(Number(id)), parseHash: parseHash,
+        art: artHTML, icon: icon
     };
 })();
 </script>

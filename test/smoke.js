@@ -354,7 +354,7 @@ $('[data-action="toggle-theme"]').click();
 await tick();
 ok('切换深色模式生效', document.body.classList.contains('dark'));
 ok('深色模式已持久化', window.localStorage.getItem('kd.dark') === '1');
-ok('theme-color meta 已同步', $('meta[name="theme-color"]').getAttribute('content') === '#1C1C1E',
+ok('theme-color meta 已同步为深色值', $('meta[name="theme-color"]').getAttribute('content') === '#1B1B1E',
     $('meta[name="theme-color"]').getAttribute('content'));
 $('[data-action="toggle-theme"]').click();
 await tick();
@@ -381,6 +381,51 @@ ok('使用 hash 路由（支持浏览器后退）', html.indexOf("addEventListen
 ok('实现单店下单约束', html.indexOf('更换商家') !== -1);
 ok('使用美团黄作为主色令牌', html.indexOf('--mt-yellow: #FFD100') !== -1);
 ok('未残留旧版购物车 key', html.indexOf("'foodapp.cart'") === -1);
+
+// ============================================================
+// 14. 视觉实现（全 SVG / 无 emoji / 双击放大修复）
+// ============================================================
+// 注意范围只取真正的 emoji 区段，避免误伤普通标点（如 U+2212 负号）
+const EMOJI_RE = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{1F1E6}-\u{1F1FF}]/u;
+const markupOnly2 = html.replace(/<script>[\s\S]*?<\/script>/g, '');
+ok('页面标记无 emoji（已全部替换为 SVG）', !EMOJI_RE.test(markupOnly2),
+    (markupOnly2.match(EMOJI_RE) || []).join(' '));
+ok('渲染 DOM 中无 emoji 文本', !EMOJI_RE.test(document.body.textContent),
+    (document.body.textContent.match(EMOJI_RE) || []).join(' '));
+ok('存在 SVG 图标雪碧图', document.querySelector('symbol[id^="i-"]') !== null &&
+    document.querySelectorAll('symbol').length >= 30, 'symbol ' + document.querySelectorAll('symbol').length + ' 个');
+ok('图标通过 <use> 引用', $$('use').length >= 10, 'use ' + $$('use').length + ' 处');
+
+// 进入商家页检查菜品插画
+window.location.hash = '#/shop/1';
+await tick();
+ok('食物插画全部为内联 SVG', $$('.art-wrap').length >= 9 && $$('.art').length >= 9,
+    'art 容器 ' + $$('.art-wrap').length + ' 个 / svg ' + $$('.art').length + ' 个');
+ok('每个商家卡片都配了插画', $$('.shop-card .art-wrap').length === $$('.shop-card').length,
+    $$('.shop-card .art-wrap').length + '/' + $$('.shop-card').length);
+ok('每个菜品都配了插画', $$('.dish .art-wrap').length === $$('.dish').length && $$('.dish').length >= 8,
+    $$('.dish .art-wrap').length + '/' + $$('.dish').length);
+const dishColors = new Set($$('.dish .art-wrap').map(a => a.style.getPropertyValue('--ac')));
+ok('同店菜品插画配色也各不相同', dishColors.size >= 6, '去重后 ' + dishColors.size + ' 色');
+window.location.hash = '#/home';
+await tick();
+ok('首页商家卡片插画齐全', $$('.shop-card .art-wrap').length === $$('.shop-card').length,
+    $$('.shop-card .art-wrap').length + '/' + $$('.shop-card').length);
+ok('金刚区图标使用彩色描边', $$('.kk-item .kk-ico .ic').length === $$('.kk-item').length);
+ok('底部 Tab 用 SVG 图标', $$('.tab .ico .ic').length === $$('.tab').length);
+
+// 双击放大修复：只看真正的 viewport meta，避免被注释文字干扰
+const vpMeta = ($('meta[name="viewport"]') || {}).content || '';
+ok('声明了 touch-action: manipulation（禁双击缩放）', html.indexOf('touch-action: manipulation') !== -1);
+ok('交互元素禁用文字选中（防双击选字）', html.indexOf('user-select: none') !== -1);
+ok('viewport 未设置 user-scalable=no', !/user-scalable\s*=\s*no/i.test(vpMeta), vpMeta);
+ok('viewport 未设置 maximum-scale 限制', !/maximum-scale/i.test(vpMeta), vpMeta);
+ok('可交互元素 touch-action 覆盖 button', (() => {
+    const css = html.match(/html, body, \.app, button[\s\S]{0,200}?touch-action: manipulation/);
+    return css !== null;
+})());
+ok('双击卡片不会触发文字选中',
+    (() => { const s = window.getComputedStyle($('.shop-card')); return s.userSelect === 'none' || s.webkitUserSelect === 'none'; })());
 
 console.log(results.join('\n'));
 console.log('\n' + (failed === 0 ? '✅ 全部 ' + results.length + ' 项通过' : '❌ ' + failed + ' / ' + results.length + ' 项失败'));
