@@ -229,6 +229,10 @@ body.dark .tab.on { color: var(--mt-yellow); }
 
 /* ============================ 搜索页 ============================ */
 .search-head { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--mt-yellow-grad); position: sticky; top: 0; z-index: 60; }
+.suggest { position: absolute; top: calc(100% + 6px); left: 14px; right: 14px; background: var(--mt-surface); border-radius: 12px; box-shadow: var(--mt-shadow); overflow: hidden; z-index: 70; }
+.sug-item { display: flex; align-items: center; gap: 9px; width: 100%; padding: 11px 14px; text-align: left; font-size: 13.5px; border-bottom: 1px solid var(--mt-line); }
+.sug-item:last-child { border-bottom: none; }
+.sug-item .ic { width: 15px; height: 15px; color: var(--mt-text-3); flex-shrink: 0; }
 .search-head .icon-btn { background: rgba(255, 255, 255, .4); }
 .search-field { flex: 1; display: flex; align-items: center; gap: 7px; background: #fff; border-radius: 999px; padding: 9px 13px; }
 .search-field .ic { width: 17px; height: 17px; color: var(--mt-text-3); flex-shrink: 0; }
@@ -483,6 +487,61 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
 .coupon.used { opacity: .45; }
 .coupon.picked { border-color: var(--mt-yellow-deep); box-shadow: 0 0 0 1.5px var(--mt-yellow-deep); }
 
+/* ============================ 收藏 / 规格弹层 / 评价 ============================ */
+.fav-btn { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; color: var(--mt-text-3); flex-shrink: 0; }
+.fav-btn .ic { width: 19px; height: 19px; }
+.fav-btn.on { color: var(--mt-red); }
+.fav-btn.on .ic { fill: var(--mt-red); }
+
+.shop-tabs { display: flex; background: var(--mt-surface); border-bottom: 1px solid var(--mt-line); flex-shrink: 0; }
+.shop-tab { flex: 1; padding: 12px 0; font-size: 14px; color: var(--mt-text-2); text-align: center; position: relative; }
+.shop-tab.on { color: var(--mt-black); font-weight: 700; }
+.shop-tab.on::after { content: ''; position: absolute; left: 50%; transform: translateX(-50%); bottom: 0; width: 22px; height: 3px; border-radius: 3px; background: var(--mt-yellow-deep); }
+.shop-tab .cnt { font-size: 11px; color: var(--mt-text-3); margin-left: 3px; }
+
+.spec-sheet .sheet-body { padding: 4px 16px 16px; }
+.spec-group { margin-bottom: 16px; }
+.spec-group .gname { font-size: 12.5px; color: var(--mt-text-3); margin-bottom: 8px; }
+.spec-opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.spec-opt { padding: 8px 14px; border-radius: 9px; font-size: 13px; background: var(--mt-surface-2); color: var(--mt-text-2); border: 1px solid transparent; }
+.spec-opt .delta { font-size: 11px; color: var(--mt-text-3); margin-left: 3px; }
+.spec-opt.on { background: var(--mt-yellow-soft); border-color: var(--mt-yellow-deep); color: var(--mt-black); font-weight: 600; }
+body.dark .spec-opt.on { background: #3D3600; border-color: var(--mt-yellow); color: var(--mt-yellow); }
+.spec-foot { display: flex; align-items: center; gap: 12px; padding: 12px 16px calc(12px + var(--safe-b)); border-top: 1px solid var(--mt-line); }
+.spec-foot .price { flex: 1; }
+
+.review-item { padding: 14px; border-bottom: 1px solid var(--mt-line); }
+.review-item:last-child { border-bottom: none; }
+.review-head { display: flex; align-items: center; gap: 9px; margin-bottom: 6px; }
+.review-av { width: 32px; height: 32px; border-radius: 50%; background: var(--mt-surface-2); color: var(--mt-text-2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.review-av .ic { width: 17px; height: 17px; }
+.review-user { font-size: 13px; font-weight: 600; }
+.review-date { font-size: 11px; color: var(--mt-text-3); margin-top: 1px; }
+.review-stars { display: flex; gap: 1px; margin-left: auto; }
+.review-stars .ic { width: 13px; height: 13px; color: var(--mt-orange); }
+.review-stars .ic.off { color: var(--mt-line); }
+.review-text { font-size: 13px; color: var(--mt-text-2); line-height: 1.55; }
+.review-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 7px; }
+
+.star-row { display: flex; gap: 6px; justify-content: center; padding: 6px 0 14px; }
+.star-row button { display: flex; }
+.star-row .ic { width: 30px; height: 30px; color: var(--mt-line); }
+.star-row .ic.on { color: var(--mt-orange); }
+.tag-pick { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 14px; }
+
+.msg-item { display: flex; gap: 12px; padding: 15px 14px; border-bottom: 1px solid var(--mt-line); }
+.msg-item .mi { width: 38px; height: 38px; border-radius: 11px; background: var(--mt-yellow-bg); color: var(--mt-yellow-deep); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+body.dark .msg-item .mi { background: #332C00; color: var(--mt-yellow); }
+.msg-item .mt { flex: 1; min-width: 0; }
+.msg-item .mtitle { font-size: 14px; font-weight: 600; }
+.msg-item .mdesc { font-size: 12.5px; color: var(--mt-text-2); margin-top: 2px; line-height: 1.5; }
+.msg-item .mtime { font-size: 11px; color: var(--mt-text-3); flex-shrink: 0; }
+
+.balance-row { display: flex; align-items: center; gap: 10px; padding: 15px 14px; border-bottom: 1px solid var(--mt-line); }
+.balance-row .k { color: var(--mt-text-2); font-size: 13.5px; flex-shrink: 0; }
+.balance-row .v { flex: 1; text-align: right; font-size: 13px; color: var(--mt-text-3); }
+.balance-row .v em { font-style: normal; color: var(--mt-red); font-weight: 700; }
+
 @media (min-width: 481px) {
     .tabbar, .submit-bar { box-shadow: 0 0 0 1px var(--mt-line), 0 0 40px rgba(0, 0, 0, .05); }
 }
@@ -521,6 +580,9 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
 <symbol id="i-leaf" viewBox="0 0 24 24" data-page-node-id="9bHayrqKrYgMtvsGWzhLvv"><path d="M20.4 4.4c0 9.4-5.6 14.6-12.4 14.6H4.8c0-8.4 5-14.6 15.6-14.6z" data-page-node-id="mvTt8orVlLtmElk274Yh4a"/><path d="M4.8 19c3-6.2 7-10.4 13-12.6" data-page-node-id="AjSq8bfUhmNstvJOCaqnic"/></symbol>
 <symbol id="i-redpacket" viewBox="0 0 24 24" data-page-node-id="q9yq5ybmAGKTw21PIcARsm"><rect x="4" y="3.6" width="16" height="16.8" rx="2.6" data-page-node-id="G7dJITu611GeUf7r4f4Occ"/><path d="M8 4.4c1.2 3.6 2.4 5.2 4 5.2s2.8-1.6 4-5.2" data-page-node-id="YlFucySREJQSFWyhhGIPeI"/><circle cx="12" cy="13.4" r="2.8" data-page-node-id="9vnVXE3OXVvD0AWarzL2zt"/></symbol>
 <symbol id="i-trophy" viewBox="0 0 24 24" data-page-node-id="CoCFeEfpu81lmbA5E7bNSP"><path d="M7 3.8h10v5.4a5 5 0 0 1-10 0z" data-page-node-id="D2v6AC2w2UhNOFOdhudozd"/><path d="M7 6H4.4v1.8A3.6 3.6 0 0 0 7 11.4M17 6h2.6v1.8A3.6 3.6 0 0 1 17 11.4" data-page-node-id="AreDokPGIgADAqFjFAykJc"/><path d="M12 14.2v3.6M8.4 20.2h7.2" data-page-node-id="rPVX3RJrlWN7aEDCLUi4Gn"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.6S3.6 15.4 3.6 9.4a4.6 4.6 0 0 1 8.4-2.6A4.6 4.6 0 0 1 20.4 9.4c0 6-8.4 11.2-8.4 11.2z"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3.2 7.4A2.4 2.4 0 0 1 5.6 5H19v14H5.6a2.4 2.4 0 0 1-2.4-2.4z"/><path d="M15.8 12h3.4"/></symbol>
+<symbol id="i-msg" viewBox="0 0 24 24"><path d="M4 5.4h16v11H9.6L5.4 20v-3.6H4z"/><path d="M8.4 9.4h7.2M8.4 12.6h4.6"/></symbol>
 </defs></svg>
 
 <div class="app" id="app" data-page-node-id="viRwT6b6T8W1PvEJrJvwly"></div>
@@ -1049,6 +1111,52 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     const SHOP_BY_ID = new Map(SHOPS.map(s => [s.id, s]));
     const COUPON_BY_ID = new Map(COUPONS.map(c => [c.id, c]));
 
+    /* ---------- 菜品规格 ---------- */
+    const SPEC = {
+        size:   { name: '规格', opts: [['标准', 0], ['大份', 6], ['双人份', 14]] },
+        spicy:  { name: '辣度', opts: [['微辣', 0], ['中辣', 0], ['特辣', 0]] },
+        extra:  { name: '加料', opts: [['不加料', 0], ['加丸子', 4], ['加肥牛', 9], ['加宽粉', 3]] },
+        temp:   { name: '温度', opts: [['正常冰', 0], ['少冰', 0], ['常温', 0]] },
+        sugar:  { name: '甜度', opts: [['标准糖', 0], ['七分甜', 0], ['三分甜', 0]] },
+        pack:   { name: '套餐', opts: [['单点', 0], ['配薯条', 6], ['配鸡翅', 9]] }
+    };
+    const SPEC_BY_DISH = {
+        101: ['size', 'extra', 'spicy'], 103: ['size', 'spicy'],
+        201: ['size', 'extra'],          301: ['pack'],   302: ['spicy'],
+        401: ['size', 'spicy'],          403: ['spicy'],  501: ['size'],
+        502: ['spicy'],                  602: ['size'],   604: ['sugar', 'temp'],
+        801: ['temp']
+    };
+    const specsOf = id => (SPEC_BY_DISH[id] || []).map(k => SPEC[k]);
+    function specUnitPrice(dish, picks) {
+        return dish.price + specsOf(dish.id).reduce((s, g, i) => {
+            const o = g.opts.find(o => o[0] === picks[i]);
+            return s + (o ? o[1] : 0);
+        }, 0);
+    }
+    const lineKey = (dishId, picks) => dishId + '|' + (picks || []).join('>');
+
+    /* ---------- 商家种子评价 ---------- */
+    const SEED_REVIEWS = {
+        1: [{ user: '无辣不欢', rating: 5, tags: ['味道好', '分量足'], text: '麻辣烫很入味，汤底够香，丸子也新鲜。', date: '2026-10-08' },
+            { user: '挑食星人', rating: 4, tags: ['送得快'], text: '三十分钟就到了，微微辣刚好。', date: '2026-10-05' }],
+        2: [{ user: '寿司控', rating: 5, tags: ['食材新鲜', '包装好'], text: '三文鱼很肥，刺身没有化冻。', date: '2026-10-07' }],
+        3: [{ user: '打工人', rating: 4, tags: ['性价比高'], text: '汉堡料足，薯条到的时候还是脆的。', date: '2026-10-06' }],
+        4: [{ user: '面食党', rating: 5, tags: ['味道好'], text: '牛肉给得实在，汤头浓郁。', date: '2026-10-04' }],
+        5: [{ user: '肉食动物', rating: 5, tags: ['分量足', '味道好'], text: '烤肉焦香到位，配菜也够。', date: '2026-10-09' }],
+        6: [{ user: '甜品脑袋', rating: 5, tags: ['包装好', '味道好'], text: '千层没有压塌，甜度刚好。', date: '2026-10-10' }],
+        7: [{ user: '果粉', rating: 4, tags: ['新鲜'], text: '葡萄很甜，坏果包赔让人放心。', date: '2026-10-03' }],
+        8: [{ user: '夜猫子', rating: 5, tags: ['送得快'], text: '凌晨一点下单半小时到，救急。', date: '2026-10-09' }]
+    };
+    const REVIEW_TAGS = ['味道好', '分量足', '送得快', '包装好', '性价比高', '食材新鲜'];
+    const MESSAGES = [
+        { ic: 'gift',    t: '您有 3 张红包即将过期', d: '满 50 减 12 等红包 11-30 前有效，别忘了用。', time: '10 分钟前' },
+        { ic: 'bike',    t: '骑手已取货', d: '订单 FD2609810377 正在配送，李师傅距您 1.2km。', time: '2 小时前' },
+        { ic: 'star',    t: '订单已送达', d: '给本次用餐打个分吧，评价能帮助其他用户。', time: '昨天' },
+        { ic: 'ticket',  t: '领券中心上新', d: '本周新增「满 100 减 30」，数量有限先到先得。', time: '2 天前' },
+        { ic: 'fire',    t: '限时秒杀开始', d: '麻辣烫天堂、甜品工房参与今晚 18 点档。', time: '3 天前' }
+    ];
+
     /* ======================================================================
      * 3. 通用工具
      * ==================================================================== */
@@ -1121,6 +1229,83 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     function syncLock() {
         document.body.classList.toggle('locked', document.querySelector('.mask, .sheet-mask') !== null);
     }
+    function closeTopSheet() {
+        const layer = document.querySelector('.sheet-mask, .mask');
+        if (layer) layer.remove();
+        syncLock();
+    }
+
+    /* ---------- 评价面板 ---------- */
+    function openReviewSheet(orderId) {
+        const order = state.orders.find(o => o.id === orderId);
+        if (!order) return;
+        const shop = SHOP_BY_ID.get(order.shopId);
+        state.reviewDraft = { rating: 5, tags: [] };
+
+        const body =
+            '<div style="padding:14px 16px 0;font-size:13px;color:var(--mt-text-2);text-align:center">' +
+                esc(shop.name) + ' · ' + esc(order.items[0].name) +
+                (order.items.length > 1 ? ' 等 ' + order.items.length + ' 件商品' : '') +
+            '</div>' +
+            '<div class="star-row">' + [1, 2, 3, 4, 5].map(n =>
+                '<button type="button" data-review-star="' + n + '" aria-label="' + n + ' 星">' +
+                icon('star', 'fill on') + '</button>').join('') + '</div>' +
+            '<div class="tag-pick">' + REVIEW_TAGS.map(t =>
+                '<button type="button" class="chip" data-review-tag="' + esc(t) + '">' + esc(t) + '</button>').join('') +
+            '</div>' +
+            '<div style="padding:0 16px 16px">' +
+                '<textarea id="reviewText" rows="3" maxlength="120" placeholder="说说菜品口味、配送体验…" ' +
+                'style="width:100%;border:1px solid var(--mt-border);border-radius:11px;padding:11px;font:inherit;resize:none;background:var(--mt-surface-2);color:var(--mt-text);outline:none"></textarea>' +
+            '</div>';
+
+        const layer = document.createElement('div');
+        layer.className = 'sheet-mask';
+        layer.innerHTML =
+            '<div class="sheet" role="dialog" aria-modal="true">' +
+                '<div class="sheet-head">评价订单' +
+                    '<button type="button" class="close" data-sheet="close" aria-label="关闭">' + icon('close') + '</button></div>' +
+                '<div class="sheet-body">' + body + '</div>' +
+                '<div style="padding:0 16px calc(16px + var(--safe-b))">' +
+                    '<button type="button" class="btn-primary" style="width:100%" data-review-submit data-id="' + order.id + '">发布评价</button>' +
+                '</div>' +
+            '</div>';
+        layer.addEventListener('click', e => {
+            if (e.target.closest('[data-sheet="close"]') || e.target === layer) { layer.remove(); syncLock(); return; }
+            // 注意：评价面板的控件不用 data-action，避免被全局委托重复执行
+            const star = e.target.closest('[data-review-star]');
+            if (star) {
+                state.reviewDraft.rating = Number(star.dataset.reviewStar);
+                layer.querySelectorAll('.star-row .ic').forEach((s, i) => {
+                    s.classList.toggle('on', i < state.reviewDraft.rating);
+                });
+                return;
+            }
+            const tag = e.target.closest('[data-review-tag]');
+            if (tag) {
+                const t = tag.dataset.reviewTag;
+                const i = state.reviewDraft.tags.indexOf(t);
+                if (i === -1) state.reviewDraft.tags.push(t); else state.reviewDraft.tags.splice(i, 1);
+                tag.classList.toggle('on', i === -1);
+                return;
+            }
+            const submit = e.target.closest('[data-review-submit]');
+            if (submit) {
+                const id = submit.dataset.id;
+                const o = state.orders.find(x => x.id === id);
+                if (!o) return;
+                if (!state.reviewDraft.rating) { toast('先打个分吧'); return; }
+                const text = (document.getElementById('reviewText') || {}).value || '';
+                o.review = { rating: state.reviewDraft.rating, tags: state.reviewDraft.tags.slice(), text: text.trim() };
+                o.reviewed = true;
+                saveOrders();
+                layer.remove(); syncLock();
+                toast('感谢你的评价');
+                go('order/' + id);
+            }
+        });
+        $('#layerRoot').appendChild(layer);
+        syncLock();
+    }
 
     /* 照片加载失败时移除 <img>，露出下层 SVG 插画（error 事件不冒泡，需捕获阶段） */
     document.addEventListener('error', e => {
@@ -1136,23 +1321,35 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
      * 4. 状态与持久化
      * ==================================================================== */
     const state = {
-        cart: { shopId: null, items: {} },
+        cart: { shopId: null, lines: [] },   // 行项目模型：{ key, dishId, picks, qty, unit }
         addresses: [], orders: [],
+        ownedCoupons: ['c1', 'c2'],          // 已领取的红包
+        favorites: [],                       // 收藏的商家
+        balance: 128, useBalance: true,
         couponId: null, addressId: null,
         timeSlot: TIME_SLOTS[0], remark: '',
         searchHistory: [], searchKeyword: '',
-        category: 'all', sort: 'recommend', orderFilter: 'all'
+        category: 'all', sort: 'recommend',
+        orderFilter: 'all', shopTab: 'menu',
+        reviewDraft: { rating: 0, tags: [] }
     };
 
     function loadState() {
         const raw = readJSON('kd.cart', null);
-        if (raw && typeof raw === 'object') {
-            const items = {};
-            Object.keys(raw.items || {}).forEach(k => {
-                const id = Number(k), qty = Math.floor(Number(raw.items[k]));
-                if (DISH_INDEX.has(id) && qty > 0) items[id] = qty;
+        if (raw && typeof raw === 'object' && Array.isArray(raw.lines)) {
+            const lines = [];
+            raw.lines.forEach(l => {
+                const dishId = Number(l.dishId), qty = Math.floor(Number(l.qty));
+                const entry = DISH_INDEX.get(dishId);
+                if (!entry || qty <= 0) return;
+                const picks = Array.isArray(l.picks) ? l.picks.filter(p => typeof p === 'string') : [];
+                lines.push({
+                    key: lineKey(dishId, picks), dishId: dishId, picks: picks,
+                    qty: qty, unit: specUnitPrice(entry.dish, picks)
+                });
             });
-            state.cart = { shopId: Object.keys(items).length ? raw.shopId : null, items: items };
+            const sid = SHOP_BY_ID.has(raw.shopId) ? raw.shopId : null;
+            state.cart = { shopId: lines.length ? sid : null, lines: lines };
         }
         const addrs = readJSON('kd.addresses', null);
         state.addresses = (Array.isArray(addrs) && addrs.length) ? addrs : DEFAULT_ADDRESSES.slice();
@@ -1161,25 +1358,31 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         state.orders = (Array.isArray(orders) && orders.length) ? orders : SEED_ORDERS.slice();
         const hist = readJSON('kd.searchHistory', null);
         state.searchHistory = Array.isArray(hist) ? hist.slice(0, 10) : [];
+        const favs = readJSON('kd.favs', null);
+        state.favorites = Array.isArray(favs) ? favs.filter(id => SHOP_BY_ID.has(id)) : [];
+        const owned = readJSON('kd.coupons', null);
+        state.ownedCoupons = Array.isArray(owned) && owned.length
+            ? owned.filter(id => COUPON_BY_ID.has(id)) : ['c1', 'c2'];
+        const balRaw = readJSON('kd.balance', null);
+        const bal = balRaw == null ? NaN : Number(balRaw);
+        state.balance = isNaN(bal) ? 128 : bal;
         state.addressId = (state.addresses.find(a => a.isDefault) || state.addresses[0]).id;
     }
     const saveCart = () => store('kd.cart', JSON.stringify(state.cart));
     const saveAddresses = () => store('kd.addresses', JSON.stringify(state.addresses));
     const saveOrders = () => store('kd.orders', JSON.stringify(state.orders));
     const saveHistory = () => store('kd.searchHistory', JSON.stringify(state.searchHistory));
+    const saveFavs = () => store('kd.favs', JSON.stringify(state.favorites));
+    const saveCoupons = () => store('kd.coupons', JSON.stringify(state.ownedCoupons));
+    const saveBalance = () => store('kd.balance', JSON.stringify(state.balance));
 
     /* ======================================================================
      * 5. 购物车 & 费用
      * ==================================================================== */
     const cartShop = () => (state.cart.shopId ? SHOP_BY_ID.get(state.cart.shopId) : null);
-    function cartLines() {
-        return Object.keys(state.cart.items).map(id => {
-            const e = DISH_INDEX.get(Number(id));
-            return { dish: e.dish, qty: state.cart.items[id] };
-        });
-    }
-    const cartCount = () => Object.keys(state.cart.items).reduce((s, id) => s + state.cart.items[id], 0);
-    const cartSubtotal = () => cartLines().reduce((s, l) => s + l.dish.price * l.qty, 0);
+    const cartLines = () => state.cart.lines.slice();
+    const cartCount = () => state.cart.lines.reduce((s, l) => s + l.qty, 0);
+    const cartSubtotal = () => state.cart.lines.reduce((s, l) => s + l.unit * l.qty, 0);
 
     function discountFor(shop, subtotal) {
         if (!shop) return 0;
@@ -1187,8 +1390,15 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         shop.discounts.forEach(d => { if (subtotal >= d.threshold && d.cut > best) best = d.cut; });
         return best;
     }
+    /* 下一档满减还差多少 */
+    function nextDiscountGap(shop, subtotal) {
+        if (!shop) return null;
+        const next = shop.discounts.filter(d => d.threshold > subtotal)
+            .sort((a, b) => a.threshold - b.threshold)[0];
+        return next ? { need: next.threshold - subtotal, cut: next.cut } : null;
+    }
     function bill(shop, lines, couponId) {
-        const subtotal = lines.reduce((s, l) => s + l.dish.price * l.qty, 0);
+        const subtotal = lines.reduce((s, l) => s + (l.unit != null ? l.unit : l.dish.price) * l.qty, 0);
         const qty = lines.reduce((s, l) => s + l.qty, 0);
         const packing = shop ? shop.packingFee * qty : 0;
         const delivery = shop ? shop.deliveryFee : 0;
@@ -1199,30 +1409,100 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         return { subtotal: subtotal, qty: qty, packing: packing, delivery: delivery, discount: discount, couponCut: couponCut, total: total };
     }
 
-    function addDish(id) {
-        const entry = DISH_INDEX.get(id);
+    function addDish(id, picks) {
+        const entry = DISH_INDEX.get(Number(id));
         if (!entry) return;
         const shop = entry.shop;
+        // 带规格的菜品：第一次点先弹规格面板（Meituan 交互）
+        if (!picks && specsOf(id).length) { openSpecSheet(Number(id)); return; }
+
         if (state.cart.shopId && state.cart.shopId !== shop.id && cartCount() > 0) {
             const other = SHOP_BY_ID.get(state.cart.shopId);
             confirmDialog({ title: '更换商家', message: '购物车中已有「' + other.name + '」的商品，切换商家需要先清空购物车。', okText: '清空并添加' })
-                .then(ok => { if (!ok) return; state.cart = { shopId: shop.id, items: {} }; addDish(id); });
+                .then(ok => { if (!ok) return; state.cart = { shopId: shop.id, lines: [] }; addDish(id, picks); });
             return;
         }
+        picks = picks || [];
         state.cart.shopId = shop.id;
-        state.cart.items[id] = (state.cart.items[id] || 0) + 1;
+        const key = lineKey(id, picks);
+        const found = state.cart.lines.find(l => l.key === key);
+        if (found) found.qty += 1;
+        else state.cart.lines.push({
+            key: key, dishId: Number(id), picks: picks,
+            qty: 1, unit: specUnitPrice(entry.dish, picks)
+        });
         saveCart();
         refreshShopUI();
     }
-    function minusDish(id) {
-        if (!state.cart.items[id]) return;
-        state.cart.items[id] -= 1;
-        if (state.cart.items[id] <= 0) delete state.cart.items[id];
+    function minusLine(key) {
+        const i = state.cart.lines.findIndex(l => l.key === key);
+        if (i < 0) return;
+        const l = state.cart.lines[i];
+        l.qty -= 1;
+        if (l.qty <= 0) state.cart.lines.splice(i, 1);
         if (!cartCount()) state.cart.shopId = null;
         saveCart();
         refreshShopUI();
     }
-    function clearCart() { state.cart = { shopId: null, items: {} }; state.couponId = null; saveCart(); refreshShopUI(); }
+    /* 菜品行上的「−」：该菜品可能有多条规格行，减最后加入的那条 */
+    function minusDish(id) {
+        const ids = state.cart.lines.map(l => l.dishId);
+        const idx = ids.lastIndexOf(Number(id));
+        if (idx < 0) return;
+        minusLine(state.cart.lines[idx].key);
+    }
+    function clearCart() { state.cart = { shopId: null, lines: [] }; state.couponId = null; saveCart(); refreshShopUI(); }
+
+    /* ---------- 规格选择面板 ---------- */
+    function openSpecSheet(dishId) {
+        const entry = DISH_INDEX.get(dishId);
+        if (!entry) return;
+        const groups = specsOf(dishId);
+        if (!groups.length) { addDish(dishId, []); return; }
+        const picks = groups.map(g => g.opts[0][0]);
+        const unit = () => specUnitPrice(entry.dish, picks);
+
+        function bodyHTML() {
+            return groups.map((g, gi) =>
+                '<div class="spec-group"><div class="gname">' + esc(g.name) + '</div><div class="spec-opts">' +
+                g.opts.map(o =>
+                    '<button type="button" class="spec-opt' + (picks[gi] === o[0] ? ' on' : '') + '"' +
+                    ' data-gi="' + gi + '" data-v="' + esc(o[0]) + '">' + esc(o[0]) +
+                    (o[1] ? '<span class="delta">+' + money(o[1]) + '</span>' : '') + '</button>').join('') +
+                '</div></div>').join('');
+        }
+
+        const layer = document.createElement('div');
+        layer.className = 'sheet-mask spec-sheet';
+        layer.innerHTML =
+            '<div class="sheet" role="dialog" aria-modal="true">' +
+                '<div class="sheet-head">' + esc(entry.dish.name) +
+                    '<button type="button" class="close" data-sheet="close" aria-label="关闭">' + icon('close') + '</button></div>' +
+                '<div class="sheet-body">' + bodyHTML() + '</div>' +
+                '<div class="spec-foot">' +
+                    '<span class="price">' + priceHTML(unit()) + '</span>' +
+                    '<button type="button" class="btn-primary" data-spec-add style="padding:11px 26px">加入购物车</button>' +
+                '</div>' +
+            '</div>';
+
+        layer.addEventListener('click', e => {
+            if (e.target.closest('[data-sheet="close"]') || e.target === layer) { layer.remove(); syncLock(); return; }
+            const opt = e.target.closest('.spec-opt');
+            if (opt) {
+                picks[Number(opt.dataset.gi)] = opt.dataset.v;
+                layer.querySelector('.sheet-body').innerHTML = bodyHTML();
+                layer.querySelector('.spec-foot .price').innerHTML = priceHTML(unit());
+                return;
+            }
+            if (e.target.closest('[data-spec-add]')) {
+                layer.remove(); syncLock();
+                addDish(dishId, picks);
+                toast('已加入购物车');
+            }
+        });
+        $('#layerRoot').appendChild(layer);
+        syncLock();
+    }
 
     /* ======================================================================
      * 6. 路由
@@ -1266,14 +1546,16 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     }
     function shopCardHTML(shop) {
         const promo = shop.discounts.map(d => '满' + d.threshold + '减' + d.cut).join(' · ');
+        const fav = state.favorites.indexOf(shop.id) !== -1;
         return '<button type="button" class="shop-card" data-go="shop/' + shop.id + '" aria-label="进入 ' + esc(shop.name) + '">' +
             artHTML(shop.art[0], shop.art[1], shop.art[2], imgURL('s' + shop.id)) +
             '<span class="shop-main">' +
-                '<span class="shop-name">' + esc(shop.name) + '</span>' +
+                '<span class="shop-name">' + esc(shop.name) + (fav ? '<span class="tag red" style="margin-left:6px">已收藏</span>' : '') + '</span>' +
                 '<span class="shop-stats">' +
-                    '<span class="stars">' + icon('star', 'fill') + '<span class="num">' + shop.rating.toFixed(1) + '</span></span>' +
+                    '<span class="stars">' + icon('star', 'fill') + '<span class="num">' + shopRating(shop.id, shop.rating).toFixed(1) + '</span></span>' +
                     '<span>月售 ' + shop.monthSales + '</span>' +
                     '<span>' + shop.minutes + ' 分钟</span>' +
+                    '<span>' + shopReviews(shop.id).length + ' 条评价</span>' +
                 '</span>' +
                 '<span class="shop-tags">' + shop.tags.map(t => '<span class="tag yellow">' + esc(t) + '</span>').join('') + '</span>' +
                 '<span class="shop-promo"><span class="lbl">满减</span><span class="txt">' + esc(promo) + '</span></span>' +
@@ -1362,9 +1644,10 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             '<div class="search-field">' + icon('search') +
                 '<label class="sr-only" for="kw">搜索商家或菜品</label>' +
                 '<input id="kw" type="search" placeholder="搜索商家或菜品" autocomplete="off" value="' + esc(kw) + '">' +
-                (kw ? '<button type="button" class="clr" data-action="clear-kw" aria-label="清空">' + icon('close') + '</button>' : '') +
+                (kw ?                 '<button type="button" class="clr" data-action="clear-kw" aria-label="清空">' + icon('close') + '</button>' : '') +
             '</div>' +
             '<button type="button" class="search-go" data-action="do-search">搜索</button>' +
+            '<div class="suggest" id="suggest" hidden></div>' +
         '</div>';
         if (results === null) {
             return '<div class="page">' + head +
@@ -1406,13 +1689,14 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
      * 9. 商家页
      * ==================================================================== */
     function dishRowHTML(dish) {
-        const qty = state.cart.items[dish.id] || 0;
+        const qty = state.cart.lines.filter(l => l.dishId === dish.id).reduce((s, l) => s + l.qty, 0);
+        const hasSpec = specsOf(dish.id).length > 0;
         return '<div class="dish" data-dish-row="' + dish.id + '">' +
             artHTML(dish.art[0], dish.art[1], dish.art[2], imgURL(dish.id)) +
             '<span class="dish-body">' +
                 '<span class="dish-name">' + esc(dish.name) + '</span>' +
                 '<span class="dish-desc">' + esc(dish.desc) + '</span>' +
-                '<span class="dish-sales">月售 ' + dish.sales + '</span>' +
+                '<span class="dish-sales">月售 ' + dish.sales + (hasSpec ? ' · 多规格' : '') + '</span>' +
                 '<span class="dish-bottom">' +
                     '<span class="price">' + priceHTML(dish.price) +
                         (dish.orig ? '<span class="orig">' + money(dish.orig) + '</span>' : '') + '</span>' +
@@ -1432,7 +1716,11 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         const subtotal = cartSubtotal();
         const enough = shop ? subtotal >= shop.minPrice : false;
         const lack = shop ? Math.max(shop.minPrice - subtotal, 0) : 0;
-        const hint = n ? (enough ? '已满 ' + money(shop.minPrice) + ' 起送' : '差 ' + money(lack) + ' 起送') : '购物车是空的';
+        const gap = nextDiscountGap(shop, subtotal);
+        const hint = !n ? '购物车是空的'
+            : (subtotal < shop.minPrice ? '差 ' + money(lack) + ' 起送'
+                : (gap ? '再买 ' + money(gap.need) + ' 可减 ' + money(gap.cut)
+                    : '已满 ' + money(shop.minPrice) + ' 起送 · 已达最高满减'));
         return '<div class="cartbar' + (n ? '' : ' empty-state') + '" id="cartBar">' +
             '<button type="button" class="cart-ico-wrap" data-action="toggle-drawer" aria-label="展开购物车">' +
                 '<span class="cart-ico' + (n ? ' has' : '') + '">' + icon('cart') + '</span>' +
@@ -1443,6 +1731,33 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                 (enough ? '' : ' disabled') + '>' + (enough ? '去结算' : money(shop.minPrice) + ' 起送') + '</button>' +
         '</div>';
     }
+    function reviewsHTML(shop) {
+        const list = shopReviews(shop.id);
+        const avg = list.length ? (list.reduce((s, r) => s + r.rating, 0) / list.length) : shop.rating;
+        return '<div class="shop-body" style="flex-direction:column;overflow-y:auto">' +
+            '<div style="display:flex;align-items:baseline;gap:10px;padding:16px 14px 6px">' +
+                '<span style="font-size:32px;font-weight:800;color:var(--mt-yellow-deep)">' + avg.toFixed(1) + '</span>' +
+                '<span style="font-size:12.5px;color:var(--mt-text-3)">共 ' + list.length + ' 条评价</span>' +
+            '</div>' +
+            (list.length
+                ? list.map(r =>
+                    '<div class="review-item">' +
+                        '<div class="review-head">' +
+                            '<span class="review-av">' + icon('user') + '</span>' +
+                            '<span><div class="review-user">' + esc(r.user) + (r.mine ? ' <span class="tag yellow">我的评价</span>' : '') + '</div>' +
+                            '<div class="review-date">' + esc(r.date) + '</div></span>' +
+                            '<span class="review-stars">' + [1, 2, 3, 4, 5].map(n =>
+                                icon('star', 'fill' + (n <= r.rating ? '' : ' off'))).join('') + '</span>' +
+                        '</div>' +
+                        (r.text ? '<div class="review-text">' + esc(r.text) + '</div>' : '') +
+                        (r.tags && r.tags.length
+                            ? '<div class="review-tags">' + r.tags.map(t => '<span class="tag yellow">' + esc(t) + '</span>').join('') + '</div>'
+                            : '') +
+                    '</div>').join('')
+                : emptyState('star', '还没有评价', '下单后来写第一条评价吧')) +
+        '</div>';
+    }
+
     function renderShop(id) {
         const shop = SHOP_BY_ID.get(Number(id));
         if (!shop) {
@@ -1453,29 +1768,11 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         const cats = [];
         shop.menu.forEach(d => { if (cats.indexOf(d.cat) === -1) cats.push(d.cat); });
         const promo = shop.discounts.map(d => '满' + d.threshold + '减' + d.cut).join('，');
-        return '<div class="shop-page">' +
-            '<div class="shop-hero">' +
-                '<div class="shop-hero-top">' +
-                    '<button type="button" class="back" data-go="home" aria-label="返回">' + icon('back') + '</button>' +
-                    '<span class="ttl">' + esc(shop.name) + '</span>' +
-                    '<button type="button" class="icon-btn" data-action="toggle-theme" aria-label="切换深色模式">' + icon('moon') + '</button>' +
-                '</div>' +
-                '<div class="shop-brief">' +
-                    artHTML(shop.art[0], shop.art[1], shop.art[2], imgURL('s' + shop.id)) +
-                    '<span class="info">' +
-                        '<h2>' + esc(shop.name) + '</h2>' +
-                        '<span class="meta"><span class="stars">' + icon('star', 'fill') +
-                            '<span class="num">' + shop.rating.toFixed(1) + '</span></span>' +
-                            '<span>月售 ' + shop.monthSales + '</span>' +
-                            '<span>' + shop.minutes + ' 分钟</span>' +
-                            '<span>' + shop.distance + 'km</span></span>' +
-                        '<span class="promo"><span class="k">满减</span><span class="v">' + esc(promo) + '</span></span>' +
-                        '<span class="promo"><span class="k">配送</span><span class="v">起送 ' + money(shop.minPrice) +
-                            ' · 配送费 ' + money(shop.deliveryFee) + ' · 打包 ' + money(shop.packingFee) + '/件</span></span>' +
-                    '</span>' +
-                '</div>' +
-            '</div>' +
-            '<div class="shop-body">' +
+        const fav = state.favorites.indexOf(shop.id) !== -1;
+        const tab = state.shopTab;
+        const revCount = shopReviews(shop.id).length;
+
+        const menuPane = '<div class="shop-body">' +
                 '<nav class="dish-cats" aria-label="菜品分类">' +
                     cats.map((cat, i) =>
                         '<button type="button" class="dish-cat' + (i === 0 ? ' on' : '') + '" data-cat-nav="' + esc(cat) + '">' +
@@ -1498,7 +1795,37 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                 '</div>' +
                 '<div class="cart-drawer-list" data-drawer-list></div>' +
             '</div>' +
-            cartBarHTML(shop) +
+            cartBarHTML(shop);
+
+        return '<div class="shop-page">' +
+            '<div class="shop-hero">' +
+                '<div class="shop-hero-top">' +
+                    '<button type="button" class="back" data-go="home" aria-label="返回">' + icon('back') + '</button>' +
+                    '<span class="ttl">' + esc(shop.name) + '</span>' +
+                    '<button type="button" class="fav-btn' + (fav ? ' on' : '') + '" data-action="toggle-fav" data-id="' + shop.id + '"' +
+                        ' aria-label="收藏商家" aria-pressed="' + (fav ? 'true' : 'false') + '">' + icon('heart') + '</button>' +
+                    '<button type="button" class="icon-btn" data-action="toggle-theme" aria-label="切换深色模式">' + icon('moon') + '</button>' +
+                '</div>' +
+                '<div class="shop-brief">' +
+                    artHTML(shop.art[0], shop.art[1], shop.art[2], imgURL('s' + shop.id)) +
+                    '<span class="info">' +
+                        '<h2>' + esc(shop.name) + '</h2>' +
+                        '<span class="meta"><span class="stars">' + icon('star', 'fill') +
+                            '<span class="num">' + shopRating(shop.id, shop.rating).toFixed(1) + '</span></span>' +
+                            '<span>月售 ' + shop.monthSales + '</span>' +
+                            '<span>' + shop.minutes + ' 分钟</span>' +
+                            '<span>' + shop.distance + 'km</span></span>' +
+                        '<span class="promo"><span class="k">满减</span><span class="v">' + esc(promo) + '</span></span>' +
+                        '<span class="promo"><span class="k">配送</span><span class="v">起送 ' + money(shop.minPrice) +
+                            ' · 配送费 ' + money(shop.deliveryFee) + ' · 打包 ' + money(shop.packingFee) + '/件</span></span>' +
+                    '</span>' +
+                '</div>' +
+            '</div>' +
+            '<div class="shop-tabs">' +
+                '<button type="button" class="shop-tab' + (tab !== 'reviews' ? ' on' : '') + '" data-action="shop-tab" data-tab="menu">点菜</button>' +
+                '<button type="button" class="shop-tab' + (tab === 'reviews' ? ' on' : '') + '" data-action="shop-tab" data-tab="reviews">评价<span class="cnt">' + revCount + '</span></button>' +
+            '</div>' +
+            (tab === 'reviews' ? reviewsHTML(shop) : menuPane) +
         '</div>';
     }
     function refreshShopUI() {
@@ -1507,7 +1834,7 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         if (!shop) return;
         document.querySelectorAll('[data-dish-row]').forEach(row => {
             const id = Number(row.dataset.dishRow);
-            const qty = state.cart.items[id] || 0;
+            const qty = state.cart.lines.filter(l => l.dishId === id).reduce((s, l) => s + l.qty, 0);
             const stepper = row.querySelector('.stepper');
             const exist = stepper.querySelector('[data-qty]');
             if (qty > 0) {
@@ -1521,8 +1848,10 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             }
         });
         document.querySelectorAll('[data-cat-dot]').forEach(dot => {
-            const total = shop.menu.filter(d => d.cat === dot.dataset.catDot)
-                .reduce((s, d) => s + (state.cart.items[d.id] || 0), 0);
+            const total = state.cart.lines.filter(l => {
+                const dd = DISH_INDEX.get(l.dishId);
+                return dd && dd.dish.cat === dot.dataset.catDot;
+            }).reduce((s, l) => s + l.qty, 0);
             dot.hidden = total === 0;
             dot.textContent = total;
         });
@@ -1539,13 +1868,17 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         if (title) title.textContent = lines.length ? '已选 ' + cartCount() + ' 件' : '购物车是空的';
         if (!list) return;
         list.innerHTML = lines.length
-            ? lines.map(l =>
-                '<div class="cart-row">' +
-                    '<button type="button" class="step-btn step-minus" data-action="minus-dish" data-id="' + l.dish.id + '" aria-label="减少">' + icon('minus') + '</button>' +
-                    '<span class="nm">' + esc(l.dish.name) + '</span>' +
-                    '<span class="pr">' + money(l.dish.price * l.qty) + '</span>' +
-                    '<button type="button" class="step-btn step-add" data-action="add-dish" data-id="' + l.dish.id + '" aria-label="增加">' + icon('plus') + '</button>' +
-                '</div>').join('')
+            ? lines.map(l => {
+                const dd = DISH_INDEX.get(l.dishId).dish;
+                return '<div class="cart-row">' +
+                    '<button type="button" class="step-btn step-minus" data-action="minus-line" data-key="' + esc(l.key) + '" aria-label="减少">' + icon('minus') + '</button>' +
+                    '<span class="nm">' + esc(dd.name) +
+                        (l.picks.length ? '<span style="color:var(--mt-text-3);font-size:11px"> · ' + esc(l.picks.join(' / ')) + '</span>' : '') +
+                    '</span>' +
+                    '<span class="pr">' + money(l.unit * l.qty) + '</span>' +
+                    '<button type="button" class="step-btn step-add" data-action="add-dish" data-id="' + l.dishId + '" data-picks="' + esc(l.picks.join('>')) + '" aria-label="增加">' + icon('plus') + '</button>' +
+                '</div>';
+            }).join('')
             : '<div style="padding:28px;text-align:center;color:var(--mt-text-3)">还没有选择菜品</div>';
     }
     function toggleDrawer(force) {
@@ -1593,7 +1926,13 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         const addr = state.addresses.find(a => a.id === state.addressId) || currentAddress();
         const b = bill(shop, lines, state.couponId);
         const coupon = state.couponId ? COUPON_BY_ID.get(state.couponId) : null;
-        const usable = COUPONS.filter(c => b.subtotal >= c.threshold).length;
+        const usable = state.ownedCoupons.filter(cid => {
+            const c = COUPON_BY_ID.get(cid);
+            return c && b.subtotal >= c.threshold;
+        }).length;
+        const balanceCut = state.useBalance ? Math.min(state.balance, b.total) : 0;
+        const payable = b.total - balanceCut;
+        const nextGap = nextDiscountGap(shop, b.subtotal);
         return '<div class="page" style="padding-bottom:96px">' +
             '<div class="subheader">' +
                 '<button type="button" class="back" data-go="shop/' + shop.id + '" aria-label="返回">' + icon('back') + '</button>' +
@@ -1617,10 +1956,14 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             '</div>' +
             '<div class="card">' +
                 '<div class="order-items">' +
-                    lines.map(l =>
-                        '<div class="oi"><span class="nm">' + esc(l.dish.name) + '</span>' +
-                        '<span class="qt">×' + l.qty + '</span>' +
-                        '<span>' + money(l.dish.price * l.qty) + '</span></div>').join('') +
+                    lines.map(l => {
+                        const dd = DISH_INDEX.get(l.dishId).dish;
+                        return '<div class="oi"><span class="nm">' + esc(dd.name) +
+                            (l.picks.length ? '<span style="color:var(--mt-text-3);font-size:11px">（' + esc(l.picks.join(' / ')) + '）</span>' : '') +
+                            '</span>' +
+                            '<span class="qt">×' + l.qty + '</span>' +
+                            '<span>' + money(l.unit * l.qty) + '</span></div>';
+                    }).join('') +
                 '</div>' +
                 '<button type="button" class="row" data-action="choose-coupon">' +
                     '<span class="k">红包</span>' +
@@ -1638,16 +1981,26 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                 '<div class="bill-row"><span>配送费</span><span class="amt">' + money(b.delivery) + '</span></div>' +
                 (b.discount ? '<div class="bill-row cut"><span>满减优惠</span><span class="amt">−' + money(b.discount) + '</span></div>' : '') +
                 (b.couponCut ? '<div class="bill-row cut"><span>红包抵扣</span><span class="amt">−' + money(b.couponCut) + '</span></div>' : '') +
-                '<div class="bill-row total"><span>实付</span><span class="amt">' + money(b.total) + '</span></div>' +
+                '<div class="balance-row">' +
+                    '<span class="k">余额支付</span>' +
+                    '<span class="v">可用 <em>' + money(state.balance) + '</em>' +
+                        (balanceCut ? ' · 抵扣 ' + money(balanceCut) : '') + '</span>' +
+                    '<button type="button" class="switch' + (state.useBalance ? ' on' : '') + '" data-action="toggle-balance" aria-label="使用余额支付"></button>' +
+                '</div>' +
+                '<div class="bill-row total"><span>实付</span><span class="amt">' + money(payable) + '</span></div>' +
             '</div>' +
+            (nextGap
+                ? '<div style="margin:-4px 12px 10px;padding:9px 12px;border-radius:10px;background:var(--mt-yellow-bg);font-size:12px;color:#8A6A00">' +
+                  '再买 <b>' + money(nextGap.need) + '</b> 可触发「满 ' + money(nextGap.need + b.subtotal) + ' 减 ' + money(nextGap.cut) + '」</div>'
+                : '') +
             '<div style="padding:0 14px 20px;font-size:11.5px;color:var(--mt-text-3);line-height:1.6">' +
                 '满减规则：' + esc(shop.discounts.map(d => '满' + d.threshold + '减' + d.cut).join('，')) +
                 '，按最高档位计算，可与红包叠加。<br>' +
                 '本页为演示环境，提交后仅生成一条本地模拟订单，不产生真实交易。' +
             '</div>' +
             '<div class="submit-bar">' +
-                '<div class="sum"><div class="amt">' + money(b.total) + '</div>' +
-                    '<div class="hint">' + ((b.discount + b.couponCut) ? '已优惠 ' + money(b.discount + b.couponCut) : '暂无优惠') + '</div></div>' +
+                '<div class="sum"><div class="amt">' + money(payable) + '</div>' +
+                    '<div class="hint">' + ((b.discount + b.couponCut + balanceCut) ? '已优惠 ' + money(b.discount + b.couponCut + balanceCut) : '暂无优惠') + '</div></div>' +
                 '<button type="button" class="btn-primary" data-action="submit-order">提交订单</button>' +
             '</div>' +
         '</div>';
@@ -1682,20 +2035,21 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         { id: 'all', name: '全部' }, { id: 'active', name: '进行中' }, { id: 'done', name: '已完成' }
     ];
     function filteredOrders() {
-        if (state.orderFilter === 'active') return state.orders.filter(o => o.status < 3);
-        if (state.orderFilter === 'done') return state.orders.filter(o => o.status >= 3);
+        if (state.orderFilter === 'active') return state.orders.filter(o => liveStatus(o) < 3);
+        if (state.orderFilter === 'done') return state.orders.filter(o => liveStatus(o) >= 3);
         return state.orders.slice();
     }
     function orderCardHTML(order) {
         const shop = SHOP_BY_ID.get(order.shopId);
-        const done = order.status >= 3;
+        const st = liveStatus(order);
+        const done = st >= 3;
         const qty = order.items.reduce((s, i) => s + i.qty, 0);
         const first = order.items[0];
         return '<div class="order-card">' +
             '<div class="order-card-head">' +
                 artHTML(shop.art[0], shop.art[1], shop.art[2], imgURL('s' + shop.id)) +
                 '<span class="nm">' + esc(shop.name) + '</span>' +
-                '<span class="st' + (done ? ' done' : '') + '">' + ORDER_FLOW[order.status] + '</span>' +
+                '<span class="st' + (done ? ' done' : '') + '">' + ORDER_FLOW[st] + '</span>' +
             '</div>' +
             '<div class="order-line"><span class="nm">' + esc(first.name) +
                 (order.items.length > 1 ? ' 等 ' + order.items.length + ' 种商品' : '') + '</span>' +
@@ -1703,10 +2057,12 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             '<div class="order-line"><span class="nm">下单时间 ' + esc(order.createdAt) + '</span>' +
                 '<span class="qt">' + esc(order.id) + '</span></div>' +
             '<div class="order-card-foot">' +
-                '<span class="order-total">实付 <em>' + money(order.total) + '</em></span>' +
+                '<span class="order-total">实付 <em>' + money(order.payable != null ? order.payable : order.total) + '</em></span>' +
                 '<button type="button" class="btn-sm" data-go="order/' + order.id + '">订单详情</button>' +
                 (done
-                    ? '<button type="button" class="btn-sm solid" data-action="reorder" data-id="' + order.id + '">再来一单</button>'
+                    ? (order.review
+                        ? '<span class="tag yellow">已评价</span>'
+                        : '<button type="button" class="btn-sm solid" data-action="open-review" data-id="' + order.id + '">去评价</button>')
                     : '<button type="button" class="btn-sm solid" data-action="urge" data-id="' + order.id + '">催一催</button>') +
             '</div>' +
         '</div>';
@@ -1732,12 +2088,13 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                 emptyState('receipt', '订单不存在', '这条订单可能已被清除') + '</div>';
         }
         const shop = SHOP_BY_ID.get(order.shopId);
+        const st = liveStatus(order);
         const timeline = ORDER_FLOW.map((name, i) => {
-            const cls = i < order.status ? 'done' : (i === order.status ? 'now' : '');
+            const cls = i < st ? 'done' : (i === st ? 'now' : '');
             return '<div class="tl-item ' + cls + '">' +
                 '<span class="tl-dot" aria-hidden="true"></span>' +
                 '<span class="tl-body"><div class="tl-title">' + name + '</div>' +
-                (i === order.status ? '<div class="tl-time">' + esc(order.eta || '') + '</div>' : '') +
+                (i === st ? '<div class="tl-time">' + esc(order.eta || '') + '</div>' : '') +
                 '</span></div>';
         }).join('');
         return '<div class="page">' +
@@ -1746,7 +2103,7 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                 '<h1>订单详情</h1>' +
             '</div>' +
             '<div class="card" style="padding:16px 14px"><div class="timeline">' + timeline + '</div></div>' +
-            (order.status < 3
+            (st < 3
                 ? '<div class="rider">' +
                     '<span class="av">' + icon('bike') + '</span>' +
                     '<span style="flex:1">' +
@@ -1756,10 +2113,25 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                     '<button type="button" class="btn-sm" data-action="urge" data-id="' + order.id + '">催单</button>' +
                   '</div>'
                 : '') +
+            (order.review
+                ? '<div class="card" style="padding:14px">' +
+                    '<div class="review-head">' +
+                        '<span style="font-size:13.5px;font-weight:600">我的评价</span>' +
+                        '<span class="review-stars">' + [1, 2, 3, 4, 5].map(n =>
+                            icon('star', 'fill' + (n <= order.review.rating ? '' : ' off'))).join('') + '</span>' +
+                    '</div>' +
+                    (order.review.text ? '<div class="review-text">' + esc(order.review.text) + '</div>' : '') +
+                    (order.review.tags && order.review.tags.length
+                        ? '<div class="review-tags">' + order.review.tags.map(t => '<span class="tag yellow">' + esc(t) + '</span>').join('') + '</div>'
+                        : '') +
+                  '</div>'
+                : '') +
             '<div class="card">' +
                 '<div class="row"><span style="font-size:15px"><b>' + esc(shop.name) + '</b></span></div>' +
                 '<div class="order-items">' +
-                    order.items.map(i => '<div class="oi"><span class="nm">' + esc(i.name) + '</span>' +
+                    order.items.map(i => '<div class="oi"><span class="nm">' + esc(i.name) +
+                        (i.spec ? '<span style="color:var(--mt-text-3);font-size:11px">（' + esc(i.spec) + '）</span>' : '') +
+                        '</span>' +
                         '<span class="qt">×' + i.qty + '</span>' +
                         '<span>' + money(i.price * i.qty) + '</span></div>').join('') +
                 '</div>' +
@@ -1768,7 +2140,8 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                 '<div class="bill-row"><span>配送费</span><span class="amt">' + money(order.delivery) + '</span></div>' +
                 (order.discount ? '<div class="bill-row cut"><span>满减优惠</span><span class="amt">−' + money(order.discount) + '</span></div>' : '') +
                 (order.couponCut ? '<div class="bill-row cut"><span>红包抵扣</span><span class="amt">−' + money(order.couponCut) + '</span></div>' : '') +
-                '<div class="bill-row total"><span>实付</span><span class="amt">' + money(order.total) + '</span></div>' +
+                (order.balanceCut ? '<div class="bill-row cut"><span>余额抵扣</span><span class="amt">−' + money(order.balanceCut) + '</span></div>' : '') +
+                '<div class="bill-row total"><span>实付</span><span class="amt">' + money(order.payable != null ? order.payable : order.total) + '</span></div>' +
             '</div>' +
             '<div class="card" style="padding:15px;font-size:13px;color:var(--mt-text-2)">' +
                 '<div class="order-line"><span>订单号</span><span>' + esc(order.id) + '</span></div>' +
@@ -1779,6 +2152,9 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             '</div>' +
             '<div style="display:flex;gap:10px;padding:6px 12px 24px">' +
                 '<button type="button" class="btn-sm" style="flex:1;padding:12px" data-go="orders">返回订单列表</button>' +
+                (st < 3
+                    ? '<button type="button" class="btn-sm" style="flex:1;padding:12px" data-action="cancel-order" data-id="' + order.id + '">取消订单</button>'
+                    : '<button type="button" class="btn-sm" style="flex:1;padding:12px" data-action="delete-order" data-id="' + order.id + '">删除记录</button>') +
                 '<button type="button" class="btn-sm solid" style="flex:1;padding:12px" data-action="reorder" data-id="' + order.id + '">再来一单</button>' +
             '</div>' +
         '</div>';
@@ -1797,19 +2173,29 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                 '<div class="sub">' + esc(addr ? addr.detail.slice(0, 16) + '…' : '未设置收货地址') + '</div></span>' +
             '</div></div>' +
             '<div class="assets">' +
-                '<button type="button" class="asset" data-action="open-coupons">' +
-                    '<div class="n">' + COUPONS.length + '<em>张</em></div><div class="l">红包</div></button>' +
-                '<div class="asset"><div class="n">128<em>元</em></div><div class="l">余额</div></div>' +
+                '<button type="button" class="asset" data-go="favs">' +
+                    '<div class="n">' + state.favorites.length + '<em>家</em></div><div class="l">收藏</div></button>' +
+                '<button type="button" class="asset" data-go="coupons">' +
+                    '<div class="n">' + state.ownedCoupons.length + '<em>张</em></div><div class="l">红包</div></button>' +
                 '<button type="button" class="asset" data-go="orders">' +
                     '<div class="n">' + doneCount + '<em>单</em></div><div class="l">已完成</div></button>' +
             '</div>' +
             '<div class="card menu-list">' +
+                '<div class="menu-row" style="cursor:default">' +
+                    '<span class="mi">' + icon('wallet') + '</span><span class="mt">账户余额</span>' +
+                    '<span class="mv">¥' + state.balance + '</span></div>' +
                 '<button type="button" class="menu-row" data-go="address">' +
                     '<span class="mi">' + icon('pin') + '</span><span class="mt">收货地址</span>' +
                     '<span class="mv">' + state.addresses.length + ' 个</span><span class="caret">' + icon('chev-r') + '</span></button>' +
-                '<button type="button" class="menu-row" data-action="open-coupons">' +
-                    '<span class="mi">' + icon('gift') + '</span><span class="mt">我的红包</span>' +
-                    '<span class="mv">' + COUPONS.length + ' 张可用</span><span class="caret">' + icon('chev-r') + '</span></button>' +
+                '<button type="button" class="menu-row" data-go="coupons">' +
+                    '<span class="mi">' + icon('gift') + '</span><span class="mt">领券中心</span>' +
+                    '<span class="mv">持 ' + state.ownedCoupons.length + ' 张</span><span class="caret">' + icon('chev-r') + '</span></button>' +
+                '<button type="button" class="menu-row" data-go="favs">' +
+                    '<span class="mi">' + icon('heart') + '</span><span class="mt">我的收藏</span>' +
+                    '<span class="mv">' + state.favorites.length + ' 家</span><span class="caret">' + icon('chev-r') + '</span></button>' +
+                '<button type="button" class="menu-row" data-go="messages">' +
+                    '<span class="mi">' + icon('bell') + '</span><span class="mt">消息中心</span>' +
+                    '<span class="mv">' + MESSAGES.length + ' 条</span><span class="caret">' + icon('chev-r') + '</span></button>' +
                 '<button type="button" class="menu-row" data-go="orders">' +
                     '<span class="mi">' + icon('receipt') + '</span><span class="mt">全部订单</span>' +
                     '<span class="mv">' + state.orders.length + ' 单</span><span class="caret">' + icon('chev-r') + '</span></button>' +
@@ -1864,6 +2250,66 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     }
 
     /* ======================================================================
+     * 12b. 收藏 / 领券中心 / 消息
+     * ==================================================================== */
+    function renderFavs() {
+        const list = SHOPS.filter(s => state.favorites.indexOf(s.id) !== -1);
+        return '<div class="page">' +
+            '<div class="subheader">' +
+                '<button type="button" class="back" data-go="profile" aria-label="返回">' + icon('back') + '</button>' +
+                '<h1>我的收藏</h1>' +
+                '<span class="tag yellow" style="margin-left:auto">' + list.length + ' 家</span>' +
+            '</div>' +
+            (list.length
+                ? '<div class="shop-list">' + list.map(shopCardHTML).join('') + '</div>'
+                : emptyState('heart', '还没有收藏的商家', '进商家页点右上角的小心心')) +
+            tabbarHTML('profile') +
+        '</div>';
+    }
+    function renderCouponCenter() {
+        return '<div class="page">' +
+            '<div class="subheader">' +
+                '<button type="button" class="back" data-go="profile" aria-label="返回">' + icon('back') + '</button>' +
+                '<h1>领券中心</h1>' +
+                '<span class="tag yellow" style="margin-left:auto">已持有 ' + state.ownedCoupons.length + ' 张</span>' +
+            '</div>' +
+            COUPONS.map(c => {
+                const owned = state.ownedCoupons.indexOf(c.id) !== -1;
+                return '<div class="coupon' + (owned ? ' used' : '') + '">' +
+                    '<span class="l"><span class="amt"><em>¥</em>' + c.amount + '</span>' +
+                        '<span class="th">' + (c.threshold ? '满 ' + c.threshold + ' 可用' : '无门槛') + '</span></span>' +
+                    '<span class="r"><span class="t">' + esc(c.title) + '</span>' +
+                        '<span class="e">' + esc(c.scope) + ' · ' + esc(c.expire) + ' 到期</span></span>' +
+                    '<span style="display:flex;align-items:center;padding-right:14px">' +
+                        (owned
+                            ? '<span class="tag yellow">已领取</span>'
+                            : '<button type="button" class="btn-sm solid" data-action="claim-coupon" data-id="' + c.id + '">领取</button>') +
+                    '</span>' +
+                '</div>';
+            }).join('') +
+            '<div style="padding:0 14px 24px;font-size:11.5px;color:var(--mt-text-3)">' +
+                '红包与商家满减可叠加；领取后在「结算 → 红包」里选用。' +
+            '</div>' +
+            tabbarHTML('profile') +
+        '</div>';
+    }
+    function renderMessages() {
+        return '<div class="page">' +
+            '<div class="subheader">' +
+                '<button type="button" class="back" data-go="home" aria-label="返回">' + icon('back') + '</button>' +
+                '<h1>消息中心</h1></div>' +
+            MESSAGES.map(m =>
+                '<div class="msg-item">' +
+                    '<span class="mi">' + icon(m.ic) + '</span>' +
+                    '<span class="mt"><div class="mtitle">' + esc(m.t) + '</div>' +
+                        '<div class="mdesc">' + esc(m.d) + '</div></span>' +
+                    '<span class="mtime">' + esc(m.time) + '</span>' +
+                '</div>').join('') +
+            tabbarHTML('home') +
+        '</div>';
+    }
+
+    /* ======================================================================
      * 13. 主题
      * ==================================================================== */
     const isDark = () => document.body.classList.contains('dark');
@@ -1894,6 +2340,9 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             case 'order':    html = renderOrderDetail(route.args[0]); break;
             case 'profile':  html = renderProfile(); break;
             case 'address':  html = renderAddress(); break;
+            case 'favs':     html = renderFavs(); break;
+            case 'coupons':  html = renderCouponCenter(); break;
+            case 'messages': html = renderMessages(); break;
             default:         html = renderHome();
         }
         document.getElementById('app').innerHTML = html;
@@ -1905,7 +2354,11 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         }
         if (route.path === 'search') {
             const input = document.getElementById('kw');
-            if (input) { input.focus(); input.setSelectionRange(input.value.length, input.value.length); }
+            if (input) {
+                input.focus(); input.setSelectionRange(input.value.length, input.value.length);
+                input.addEventListener('input', () => renderSuggest(input.value));
+                renderSuggest(input.value);
+            }
         }
     }
 
@@ -1922,21 +2375,29 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         const pad = n => String(n).padStart(2, '0');
         const eta = pad((now.getHours() + Math.floor((now.getMinutes() + shop.minutes) / 60)) % 24) +
                     ':' + pad((now.getMinutes() + shop.minutes) % 60);
+        const balanceCut = state.useBalance ? Math.min(state.balance, b.total) : 0;
         const order = {
             id: 'FD' + String(Date.now()).slice(-10),
-            shopId: shop.id, status: 1,
+            shopId: shop.id, status: 0, ts: Date.now(),
             createdAt: now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) +
                        ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes()),
             eta: eta, distance: (Math.random() * 3 + 0.8).toFixed(1),
             address: addr ? addr.detail : '', remark: state.remark,
-            items: lines.map(l => ({ id: l.dish.id, name: l.dish.name, price: l.dish.price, qty: l.qty })),
+            items: lines.map(l => {
+                const dd = DISH_INDEX.get(l.dishId).dish;
+                return { id: dd.id, name: dd.name, price: l.unit, qty: l.qty, spec: l.picks.join(' / ') };
+            }),
             subtotal: b.subtotal, packing: b.packing, delivery: b.delivery,
-            discount: b.discount, couponCut: b.couponCut, total: b.total, reviewed: false
+            discount: b.discount, couponCut: b.couponCut, total: b.total,
+            balanceCut: balanceCut, payable: b.total - balanceCut,
+            reviewed: false
         };
         state.orders.unshift(order);
         saveOrders();
-        state.cart = { shopId: null, items: {} };
+        if (balanceCut) { state.balance -= balanceCut; saveBalance(); }
+        state.cart = { shopId: null, lines: [] };
         state.couponId = null; state.remark = ''; state.timeSlot = TIME_SLOTS[0];
+        state.useBalance = true;
         saveCart();
         go('success/' + order.id);
     }
@@ -1944,15 +2405,45 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         const order = state.orders.find(o => o.id === orderId);
         if (!order) return;
         const shop = SHOP_BY_ID.get(order.shopId);
-        const items = {};
+        const lines = [];
         let skipped = 0;
-        order.items.forEach(i => { if (DISH_INDEX.has(i.id)) items[i.id] = i.qty; else skipped++; });
-        if (!Object.keys(items).length) { toast('该商家菜品已全部下架'); return; }
-        state.cart = { shopId: shop.id, items: items };
+        order.items.forEach(i => {
+            const entry = DISH_INDEX.get(i.id);
+            if (!entry) { skipped++; return; }
+            const picks = typeof i.spec === 'string' && i.spec ? i.spec.split(' / ') : [];
+            lines.push({
+                key: lineKey(i.id, picks), dishId: i.id, picks: picks,
+                qty: i.qty, unit: specUnitPrice(entry.dish, picks)
+            });
+        });
+        if (!lines.length) { toast('该商家菜品已全部下架'); return; }
+        state.cart = { shopId: shop.id, lines: lines };
         state.couponId = null;
         saveCart();
         toast(skipped ? skipped + ' 件商品已下架，其余已加入购物车' : '已加入购物车');
         go('shop/' + shop.id);
+    }
+    /* 订单状态随时间推进：0 待接单 → 1 已接单 → 2 骑手取货 → 3 已送达 */
+    function liveStatus(o) {
+        if (o.status >= 3 || o.cancelled) return o.status;
+        if (!o.ts) return o.status;
+        const mins = (Date.now() - o.ts) / 60000;
+        if (mins >= 6) return 3;
+        if (mins >= 3) return 2;
+        if (mins >= 1) return 1;
+        return 0;
+    }
+    const shopReviews = shopId =>
+        (SEED_REVIEWS[shopId] || []).slice().concat(
+            state.orders.filter(o => o.shopId === shopId && o.review)
+                .map(o => ({ user: '袋鼠用户', rating: o.review.rating, tags: o.review.tags || [],
+                             text: o.review.text || '', date: o.createdAt.slice(0, 10), mine: true }))
+        );
+    function shopRating(shopId, base) {
+        const rs = shopReviews(shopId);
+        if (!rs.length) return base;
+        const avg = rs.reduce((s, r) => s + r.rating, 0) / rs.length;
+        return Math.round(((base * 3 + avg) / 4) * 10) / 10;   // 基础分权重 3，用户评分权重 1
     }
     function doSearch() {
         const input = document.getElementById('kw');
@@ -1963,6 +2454,24 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             saveHistory();
         }
         renderApp();
+    }
+
+    /* 搜索联想：只更新联想层，不重绘整页（保住输入框焦点） */
+    function renderSuggest(value) {
+        const box = document.getElementById('suggest');
+        if (!box) return;
+        const kw = String(value || '').trim().toLowerCase();
+        if (!kw) { box.hidden = true; box.innerHTML = ''; return; }
+        const hits = [];
+        SHOPS.forEach(s => s.menu.forEach(d => {
+            if (hits.length < 8 && (d.name.toLowerCase().includes(kw) || d.desc.toLowerCase().includes(kw))) hits.push(d);
+        }));
+        if (!hits.length) { box.hidden = true; box.innerHTML = ''; return; }
+        box.hidden = false;
+        box.innerHTML = hits.map(d =>
+            '<button type="button" class="sug-item" data-sug="' + esc(d.name) + '">' +
+            icon('search') + '<span>' + esc(d.name) + '</span>' +
+            '<span style="margin-left:auto;color:var(--mt-text-3);font-size:11.5px">' + money(d.price) + '</span></button>').join('');
     }
     function showAddressSheet() {
         const body = state.addresses.map(a =>
@@ -2003,7 +2512,8 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     }
     function showCouponSheet(selectedId) {
         const subtotal = cartSubtotal();
-        const body = COUPONS.map(c => {
+        const mine = state.ownedCoupons.map(id => COUPON_BY_ID.get(id)).filter(Boolean);
+        const body = mine.map(c => {
             const usable = subtotal === 0 || subtotal >= c.threshold;
             return '<button type="button" class="coupon' + (c.id === selectedId ? ' picked' : '') + (usable ? '' : ' used') + '"' +
                 ' data-pick-coupon="' + c.id + '"' + (usable ? '' : ' disabled') + '>' +
@@ -2013,16 +2523,22 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
                     '<span class="e">' + esc(c.scope) + ' · ' + esc(c.expire) + ' 到期</span></span>' +
             '</button>';
         }).join('') +
-        (selectedId ? '<div style="padding:6px 14px 18px">' +
-            '<button type="button" class="btn-sm" style="width:100%;padding:12px" data-pick-coupon="__none">不使用红包</button></div>' : '');
-        openSheet(subtotal ? '红包（商品小计 ' + money(subtotal) + '）' : '我的红包', body, (ev, close) => {
+        (!mine.length ? '<div style="padding:26px;text-align:center;color:var(--mt-text-3)">还没有红包，去领券中心领几张吧</div>' : '') +
+        '<div style="padding:6px 14px 18px">' +
+            (selectedId ? '<button type="button" class="btn-sm" style="width:100%;padding:12px;margin-bottom:8px" data-pick-coupon="__none">不使用红包</button>' : '') +
+            '<button type="button" class="btn-sm solid" style="width:100%;padding:12px" data-action="goto-coupon-center">去领券中心</button>' +
+        '</div>';
+        openSheet(subtotal ? '我的红包（商品小计 ' + money(subtotal) + '）' : '我的红包', body, (ev, close) => {
             const btn = ev.target.closest('[data-pick-coupon]');
-            if (!btn) return;
-            const id = btn.dataset.pickCoupon;
-            close();
-            state.couponId = (id === '__none') ? null : id;
-            if (parseHash().path === 'checkout') renderApp();
-            else toast(id === '__none' ? '已取消选择' : '已选择红包');
+            if (btn) {
+                const id = btn.dataset.pickCoupon;
+                close();
+                state.couponId = (id === '__none') ? null : id;
+                if (parseHash().path === 'checkout') renderApp();
+                else toast(id === '__none' ? '已取消选择' : '已选择红包');
+                return;
+            }
+            if (ev.target.closest('[data-action="goto-coupon-center"]')) { close(); go('coupons'); }
         });
     }
 
@@ -2034,10 +2550,51 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             'toggle-theme': () => { applyTheme(!isDark()); renderApp(); },
             'pick-category': () => { state.category = el.dataset.cat; renderApp(); },
             'pick-sort': () => { state.sort = el.dataset.sort; renderApp(); },
-            'open-notice': () => toast('暂无新消息'),
+            'open-notice': () => go('messages'),
             'open-coupons': () => showCouponSheet(null),
+            'goto-coupon-center': () => go('coupons'),
 
-            'add-dish': () => addDish(Number(el.dataset.id)),
+            'shop-tab': () => { state.shopTab = el.dataset.tab; renderApp(); },
+            'toggle-fav': () => {
+                const id = Number(el.dataset.id);
+                const i = state.favorites.indexOf(id);
+                if (i === -1) { state.favorites.push(id); toast('已收藏'); }
+                else { state.favorites.splice(i, 1); toast('已取消收藏'); }
+                saveFavs();
+                renderApp();
+            },
+            'claim-coupon': () => {
+                const id = el.dataset.id;
+                if (state.ownedCoupons.indexOf(id) !== -1) { toast('已经领过啦'); return; }
+                state.ownedCoupons.push(id);
+                saveCoupons();
+                toast('领取成功，已放入红包');
+                renderApp();
+            },
+            'minus-line': () => minusLine(el.dataset.key),
+            'toggle-balance': () => {
+                state.useBalance = !state.useBalance;
+                renderApp();
+            },
+            'cancel-order': () => {
+                const id = el.dataset.id;
+                confirmDialog({ title: '取消订单', message: '确定取消这笔订单吗？取消后不可恢复。', okText: '取消订单' }).then(ok => {
+                    if (!ok) return;
+                    state.orders = state.orders.filter(o => o.id !== id);
+                    saveOrders(); toast('订单已取消'); go('orders'); renderApp();
+                });
+            },
+            'delete-order': () => {
+                const id = el.dataset.id;
+                confirmDialog({ title: '删除记录', message: '删除后订单将不再显示，确定吗？', okText: '删除' }).then(ok => {
+                    if (!ok) return;
+                    state.orders = state.orders.filter(o => o.id !== id);
+                    saveOrders(); toast('已删除'); go('orders'); renderApp();
+                });
+            },
+            'open-review': () => openReviewSheet(el.dataset.id),
+            'add-dish': () => addDish(Number(el.dataset.id),
+                el.dataset.picks !== undefined ? el.dataset.picks.split('>').filter(Boolean) : undefined),
             'minus-dish': () => minusDish(Number(el.dataset.id)),
             'toggle-drawer': () => toggleDrawer(),
             'close-drawer': () => toggleDrawer(false),
@@ -2102,14 +2659,16 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
             'clear-history': () => { state.searchHistory = []; saveHistory(); renderApp(); },
 
             'reset-demo': () => {
-                confirmDialog({ title: '重置演示数据', message: '将清空购物车、订单、地址与偏好，恢复初始状态。', okText: '重置' }).then(ok => {
+                confirmDialog({ title: '重置演示数据', message: '将清空购物车、订单、地址、红包、收藏与偏好，恢复初始状态。', okText: '重置' }).then(ok => {
                     if (!ok) return;
-                    ['kd.cart', 'kd.orders', 'kd.addresses', 'kd.searchHistory'].forEach(k => store(k, null));
-                    state.cart = { shopId: null, items: {} };
+                    ['kd.cart', 'kd.orders', 'kd.addresses', 'kd.searchHistory', 'kd.favs', 'kd.coupons', 'kd.balance'].forEach(k => store(k, null));
+                    state.cart = { shopId: null, lines: [] };
                     state.orders = SEED_ORDERS.slice();
                     state.addresses = DEFAULT_ADDRESSES.slice();
                     state.searchHistory = []; state.searchKeyword = '';
                     state.couponId = null; state.addressId = 'a1';
+                    state.favorites = []; state.ownedCoupons = ['c1', 'c2'];
+                    state.balance = 128; state.useBalance = true;
                     toast('已重置'); go('home'); renderApp();
                 });
             }
@@ -2117,6 +2676,15 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
     }
 
     document.addEventListener('click', e => {
+        const sug = e.target.closest('[data-sug]');
+        if (sug) {
+            state.searchKeyword = sug.dataset.sug;
+            state.searchHistory = [sug.dataset.sug].concat(state.searchHistory.filter(w => w !== sug.dataset.sug)).slice(0, 10);
+            saveHistory();
+            renderApp();
+            return;
+        }
+
         const goto = e.target.closest('[data-go]');
         if (goto) {
             const target = goto.dataset.go;
@@ -2159,7 +2727,9 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
         cartCount: cartCount, cartSubtotal: cartSubtotal,
         shops: SHOPS, coupons: COUPONS,
         shopById: id => SHOP_BY_ID.get(Number(id)), parseHash: parseHash,
-        art: artHTML, icon: icon, imgURL: imgURL
+        art: artHTML, icon: icon, imgURL: imgURL,
+        liveStatus: liveStatus, shopReviews: shopReviews, shopRating: shopRating,
+        specsOf: specsOf, specUnitPrice: specUnitPrice, nextDiscountGap: nextDiscountGap
     };
 })();
 </script>

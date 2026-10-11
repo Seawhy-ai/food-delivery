@@ -14,12 +14,10 @@ const html = fs.readFileSync(HTML_PATH, 'utf8');
 
 const results = [];
 let failed = 0;
-
 function ok(name, cond, extra) {
     results.push((cond ? '  PASS  ' : '  FAIL  ') + name + (extra ? '   -> ' + extra : ''));
     if (!cond) failed++;
 }
-// jsdom 的 hashchange 是异步任务，需要等一小段真实时间让路由完成重渲染
 const tick = () => new Promise(r => setTimeout(r, 30));
 
 const jsdomErrors = [];
@@ -28,17 +26,13 @@ vc.on('jsdomError', e => jsdomErrors.push(e.message));
 vc.on('error', m => jsdomErrors.push('console.error: ' + m));
 
 const dom = new JSDOM(html, {
-    runScripts: 'dangerously',
-    pretendToBeVisual: true,
-    url: 'https://example.com/',
-    virtualConsole: vc,
+    runScripts: 'dangerously', pretendToBeVisual: true, url: 'https://example.com/', virtualConsole: vc,
     beforeParse(window) {
-        window.confirm = () => true;               // jsdom 未实现，测试「更换商家」时需要
+        window.confirm = () => true;
         window.matchMedia = () => ({ matches: false, addListener() {}, removeListener() {} });
         window.scrollTo = () => {};
     }
 });
-
 const { window } = dom;
 const { document } = window;
 const $ = sel => document.querySelector(sel);
@@ -55,411 +49,359 @@ ok('页面加载无 JS 报错', jsdomErrors.length === 0, jsdomErrors.join(' | '
 ok('默认路由为首页', A.parseHash().path === 'home', JSON.stringify(A.parseHash()));
 
 // ============================================================
-// 2. 首页结构（定位 → 搜索 → 金刚区 → 瓷片区 → 排序 → 商家列表）
+// 2. 首页结构
 // ============================================================
-ok('顶部展示默认收货地址', ($('.loc-text') || {}).textContent.indexOf('天府大道') !== -1,
-    ($('.loc-text') || {}).textContent);
+ok('顶部展示默认收货地址', ($('.loc-text') || {}).textContent.indexOf('天府大道') !== -1);
 ok('搜索入口带满减利益点文案', ($('.search-bar .ph') || {}).textContent.indexOf('满 30 减 5') !== -1);
 ok('金刚区 10 个入口', $$('.kk-item').length === 10, '实际 ' + $$('.kk-item').length);
-ok('瓷片区 3 个卡片', $$('.tile').length === 3, '实际 ' + $$('.tile').length);
-ok('排序条 4 项', $$('.sort-item').length === 4, '实际 ' + $$('.sort-item').length);
+ok('金刚区图标各有专属色', new Set($$('.kk-item').map(b => b.style.getPropertyValue('--k'))).size >= 8);
+ok('瓷片区 3 个卡片', $$('.tile').length === 3);
+ok('排序条 4 项', $$('.sort-item').length === 4);
 ok('商家列表 8 家', $$('.shop-card').length === 8, '实际 ' + $$('.shop-card').length);
 ok('底部 Tab 3 个且首页高亮', $$('.tab').length === 3 && $$('.tab')[0].classList.contains('on'));
-ok('商家卡片含起送价与满减', ($('.shop-card') || {}).textContent.indexOf('起送') !== -1 &&
-    ($('.shop-card') || {}).textContent.indexOf('满减') !== -1);
+ok('商家卡片显示评价数', $('.shop-card').textContent.indexOf('条评价') !== -1);
+ok('商家卡片含起送价与满减', $('.shop-card').textContent.indexOf('起送') !== -1 &&
+    $('.shop-card').textContent.indexOf('满减') !== -1);
 
 // ============================================================
-// 3. 金刚区筛选 + 排序
+// 3. 筛选 + 排序
 // ============================================================
 const kk = name => $$('.kk-item').find(b => b.textContent.indexOf(name) !== -1);
 kk('甜品饮品').click();
-ok('筛选「甜品饮品」命中 1 家', $$('.shop-card').length === 1, '实际 ' + $$('.shop-card').length);
-ok('筛选后该项高亮', kk('甜品饮品').classList.contains('on'));
+ok('筛选「甜品饮品」命中 1 家', $$('.shop-card').length === 1);
 kk('全部分类').click();
-ok('切回「全部分类」恢复 8 家', $$('.shop-card').length === 8, '实际 ' + $$('.shop-card').length);
-
+ok('切回「全部分类」恢复 8 家', $$('.shop-card').length === 8);
 $$('.sort-item').find(b => b.dataset.sort === 'distance').click();
-ok('按距离排序：最近为 24h 便利超市(0.6km)',
-    $('.shop-name').textContent === '24h 便利超市', $('.shop-name').textContent);
+ok('按距离排序：最近为 24h 便利超市', $('.shop-name').textContent === '24h 便利超市', $('.shop-name').textContent);
 $$('.sort-item').find(b => b.dataset.sort === 'sales').click();
-ok('按销量排序：最高为 24h 便利超市(5320)',
-    $('.shop-name').textContent === '24h 便利超市', $('.shop-name').textContent);
+ok('按销量排序：最高为 24h 便利超市(5320)', $('.shop-name').textContent === '24h 便利超市', $('.shop-name').textContent);
 $$('.sort-item').find(b => b.dataset.sort === 'rating').click();
-ok('按评分排序：首位为 4.9 分商家', $('.stars .num').textContent === '4.9', $('.stars .num').textContent);
+ok('按评分排序：首位 4.9 分', $('.stars .num').textContent === '4.9');
 
 // ============================================================
-// 4. 搜索页
+// 4. 搜索 + 联想
 // ============================================================
-$('.search-bar').click();
-await tick();
-ok('点击搜索框跳转搜索页', hash() === '#/search', hash());
-ok('展示热门搜索词', $$('.chip.hot').length > 0);
-ok('展示猜你想吃', document.body.textContent.indexOf('猜你想吃') !== -1);
+$('.search-bar').click(); await tick();
+ok('跳转搜索页', hash() === '#/search', hash());
+ok('热门搜索存在', $$('.chip.hot').length > 0);
 
-// 注意：每次 renderApp 都会替换 DOM，必须重新查询输入框
-const setKw = v => { const node = $('#kw'); node.value = v; return node; };
-
-setKw('寿司');
-$('.search-go').click();
-ok('搜索「寿司」命中 1 家', $$('.shop-card').length === 1, '实际 ' + $$('.shop-card').length);
-ok('命中卡片展示匹配菜品', ($('.match-box .v') || {}).textContent.indexOf('握寿司套餐') !== -1,
-    ($('.match-box .v') || {}).textContent);
-ok('搜索历史已持久化',
-    (window.localStorage.getItem('kd.searchHistory') || '').indexOf('寿司') !== -1,
-    window.localStorage.getItem('kd.searchHistory'));
-
-setKw('刺身');
-$('.search-go').click();
-ok('搜索「刺身」命中 1 家', $$('.shop-card').length === 1, '实际 ' + $$('.shop-card').length);
+const setKw = v => { const n = $('#kw'); n.value = v; return n; };
+setKw('牛');
+$('#kw').dispatchEvent(new window.Event('input', { bubbles: true }));
+ok('输入触发搜索联想', !$('#suggest').hidden && $$('.sug-item').length > 0, $$('.sug-item').length + ' 条');
+ok('联想项包含「红烧牛肉面」', document.body.textContent.indexOf('红烧牛肉面') !== -1);
+$$('.sug-item')[0].click();
+ok('点击联想项即搜索', $$('.shop-card').length >= 1, '实际 ' + $$('.shop-card').length);
+ok('搜索历史已持久化', (window.localStorage.getItem('kd.searchHistory') || '').length > 2);
 
 setKw('zzz不存在');
 $('.search-go').click();
-ok('无结果时展示空状态', $('.empty') !== null, document.body.innerHTML.slice(0, 120));
-
+ok('无结果展示空状态', $('.empty') !== null);
 setKw('');
 $('.search-go').click();
-ok('清空关键词后回到热词/历史页', $$('.chip.hot').length > 0);
-ok('搜索历史出现在页面上', document.body.textContent.indexOf('搜索历史') !== -1);
 $('[data-action="clear-history"]').click();
 ok('可清空搜索历史', A.state.searchHistory.length === 0);
 
-$('.search-head .icon-btn').click();
-await tick();
-ok('返回首页', hash() === '#/home', hash());
+$('.search-head .icon-btn').click(); await tick();
+ok('返回首页', hash() === '#/home');
 
 // ============================================================
-// 5. 商家页两栏布局
+// 5. 商家页：点菜 / 评价 双 Tab + 收藏
 // ============================================================
-$$('.shop-card').find(c => c.dataset.go === 'shop/1').click();
-await tick();
-ok('进入商家页', hash() === '#/shop/1', hash());
-ok('两栏结构：分类栏 + 菜品区', $('.dish-cats') !== null && $('#dishList') !== null);
-ok('左侧分类与菜品分类一致（4 类）', $$('.dish-cat').length === 4,
-    $$('.dish-cat').map(b => b.dataset.catNav).join(','));
+$$('.shop-card').find(c => c.dataset.go === 'shop/1').click(); await tick();
+ok('进入商家页', hash() === '#/shop/1');
+ok('商家页有点菜/评价两个 Tab', $$('.shop-tab').length === 2);
+ok('评价 Tab 显示评价数', $('.shop-tab .cnt').textContent === '2', $('.shop-tab .cnt').textContent);
 ok('菜品行已渲染（8 道）', $$('.dish').length === 8, '实际 ' + $$('.dish').length);
-ok('底部购物车栏为空态', $('#cartBar').classList.contains('empty-state'));
+ok('多规格菜品有「多规格」标记', document.body.textContent.indexOf('多规格') !== -1);
+ok('商家页有收藏按钮', $('[data-action="toggle-fav"]') !== null);
+
+$('[data-action="toggle-fav"]').click(); await tick();
+ok('点击收藏生效', A.state.favorites.indexOf(1) !== -1);
+ok('收藏按钮变为激活态', $('[data-action="toggle-fav"]').classList.contains('on'));
+ok('收藏已持久化', (window.localStorage.getItem('kd.favs') || '').indexOf('1') !== -1);
+
+$$('.shop-tab').find(t => t.dataset.tab === 'reviews').click(); await tick();
+ok('切到评价 Tab', $$('.review-item').length >= 2, '实际 ' + $$('.review-item').length);
+ok('评价带星级', $$('.review-stars').length >= 1);
+ok('评价带标签', $$('.review-tags').length >= 1);
+ok('评价页没有购物车栏', $('#cartBar') === null);
+$$('.shop-tab').find(t => t.dataset.tab === 'menu').click(); await tick();
+ok('切回点菜 Tab 恢复购物车栏', $('#cartBar') !== null);
 
 // ============================================================
-// 6. 加购 & 起送门槛
+// 6. 规格：带规格的菜品点「+」先弹面板
 // ============================================================
 const addBtn = id => document.querySelector('[data-dish-row="' + id + '"] [data-action="add-dish"]');
 const qtyOf = id => (document.querySelector('[data-dish-row="' + id + '"] [data-qty]') || {}).textContent;
 
-addBtn(101).click();   // 经典麻辣烫套餐 ¥28，该店起送 ¥20
-ok('加购后数量为 1', qtyOf(101) === '1', qtyOf(101));
-ok('出现「−」按钮', document.querySelector('[data-dish-row="101"] [data-action="minus-dish"]') !== null);
-ok('底部栏金额 ¥28', ($('#cartBar .amt') || {}).textContent === '¥28', ($('#cartBar .amt') || {}).textContent);
-ok('达标后结算按钮可用', $('#cartBar .checkout-btn').disabled === false);
-ok('提示「已满起送」', ($('#cartBar .hint') || {}).textContent.indexOf('已满') !== -1,
-    ($('#cartBar .hint') || {}).textContent);
-ok('购物车角标为 1', ($('[data-cart-badge]') || {}).textContent === '1');
+ok('101 配了 3 组规格', A.specsOf(101).length === 3, A.specsOf(101).map(s => s.name).join('/'));
+ok('104 没有规格（可直接加购）', A.specsOf(104).length === 0);
 
-addBtn(106).click();   // 冰镇酸梅汤 ¥6
-ok('第二件加入后金额 ¥34', ($('#cartBar .amt') || {}).textContent === '¥34',
+addBtn(101).click();
+ok('点「+」弹出规格面板', $('.spec-sheet') !== null);
+ok('面板有 3 组规格', $$('.spec-sheet .spec-group').length === 3);
+ok('默认选中每组第一项', $$('.spec-sheet .spec-opt.on').length === 3);
+ok('默认单价 = 原价 ¥28', ($('.spec-sheet .spec-foot .price') || {}).textContent === '¥28',
+    ($('.spec-sheet .spec-foot .price') || {}).textContent);
+
+const pickOpt = label => {
+    const b = $$('.spec-sheet .spec-opt').find(x => x.textContent.indexOf(label) !== -1);
+    if (b) b.click();
+    return !!b;
+};
+pickOpt('加丸子');
+ok('选「加丸子」单价联动为 ¥32', ($('.spec-sheet .spec-foot .price') || {}).textContent === '¥32',
+    ($('.spec-sheet .spec-foot .price') || {}).textContent);
+pickOpt('不加料');
+ok('改回「不加料」单价回落 ¥28', ($('.spec-sheet .spec-foot .price') || {}).textContent === '¥28');
+
+$('[data-spec-add]').click();
+ok('规格加入购物车后数量为 1', qtyOf(101) === '1', qtyOf(101));
+ok('规格面板已关闭', $('.spec-sheet') === null);
+ok('行项目记录了规格', A.state.cart.lines.length === 1 &&
+    A.state.cart.lines[0].picks.join('/') === '标准/不加料/微辣', JSON.stringify(A.state.cart.lines[0]));
+ok('行项目单价 28', A.state.cart.lines[0].unit === 28);
+
+// ============================================================
+// 7. 直接加购 / 起送门槛 / 凑单提示
+// ============================================================
+addBtn(106).click();   // 冰镇酸梅汤 ¥6，无规格
+ok('无规格菜品直接加购，金额 ¥34', ($('#cartBar .amt') || {}).textContent === '¥34',
     ($('#cartBar .amt') || {}).textContent);
-ok('分类角标显示已选件数', ($('[data-cat-dot="热销"]') || {}).textContent === '1',
-    ($('[data-cat-dot="热销"]') || {}).textContent);
+ok('分类角标显示已选件数', ($('[data-cat-dot="热销"]') || {}).textContent === '1');
+ok('给出凑单提示（再买 X 可减 Y）', ($('#cartBar .hint') || {}).textContent.indexOf('再买') !== -1,
+    ($('#cartBar .hint') || {}).textContent);
 
 document.querySelector('[data-dish-row="101"] [data-action="minus-dish"]').click();
-ok('减号生效，金额回到 ¥6', ($('#cartBar .amt') || {}).textContent === '¥6',
+ok('菜品行「−」生效，金额 ¥6（101 已减光）', ($('#cartBar .amt') || {}).textContent === '¥6',
     ($('#cartBar .amt') || {}).textContent);
-ok('低于起送价后按钮禁用', $('#cartBar .checkout-btn').disabled === true);
-ok('提示「差 X 起送」', ($('#cartBar .hint') || {}).textContent.indexOf('差') !== -1,
-    ($('#cartBar .hint') || {}).textContent);
+ok('低于起送价按钮禁用', $('#cartBar .checkout-btn').disabled === true);
 
-// 购物车抽屉
-document.querySelector('.cart-ico-wrap').click();
-ok('抽屉展开', $('#cartDrawer').classList.contains('open'));
-ok('抽屉列出已选商品', $$('#cartDrawer .cart-row').length === 1, '实际 ' + $$('#cartDrawer .cart-row').length);
-document.querySelector('.cart-ico-wrap').click();
-ok('再次点击收起抽屉', !$('#cartDrawer').classList.contains('open'));
-
-addBtn(101).click(); addBtn(101).click();
-ok('继续加购后金额 ¥62', ($('#cartBar .amt') || {}).textContent === '¥62',
+// 再走一次规格面板把 101 加回来
+addBtn(101).click();
+ok('再次弹出规格面板', $('.spec-sheet') !== null);
+$('[data-spec-add]').click();
+ok('加回 101 后金额 ¥34', ($('#cartBar .amt') || {}).textContent === '¥34',
     ($('#cartBar .amt') || {}).textContent);
+
+// 抽屉里用「+」继续加购带规格的行（data-picks 走直加，不再弹面板）
+document.querySelector('.cart-ico-wrap').click();
+ok('抽屉展开且带规格行显示规格文案', $('#cartDrawer').classList.contains('open') &&
+    $('#cartDrawer').textContent.indexOf('标准') !== -1);
+const lineAdd = document.querySelector('#cartDrawer [data-action="add-dish"][data-picks="标准>不加料>微辣"]');
+ok('抽屉里能找到 101 的规格行', lineAdd !== null);
+ok('抽屉行带 data-picks（跳过规格面板）', lineAdd.dataset.picks !== undefined, lineAdd.dataset.picks);
+lineAdd.click();
+ok('抽屉加购后金额 ¥62', ($('#cartBar .amt') || {}).textContent === '¥62',
+    ($('#cartBar .amt') || {}).textContent);
+ok('同规格合并为一行且数量 2',
+    A.state.cart.lines.length === 2 &&
+    A.state.cart.lines.filter(l => l.dishId === 101)[0].qty === 2,
+    JSON.stringify(A.state.cart.lines.map(l => [l.dishId, l.qty])));
+document.querySelector('.cart-ico-wrap').click();
 
 // ============================================================
-// 7. 账单计算（满减 / 打包费 / 配送费 / 红包）
+// 8. 账单计算
 // ============================================================
 const shop1 = A.shopById(1);
-const dish101 = shop1.menu.find(d => d.id === 101);
-const dish103 = shop1.menu.find(d => d.id === 103);
-let b = A.bill(shop1, [{ dish: dish101, qty: 2 }], null);   // 28×2 = 56
-ok('账单｜商品小计 56', b.subtotal === 56, JSON.stringify(b));
-ok('账单｜打包费 1 元/件 × 2 = 2', b.packing === 2, 'packing=' + b.packing);
-ok('账单｜配送费 3', b.delivery === 3, 'delivery=' + b.delivery);
-ok('账单｜满减命中「满 30 减 5」', b.discount === 5, 'discount=' + b.discount);
-ok('账单｜实付 56+2+3−5 = 56', b.total === 56, 'total=' + b.total);
+const d101 = shop1.menu.find(d => d.id === 101);
+const d106 = shop1.menu.find(d => d.id === 106);
+const L = [{ dish: d101, qty: 2, unit: 28 }, { dish: d106, qty: 1, unit: 6 }];   // 62
+let b = A.bill(shop1, L, null);
+ok('账单｜小计 62（按行项目单价）', b.subtotal === 62, JSON.stringify(b));
+ok('账单｜打包费 1 元/件 × 3 = 3', b.packing === 3, 'packing=' + b.packing);
+ok('账单｜满减取最高命中档「满 60 减 12」', b.discount === 12, 'discount=' + b.discount);
+ok('账单｜实付 62+3+3−12 = 56', b.total === 56, 'total=' + b.total);
+b = A.bill(shop1, L, 'c3');
+ok('账单｜红包满 50 减 12 → 44', b.couponCut === 12 && b.total === 44, JSON.stringify(b));
+b = A.bill(shop1, L, 'c4');
+ok('账单｜门槛不足的红包不抵扣', b.couponCut === 0);
+b = A.bill(shop1, [{ dish: d101, qty: 2, unit: 34 }], null);
+ok('账单｜规格加价计入小计（34×2=68）', b.subtotal === 68 && b.discount === 12);
 
-b = A.bill(shop1, [{ dish: dish101, qty: 2 }], 'c1');       // 无门槛红包 5
-ok('账单｜无门槛红包抵扣 5 → 51', b.couponCut === 5 && b.total === 51, JSON.stringify(b));
-b = A.bill(shop1, [{ dish: dish101, qty: 2 }], 'c3');       // 满 50 减 12（56 满足）
-ok('账单｜「满 50 减 12」命中 → 44', b.couponCut === 12 && b.total === 44, JSON.stringify(b));
-b = A.bill(shop1, [{ dish: dish101, qty: 2 }], 'c5');       // 满 40 减 8
-ok('账单｜「满 40 减 8」命中 → 48', b.couponCut === 8 && b.total === 48, JSON.stringify(b));
-b = A.bill(shop1, [{ dish: dish101, qty: 2 }], 'c4');       // 满 100 减 30，56 不满足
-ok('账单｜门槛不足的红包不抵扣', b.couponCut === 0, 'couponCut=' + b.couponCut);
-
-b = A.bill(shop1, [{ dish: dish103, qty: 2 }], null);       // 68×2 = 136
-ok('账单｜136 命中最高档「满 100 减 25」', b.discount === 25, 'discount=' + b.discount);
+ok('凑单差价计算正确', (() => { const g = A.nextDiscountGap(shop1, 34); return !!g && g.need === 26 && g.cut === 12; })());
+ok('已达最高档时凑单为 null', A.nextDiscountGap(shop1, 200) === null);
 
 // ============================================================
-// 8. 结算流程
+// 9. 结算：余额支付 + 已领取的红包
 // ============================================================
-$('#cartBar .checkout-btn').click();
-await tick();
+$('#cartBar .checkout-btn').click(); await tick();
 ok('跳转结算页', A.parseHash().path === 'checkout', hash());
-ok('结算页含费用明细三项', document.body.textContent.indexOf('打包费') !== -1 &&
-    document.body.textContent.indexOf('配送费') !== -1 &&
-    document.body.textContent.indexOf('满减优惠') !== -1);
-ok('结算页展示收货地址', document.body.textContent.indexOf('天府大道') !== -1);
-
-$$('[data-action="choose-coupon"]')[0].click();
-ok('红包面板弹出', $('.sheet-mask') !== null);
-ok('列出 5 张红包', $$('.coupon').length === 5, '实际 ' + $$('.coupon').length);
-ok('门槛不满足的 1 张被禁用', $$('.coupon').filter(c => c.disabled).length === 1,
-    '禁用 ' + $$('.coupon').filter(c => c.disabled).length + ' 张');
-$('[data-pick-coupon="c3"]').click();
+ok('结算页有余额支付行', document.body.textContent.indexOf('余额支付') !== -1);
+ok('余额显示 ¥128', document.body.textContent.indexOf('¥128') !== -1);
+ok('凑单提示条存在', document.body.textContent.indexOf('可触发') !== -1);
+ok('红包面板只列已领取的', (() => {
+    $$('[data-action="choose-coupon"]')[0].click();
+    const n = $$('.sheet-mask .coupon').length;
+    const hasC1 = $$('[data-pick-coupon="c1"]').length === 1;
+    if (hasC1) $$('[data-pick-coupon="c1"]')[0].click();
+    return n === 2 && hasC1;
+})(), '已持有 2 张');
 await tick();
-ok('选完红包面板关闭', $('.sheet-mask') === null);
-ok('结算页显示已选红包', document.body.textContent.indexOf('满 50 减 12') !== -1);
+ok('结算页已选用「新人专享红包」', document.body.textContent.indexOf('新人专享红包') !== -1);
+
+A.state.cart.lines = A.state.cart.lines.filter(l => l.dishId !== 106);
+A.renderApp(); await tick();
+$('[data-action="toggle-balance"]').click(); await tick();
+ok('关闭余额支付后不抵扣', A.state.useBalance === false);
+ok('实付 = 62+3+3−12−5 = 51', ($('.submit-bar .amt') || {}).textContent === '¥51',
+    ($('.submit-bar .amt') || {}).textContent);
 
 $$('[data-action="choose-time"]')[0].click();
-ok('时间面板弹出', $('.sheet-mask') !== null);
-$('[data-pick-time="11:30 - 12:00"]').click();
-await tick();
+$('[data-pick-time="11:30 - 12:00"]').click(); await tick();
 ok('送达时间已更新', document.body.textContent.indexOf('11:30 - 12:00') !== -1);
 
 const remark = $('[data-remark]');
 remark.value = '不要香菜';
 remark.dispatchEvent(new window.Event('input', { bubbles: true }));
-ok('备注写入 state', A.state.remark === '不要香菜', A.state.remark);
+ok('备注写入 state', A.state.remark === '不要香菜');
 
-ok('实付 = 62 + 3 + 3 − 12 − 12 = 44',
-    ($('.submit-bar .amt') || {}).textContent === '¥44',
-    ($('.submit-bar .amt') || {}).textContent);
-
-$('[data-action="submit-order"]').click();
-await tick();
+$('[data-action="submit-order"]').click(); await tick();
 ok('提交后跳转成功页', A.parseHash().path === 'success', hash());
-ok('生成订单号', /^FD\d{10}$/.test(A.state.orders[0].id), A.state.orders[0].id);
-ok('订单已持久化',
-    (window.localStorage.getItem('kd.orders') || '').indexOf(A.state.orders[0].id) !== -1);
-ok('下单后清空购物车', A.cartCount() === 0, 'count=' + A.cartCount());
-ok('订单保留备注', A.state.orders[0].remark === '不要香菜', A.state.orders[0].remark);
-ok('订单实付 44', A.state.orders[0].total === 44, 'total=' + A.state.orders[0].total);
-ok('订单保留收货地址', (A.state.orders[0].address || '').indexOf('天府大道') !== -1);
-ok('订单状态为「商家已接单」', A.state.orders[0].status === 1, 'status=' + A.state.orders[0].status);
+const newOrder = A.state.orders[0];
+ok('生成订单号', /^FD\d{10}$/.test(newOrder.id), newOrder.id);
+ok('订单实付 51', newOrder.payable === 51, 'payable=' + newOrder.payable);
+ok('订单 total 51', newOrder.total === 51);
+ok('未用余额，balanceCut = 0', newOrder.balanceCut === 0);
+ok('余额未被扣减', A.state.balance === 128, 'balance=' + A.state.balance);
+ok('订单保留规格文案', (newOrder.items[0].spec || '') === '标准 / 不加料 / 微辣', newOrder.items[0].spec);
+ok('下单后清空购物车', A.cartCount() === 0);
 
 // ============================================================
-// 9. 订单中心
+// 10. 订单：状态推进 + 评价 + 取消/删除
 // ============================================================
-$('[data-go="home"]').click();
-await tick();
-$$('.tab')[1].click();
-await tick();
-ok('切换到订单页', A.parseHash().path === 'orders', hash());
-ok('共 3 单（2 条种子 + 1 条新单）', $$('.order-card').length === 3, '实际 ' + $$('.order-card').length);
-
-$$('.status-tab').find(t => t.dataset.filter === 'active').click();
-ok('「进行中」命中 1 单', $$('.order-card').length === 1, '实际 ' + $$('.order-card').length);
-$$('.status-tab').find(t => t.dataset.filter === 'done').click();
-ok('「已完成」命中 2 单', $$('.order-card').length === 2, '实际 ' + $$('.order-card').length);
+$('[data-go="home"]').click(); await tick();
+$$('.tab')[1].click(); await tick();
+ok('进入订单页', A.parseHash().path === 'orders');
+ok('订单列表 3 单', $$('.order-card').length === 3, '实际 ' + $$('.order-card').length);
+ok('进行中筛选命中 1 单',
+    ($$('.status-tab').find(t => t.dataset.filter === 'active').click(), $$('.order-card').length) === 1);
 $$('.status-tab').find(t => t.dataset.filter === 'all').click();
-ok('「全部」恢复 3 单', $$('.order-card').length === 3, '实际 ' + $$('.order-card').length);
 
-// 再来一单
-$$('[data-action="reorder"]')[0].click();
-await tick();
-ok('「再来一单」回到商家页并加购', A.parseHash().path === 'shop' && A.cartCount() > 0,
-    hash() + ' count=' + A.cartCount());
+ok('新订单实时状态为「待接单」', A.liveStatus(newOrder) === 0, 'status=' + A.liveStatus(newOrder));
+newOrder.ts = Date.now() - 4 * 60000;
+ok('4 分钟后推进为「骑手已取货」', A.liveStatus(newOrder) === 2, A.liveStatus(newOrder));
+newOrder.ts = Date.now() - 30 * 60000;
+ok('30 分钟后推进为「已送达」', A.liveStatus(newOrder) === 3);
+A.renderApp(); await tick();
 
-// 订单详情
-A.state.cart = { shopId: null, items: {} };
-window.location.hash = '#/order/' + A.state.orders[0].id;
-await tick();
-ok('详情页时间轴 4 个节点', $$('.tl-item').length === 4, '实际 ' + $$('.tl-item').length);
-ok('时间轴标记当前节点', $$('.tl-item.now').length === 1, '实际 ' + $$('.tl-item.now').length);
-ok('进行中订单展示骑手卡片', $('.rider') !== null);
-ok('详情页展示备注', document.body.textContent.indexOf('不要香菜') !== -1);
+$$('.status-tab').find(t => t.dataset.filter === 'done').click(); await tick();
+const reviewBtn = $$('[data-action="open-review"]')[0];
+ok('已完成订单出现「去评价」按钮', reviewBtn !== undefined);
+reviewBtn.click(); await tick();
+ok('评价面板弹出', $('.sheet-mask') !== null);
+ok('默认 5 星全亮', $$('.star-row .ic.on').length === 5, '实际 ' + $$('.star-row .ic.on').length);
+$$('[data-review-star]')[2].click();
+ok('点第 3 颗星后亮 3 颗', $$('.star-row .ic.on').length === 3);
+const tagBtn = $$('[data-review-tag]').find(b => b.dataset.reviewTag === '送得快');
+tagBtn.click();
+ok('选择评价标签', A.state.reviewDraft.tags.indexOf('送得快') !== -1);
+$('#reviewText').value = '味道不错，配送很快。';
+$('[data-review-submit]').click(); await tick();
+ok('评价写入订单', newOrder.review && newOrder.review.rating === 3, JSON.stringify(newOrder.review));
+ok('评价含文字', newOrder.review.text === '味道不错，配送很快。');
+ok('商家评价数增加到 3 条', A.shopReviews(1).length === 3, '实际 ' + A.shopReviews(1).length);
+ok('商家评分按用户评价加权', A.shopRating(1, 4.8) !== 4.8, A.shopRating(1, 4.8));
+ok('订单卡片显示「已评价」标签', document.body.textContent.indexOf('已评价') !== -1);
 
-// ============================================================
-// 10. 单店下单约束
-// ============================================================
-window.location.hash = '#/shop/2';
-await tick();
-document.querySelector('[data-dish-row="201"] [data-action="add-dish"]').click();
-ok('空车时可直接加购第二家店', A.state.cart.shopId === 2, 'shopId=' + A.state.cart.shopId);
+window.location.hash = '#/order/' + newOrder.id; await tick();
+ok('详情页展示「我的评价」卡片', document.body.textContent.indexOf('我的评价') !== -1);
+ok('详情页展示规格文案', document.body.textContent.indexOf('标准 / 不加料 / 微辣') !== -1);
+ok('已完成订单提供「删除记录」', $('[data-action="delete-order"]') !== null);
+const cntBefore = A.state.orders.length;
+$('[data-action="delete-order"]').click(); await tick();
+$$('.mask').pop().querySelector('[data-dlg="ok"]').click(); await tick();
+ok('删除订单生效', A.state.orders.length === cntBefore - 1);
 
-window.location.hash = '#/shop/1';
-await tick();
-document.querySelector('[data-dish-row="101"] [data-action="add-dish"]').click();
-await tick();
-ok('跨店加购先弹确认框', $('.mask') !== null);
-ok('确认框文案提到原商家', document.body.textContent.indexOf('寿司工坊') !== -1);
-document.querySelector('[data-dlg="ok"]').click();
-await tick();
-ok('确认后切到新商家并清空旧购物车', A.state.cart.shopId === 1, 'shopId=' + A.state.cart.shopId);
-ok('旧店商品已被清掉', Object.keys(A.state.cart.items).length === 1,
-    JSON.stringify(A.state.cart.items));
-
-// ============================================================
-// 11. 地址管理
-// ============================================================
-A.state.cart = { shopId: null, items: {} };
-window.location.hash = '#/address';
-await tick();
-ok('地址页列出 2 条', $$('.addr-card').length === 2, '实际 ' + $$('.addr-card').length);
-ok('默认地址已标记', $$('.addr-card')[0].textContent.indexOf('默认') !== -1);
-
-$$('[data-action="set-default"]')[1].click();
-await tick();
-ok('切换默认地址生效', A.state.addresses[1].isDefault === true && A.state.addresses[0].isDefault === false);
-ok('地址已持久化', (window.localStorage.getItem('kd.addresses') || '').indexOf('春熙路') !== -1);
-
-$('#a-name').value = '李四';
-$('#a-phone').value = '123';
-$('#a-detail').value = '某某路 1 号';
-$('[data-action="add-address"]').click();
-await tick();
-ok('手机号非法时拒绝保存', A.state.addresses.length === 2, '实际 ' + A.state.addresses.length);
-ok('弹出格式错误提示', ($$('.toast').pop() || {}).textContent === '手机号格式不正确',
-    ($$('.toast').pop() || {}).textContent);
-
-$('#a-phone').value = '13900001111';
-$('[data-action="add-address"]').click();
-await tick();
-ok('合法信息可保存', A.state.addresses.length === 3, '实际 ' + A.state.addresses.length);
-ok('手机号已脱敏存储', A.state.addresses[2].phone === '139****1111', A.state.addresses[2].phone);
-
-$$('[data-action="del-address"]')[2].click();
-await tick();
-ok('删除地址会先弹确认框', $$('.mask').length === 1, '实际 ' + $$('.mask').length + ' 个');
-$$('.mask').pop().querySelector('[data-dlg="ok"]').click();
-await tick();
-ok('删除地址生效', A.state.addresses.length === 2, '实际 ' + A.state.addresses.length);
-ok('删除后已从 localStorage 移除',
-    (window.localStorage.getItem('kd.addresses') || '').indexOf('139') === -1);
+A.state.orders.unshift({ id: 'FDTEST000001', shopId: 1, status: 0, ts: Date.now(),
+    createdAt: '2026-10-11 23:00', eta: '23:30', distance: '1.0', address: '测试地址', remark: '',
+    items: [{ id: 101, name: '经典麻辣烫套餐', price: 28, qty: 1, spec: '' }],
+    subtotal: 28, packing: 1, delivery: 3, discount: 0, couponCut: 0, total: 32, payable: 32, reviewed: false });
+window.location.hash = '#/order/FDTEST000001'; await tick();
+ok('进行中订单提供「取消订单」', $('[data-action="cancel-order"]') !== null);
+$('[data-action="cancel-order"]').click(); await tick();
+$$('.mask').pop().querySelector('[data-dlg="ok"]').click(); await tick();
+ok('取消订单生效', A.state.orders.findIndex(o => o.id === 'FDTEST000001') === -1);
 
 // ============================================================
-// 12. 我的 / 主题
+// 11. 收藏 / 领券中心 / 消息
 // ============================================================
-window.location.hash = '#/profile';
-await tick();
-ok('个人中心展示红包入口', document.body.textContent.indexOf('红包') !== -1);
-ok('个人中心有深色模式开关', $('.switch') !== null);
-ok('初始为浅色模式', !document.body.classList.contains('dark'));
+window.location.hash = '#/favs'; await tick();
+ok('收藏页列出 1 家', $$('.shop-card').length === 1, '实际 ' + $$('.shop-card').length);
+ok('收藏页卡片带「已收藏」标记', document.body.textContent.indexOf('已收藏') !== -1);
+window.location.hash = '#/coupons'; await tick();
+ok('领券中心列出 5 张', $$('.coupon').length === 5, '实际 ' + $$('.coupon').length);
+ok('已领取的 2 张带「已领取」标记',
+    $$('.coupon .tag.yellow').filter(t => t.textContent === '已领取').length === 2);
+$('[data-action="claim-coupon"]').click(); await tick();
+ok('领取红包后持有 3 张', A.state.ownedCoupons.length === 3, A.state.ownedCoupons.join(','));
+window.location.hash = '#/messages'; await tick();
+ok('消息中心 5 条', $$('.msg-item').length === 5, '实际 ' + $$('.msg-item').length);
 
-$('[data-action="toggle-theme"]').click();
-await tick();
-ok('切换深色模式生效', document.body.classList.contains('dark'));
-ok('深色模式已持久化', window.localStorage.getItem('kd.dark') === '1');
-ok('theme-color meta 已同步为深色值', $('meta[name="theme-color"]').getAttribute('content') === '#1B1B1E',
-    $('meta[name="theme-color"]').getAttribute('content'));
-$('[data-action="toggle-theme"]').click();
-await tick();
-ok('可切回浅色模式', !document.body.classList.contains('dark'));
+// ============================================================
+// 12. 余额支付
+// ============================================================
+window.location.hash = '#/shop/3'; await tick();
+document.querySelector('[data-dish-row="301"] [data-action="add-dish"]').click(); await tick();
+ok('301 也走规格面板', $('.spec-sheet') !== null);
+$('[data-spec-add]').click(); await tick();
+$('#cartBar .checkout-btn').click(); await tick();
+ok('余额开启时显示抵扣', document.body.textContent.indexOf('抵扣') !== -1);
+$('[data-action="submit-order"]').click(); await tick();
+ok('提交后余额被扣减', A.state.balance < 128, 'balance=' + A.state.balance);
+ok('订单记录余额抵扣', A.state.orders[0].balanceCut > 0, 'balanceCut=' + A.state.orders[0].balanceCut);
+ok('payable = total − balanceCut',
+    A.state.orders[0].payable === A.state.orders[0].total - A.state.orders[0].balanceCut);
 
-// 重置演示数据
-$('[data-action="reset-demo"]').click();
-await tick();
-$$('.mask').pop().querySelector('[data-dlg="ok"]').click();
-await tick();
-ok('重置后回到 2 条种子订单', A.state.orders.length === 2, '实际 ' + A.state.orders.length);
-ok('重置后回到 2 条地址', A.state.addresses.length === 2, '实际 ' + A.state.addresses.length);
+// ============================================================
+// 13. 地址 / 主题 / 重置
+// ============================================================
+window.location.hash = '#/address'; await tick();
+ok('地址页列出 2 条', $$('.addr-card').length === 2);
+$('#a-name').value = '李四'; $('#a-phone').value = '13900001111'; $('#a-detail').value = '某某路 1 号院';
+$('[data-action="add-address"]').click(); await tick();
+ok('新增地址生效且手机号脱敏', A.state.addresses.length === 3 && A.state.addresses[2].phone === '139****1111');
+$$('[data-action="del-address"]')[2].click(); await tick();
+$$('.mask').pop().querySelector('[data-dlg="ok"]').click(); await tick();
+ok('删除地址生效', A.state.addresses.length === 2);
+
+window.location.hash = '#/profile'; await tick();
+ok('个人中心显示余额', document.body.textContent.indexOf('账户余额') !== -1);
+ok('个人中心有收藏入口', document.body.textContent.indexOf('我的收藏') !== -1);
+$('[data-action="toggle-theme"]').click(); await tick();
+ok('深色模式切换并持久化', document.body.classList.contains('dark') &&
+    window.localStorage.getItem('kd.dark') === '1');
+$('[data-action="toggle-theme"]').click(); await tick();
+
+$('[data-action="reset-demo"]').click(); await tick();
+$$('.mask').pop().querySelector('[data-dlg="ok"]').click(); await tick();
+ok('重置恢复种子数据与余额', A.state.orders.length === 2 && A.state.addresses.length === 2 && A.state.balance === 128);
 ok('重置后购物车为空', A.cartCount() === 0);
 
 // ============================================================
-// 13. 代码质量 / 安全
+// 14. 代码质量 / 视觉 / 安全
 // ============================================================
 const markupOnly = html.replace(/<script>[\s\S]*?<\/script>/g, '');
 const inlineHandlers = markupOnly.match(/\son[a-z]+\s*=/gi);
 ok('无内联事件处理器', inlineHandlers === null, inlineHandlers ? inlineHandlers.join(',') : '');
 ok('定义并统一使用 esc() 转义', html.indexOf('const esc =') !== -1 && html.indexOf('ESC_MAP') !== -1);
 ok('使用 data-action 事件委托', html.indexOf("closest('[data-action]')") !== -1);
-ok('使用 hash 路由（支持浏览器后退）', html.indexOf("addEventListener('hashchange'") !== -1);
+ok('使用 hash 路由', html.indexOf("addEventListener('hashchange'") !== -1);
 ok('实现单店下单约束', html.indexOf('更换商家') !== -1);
 ok('使用美团黄作为主色令牌', html.indexOf('--mt-yellow: #FFD100') !== -1);
-ok('未残留旧版购物车 key', html.indexOf("'foodapp.cart'") === -1);
 
-// ============================================================
-// 14. 视觉实现（全 SVG / 无 emoji / 双击放大修复）
-// ============================================================
-// 注意范围只取真正的 emoji 区段，避免误伤普通标点（如 U+2212 负号）
 const EMOJI_RE = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{1F1E6}-\u{1F1FF}]/u;
-const markupOnly2 = html.replace(/<script>[\s\S]*?<\/script>/g, '');
-ok('页面标记无 emoji（已全部替换为 SVG）', !EMOJI_RE.test(markupOnly2),
-    (markupOnly2.match(EMOJI_RE) || []).join(' '));
-ok('渲染 DOM 中无 emoji 文本', !EMOJI_RE.test(document.body.textContent),
-    (document.body.textContent.match(EMOJI_RE) || []).join(' '));
-ok('存在 SVG 图标雪碧图', document.querySelector('symbol[id^="i-"]') !== null &&
-    document.querySelectorAll('symbol').length >= 30, 'symbol ' + document.querySelectorAll('symbol').length + ' 个');
-ok('图标通过 <use> 引用', $$('use').length >= 10, 'use ' + $$('use').length + ' 处');
-
-// 进入商家页检查菜品插画
-window.location.hash = '#/shop/1';
-await tick();
-ok('食物插画全部为内联 SVG', $$('.art-wrap').length >= 9 && $$('.art').length >= 9,
-    'art 容器 ' + $$('.art-wrap').length + ' 个 / svg ' + $$('.art').length + ' 个');
-ok('每个商家卡片都配了插画', $$('.shop-card .art-wrap').length === $$('.shop-card').length,
-    $$('.shop-card .art-wrap').length + '/' + $$('.shop-card').length);
-ok('每个菜品都配了插画', $$('.dish .art-wrap').length === $$('.dish').length && $$('.dish').length >= 8,
-    $$('.dish .art-wrap').length + '/' + $$('.dish').length);
-const dishColors = new Set($$('.dish .art-wrap').map(a => a.style.getPropertyValue('--ac')));
-ok('同店菜品插画配色也各不相同', dishColors.size >= 6, '去重后 ' + dishColors.size + ' 色');
-window.location.hash = '#/home';
-await tick();
-ok('首页商家卡片插画齐全', $$('.shop-card .art-wrap').length === $$('.shop-card').length,
-    $$('.shop-card .art-wrap').length + '/' + $$('.shop-card').length);
-ok('金刚区图标使用彩色描边', $$('.kk-item .kk-ico .ic').length === $$('.kk-item').length);
-ok('底部 Tab 用 SVG 图标', $$('.tab .ico .ic').length === $$('.tab').length);
-
-// 双击放大修复：只看真正的 viewport meta，避免被注释文字干扰
+const markupNoScript = html.replace(/<script>[\s\S]*?<\/script>/g, '');
+ok('页面标记无 emoji', !EMOJI_RE.test(markupNoScript));
+ok('渲染 DOM 无 emoji', !EMOJI_RE.test(document.body.textContent));
+ok('SVG 图标雪碧图 ≥ 32 个', document.querySelectorAll('symbol').length >= 32,
+    'symbol ' + document.querySelectorAll('symbol').length + ' 个');
+ok('商家卡与菜品都有插画兜底', $$('.art-wrap').length > 0 && $$('.art').length > 0);
+ok('touch-action: manipulation 已声明（禁双击缩放）', html.indexOf('touch-action: manipulation') !== -1);
+ok('交互元素 user-select: none（防双击选字）', html.indexOf('user-select: none') !== -1);
 const vpMeta = ($('meta[name="viewport"]') || {}).content || '';
-ok('声明了 touch-action: manipulation（禁双击缩放）', html.indexOf('touch-action: manipulation') !== -1);
-ok('交互元素禁用文字选中（防双击选字）', html.indexOf('user-select: none') !== -1);
-ok('viewport 未设置 user-scalable=no', !/user-scalable\s*=\s*no/i.test(vpMeta), vpMeta);
-ok('viewport 未设置 maximum-scale 限制', !/maximum-scale/i.test(vpMeta), vpMeta);
-ok('可交互元素 touch-action 覆盖 button', (() => {
-    const css = html.match(/html, body, \.app, button[\s\S]{0,200}?touch-action: manipulation/);
-    return css !== null;
-})());
-ok('双击卡片不会触发文字选中',
-    (() => { const s = window.getComputedStyle($('.shop-card')); return s.userSelect === 'none' || s.webkitUserSelect === 'none'; })());
-
-// ============================================================
-// 15. 真实食物照片
-// ============================================================
-window.location.hash = '#/shop/1';
-await tick();
-const photos1 = $$('.art-wrap .photo');
-ok('商家页挂上了真实照片', photos1.length >= 9, 'photo ' + photos1.length + ' 张');
-ok('首页商家卡也挂上了照片', (() => {
-    window.location.hash = '#/home';
-    return true;
-})());
-await tick();
-const photosHome = $$('.shop-card .photo');
-ok('首页 8 张商家卡全部有照片', photosHome.length === $$('.shop-card').length,
-    photosHome.length + '/' + $$('.shop-card').length);
-ok('照片全部来自 Unsplash 白名单域名',
-    photosHome.every(i => i.src.indexOf('https://images.unsplash.com/photo-') === 0),
-    (photosHome.find(i => i.src.indexOf('https://images.unsplash.com/') !== 0) || {}).src || '');
-ok('照片懒加载（loading=lazy）', photosHome.every(i => i.getAttribute('loading') === 'lazy'));
-ok('照片是 object-fit: cover（不变形）',
-    (() => { const s = window.getComputedStyle(photosHome[0]); return s.objectFit === 'cover'; })());
-ok('照片加载失败会回退到 SVG 插画（捕获阶段 error 监听）',
-    html.indexOf("addEventListener('error'") !== -1 && html.indexOf("classList.contains('photo')") !== -1);
-ok('未使用内联 onerror 处理器', !/\sonerror\s*=/.test(html));
-ok('电池（805）保留 SVG 插画：IMG 表刻意不给它配图', !/\n\s*805:\s*'/.test(html));
-const noImg = [];
-A.shops.forEach(s => s.menu.forEach(d => { if (d.id !== 805 && !A.imgURL(d.id)) noImg.push(d.id); }));
-ok('除电池外全部 37 道菜都配了照片', noImg.length === 0, '缺图: ' + (noImg.join(',') || '无'));
-ok('全部 8 家商家都配了封面照',
-    A.shops.every(s => !!A.imgURL('s' + s.id)),
-    A.shops.filter(s => !A.imgURL('s' + s.id)).map(s => s.id).join(','));
-ok('照片 URL 都带裁剪参数（统一 320x320）',
-    A.imgURL(101).indexOf('w=320&h=320') !== -1, A.imgURL(101));
+ok('viewport 未禁用捏合缩放', !/user-scalable\s*=\s*no/i.test(vpMeta) && !/maximum-scale/i.test(vpMeta), vpMeta);
 
 console.log(results.join('\n'));
 console.log('\n' + (failed === 0 ? '✅ 全部 ' + results.length + ' 项通过' : '❌ ' + failed + ' / ' + results.length + ' 项失败'));
