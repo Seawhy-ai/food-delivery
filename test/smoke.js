@@ -57,7 +57,7 @@ ok('金刚区 10 个入口', $$('.kk-item').length === 10, '实际 ' + $$('.kk-i
 ok('金刚区图标各有专属色', new Set($$('.kk-item').map(b => b.style.getPropertyValue('--k'))).size >= 8);
 ok('瓷片区 3 个卡片', $$('.tile').length === 3);
 ok('排序条 4 项', $$('.sort-item').length === 4);
-ok('商家列表 8 家', $$('.shop-card').length === 8, '实际 ' + $$('.shop-card').length);
+ok('商家列表 21 家', $$('.shop-card').length === 21, '实际 ' + $$('.shop-card').length);
 ok('底部 Tab 3 个且首页高亮', $$('.tab').length === 3 && $$('.tab')[0].classList.contains('on'));
 ok('商家卡片显示评价数', $('.shop-card').textContent.indexOf('条评价') !== -1);
 ok('商家卡片含起送价与满减', $('.shop-card').textContent.indexOf('起送') !== -1 &&
@@ -68,9 +68,9 @@ ok('商家卡片含起送价与满减', $('.shop-card').textContent.indexOf('起
 // ============================================================
 const kk = name => $$('.kk-item').find(b => b.textContent.indexOf(name) !== -1);
 kk('甜品饮品').click();
-ok('筛选「甜品饮品」命中 1 家', $$('.shop-card').length === 1);
+ok('筛选「甜品饮品」命中 3 家', $$('.shop-card').length === 3, '实际 ' + $$('.shop-card').length);
 kk('全部分类').click();
-ok('切回「全部分类」恢复 8 家', $$('.shop-card').length === 8);
+ok('切回「全部分类」恢复 21 家', $$('.shop-card').length === 21);
 $$('.sort-item').find(b => b.dataset.sort === 'distance').click();
 ok('按距离排序：最近为 24h 便利超市', $('.shop-name').textContent === '24h 便利超市', $('.shop-name').textContent);
 $$('.sort-item').find(b => b.dataset.sort === 'sales').click();
@@ -308,6 +308,12 @@ ok('订单卡片显示「已评价」标签', document.body.textContent.indexOf(
 window.location.hash = '#/order/' + newOrder.id; await tick();
 ok('详情页展示「我的评价」卡片', document.body.textContent.indexOf('我的评价') !== -1);
 ok('详情页展示规格文案', document.body.textContent.indexOf('标准 / 不加料 / 微辣') !== -1);
+ok('订单详情渲染配送地图', $('.map-card svg') !== null);
+ok('地图标注商家与收货地址', $('.map-card').textContent.indexOf('商家') !== -1 &&
+    $('.map-card').textContent.indexOf('收货地址') !== -1);
+ok('已送达订单地图无骑手标记（已到站）', $('.map-rider-pulse') === null);
+ok('订单明细每道菜都带商品图', $$('.oi .thumb .photo').length === newOrder.items.length,
+    $$('.oi .thumb .photo').length + '/' + newOrder.items.length);
 ok('已完成订单提供「删除记录」', $('[data-action="delete-order"]') !== null);
 const cntBefore = A.state.orders.length;
 $('[data-action="delete-order"]').click(); await tick();
@@ -320,6 +326,8 @@ A.state.orders.unshift({ id: 'FDTEST000001', shopId: 1, status: 0, ts: Date.now(
     subtotal: 28, packing: 1, delivery: 3, discount: 0, couponCut: 0, total: 32, payable: 32, reviewed: false });
 window.location.hash = '#/order/FDTEST000001'; await tick();
 ok('进行中订单提供「取消订单」', $('[data-action="cancel-order"]') !== null);
+            ok('进行中订单地图有骑手标记', $('.map-rider-pulse') !== null);
+
 $('[data-action="cancel-order"]').click(); await tick();
 $$('.mask').pop().querySelector('[data-dlg="ok"]').click(); await tick();
 ok('取消订单生效', A.state.orders.findIndex(o => o.id === 'FDTEST000001') === -1);
@@ -395,6 +403,18 @@ const EMOJI_RE = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}
 const markupNoScript = html.replace(/<script>[\s\S]*?<\/script>/g, '');
 ok('页面标记无 emoji', !EMOJI_RE.test(markupNoScript));
 ok('渲染 DOM 无 emoji', !EMOJI_RE.test(document.body.textContent));
+ok('商家规模 21 家 / 116 道菜',
+    A.shops.length === 21 && A.shops.reduce((s, x) => s + x.menu.length, 0) === 112,
+    A.shops.length + ' 家 / ' + A.shops.reduce((s, x) => s + x.menu.length, 0) + ' 道');
+const catCount = {};
+A.shops.forEach(s => { catCount[s.cat] = (catCount[s.cat] || 0) + 1; });
+ok('品类分布均衡（每个品类 ≥ 2 家）',
+    Object.values(catCount).every(n => n >= 2), JSON.stringify(catCount));
+const allIds = [];
+A.shops.forEach(s => s.menu.forEach(d => allIds.push(d.id)));
+ok('菜品 ID 全局唯一', new Set(allIds).size === allIds.length,
+    '重复: ' + allIds.filter((v, i) => allIds.indexOf(v) !== i).join(','));
+ok('新店铺都有照片与插画', A.shops.filter(s => s.id >= 9).every(s => A.imgURL('s' + s.id) && s.menu.every(d => A.imgURL(d.id) || d.id === 2105)));
 ok('SVG 图标雪碧图 ≥ 32 个', document.querySelectorAll('symbol').length >= 32,
     'symbol ' + document.querySelectorAll('symbol').length + ' 个');
 ok('商家卡与菜品都有插画兜底', $$('.art-wrap').length > 0 && $$('.art').length > 0);

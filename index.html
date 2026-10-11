@@ -542,6 +542,22 @@ body.dark .msg-item .mi { background: #332C00; color: var(--mt-yellow); }
 .balance-row .v { flex: 1; text-align: right; font-size: 13px; color: var(--mt-text-3); }
 .balance-row .v em { font-style: normal; color: var(--mt-red); font-weight: 700; }
 
+/* 配送地图（手绘 SVG，主题跟随） */
+.map-card { position: relative; border-radius: var(--mt-radius-lg); overflow: hidden; margin: 10px 12px; box-shadow: var(--mt-shadow-sm); background: var(--map-bg); }
+.map-card svg { display: block; width: 100%; height: auto; }
+:root { --map-bg: #EAF0E6; --map-block: #DCE6D6; --map-street: #FFFFFF; --map-road: #F7F3E8; }
+body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --map-road: #333F38; }
+.map-route { stroke: var(--mt-yellow-deep); stroke-width: 3.4; stroke-dasharray: .5 8.5; stroke-linecap: round; fill: none; }
+.map-street { stroke: var(--map-street); stroke-width: 16; }
+.map-road { stroke: var(--map-road); stroke-width: 9; }
+.map-block { fill: var(--map-block); }
+.map-label { font-size: 10px; fill: var(--mt-text-2); font-weight: 600; }
+.map-rider-pulse { transform-box: fill-box; transform-origin: center; animation: riderPulse 2s ease-out infinite; }
+@keyframes riderPulse { 0% { transform: scale(.45); opacity: .5; } 100% { transform: scale(1.7); opacity: 0; } }
+
+/* 订单明细里的商品缩略图 */
+.oi .thumb { width: 44px; height: 44px; border-radius: 9px; flex-shrink: 0; }
+
 @media (min-width: 481px) {
     .tabbar, .submit-bar { box-shadow: 0 0 0 1px var(--mt-line), 0 0 40px rgba(0, 0, 0, .05); }
 }
@@ -930,8 +946,68 @@ body.dark .msg-item .mi { background: #332C00; color: var(--mt-yellow); }
         705: '1585059895524-72359e06133a',
 
         801: '1608270586620-248524c67de9', 802: '1616118132534-381148898bb4',
-        803: '1566478989037-eec170784d0b', 804: '1584556812952-905ffd0c611a'
+        803: '1566478989037-eec170784d0b', 804: '1584556812952-905ffd0c611a',
         /* 805 电池：无合适实拍图，保留 SVG 插画 */
+
+        s9: '1584118624012-df056829fbd0', s10: '1546793665-c74683f339c1',
+        s11: '1549931319-a545dcf3bc73', s12: '1558857563-b371033873b8',
+        s13: '1621996346565-e3dbc646d9a9', s14: '1585032226651-759b368d7246',
+        s15: '1547592180-85f173990554', s16: '1626645738196-c2a7c87a8f58',
+        s17: '1512058564366-18510be2db19', s18: '1569718212165-3a8278d5f624',
+        s19: '1513104890138-7c749659a591', s20: '1587049352846-4a222e784d38',
+        s21: '1566478989037-eec170784d0b',
+
+        901: '1584118624012-df056829fbd0', 902: '1512003867696-6d5ce6835040',
+        903: '1555939594-58d7cb561ad1',   904: '1565680018434-b513d5e5fd47',
+        905: '1607532941433-304659e8198a', 906: '1546173159-315724a31696',
+
+        1001: '1546793665-c74683f339c1',  1002: '1517673400267-0251440c45dc',
+        1003: '1534604973900-c43ab4c2e0ab', 1004: '1607532941433-304659e8198a',
+        1005: '1547514701-42782101795e',
+
+        1101: '1608198093002-ad4e005484ec', 1102: '1549931319-a545dcf3bc73',
+        1103: '1509440159596-0249088772ff', 1104: '1509440159596-0249088772ff',
+        1105: '1578985545062-69928b1d9587',
+
+        1201: '1558857563-b371033873b8',  1202: '1558857563-b371033873b8',
+        1203: '1546173159-315724a31696',  1204: '1541696490-8744a5dc0228',
+        1205: '1546173159-315724a31696',
+
+        1301: '1621996346565-e3dbc646d9a9', 1302: '1555949258-eb67b1ef0ceb',
+        1303: '1563379926898-05f4575a45d8', 1304: '1509440159596-0249088772ff',
+        1305: '1607532941433-304659e8198a',
+
+        1401: '1585032226651-759b368d7246', 1402: '1591814468924-caf88d1232e1',
+        1403: '1573080496219-bb080dd4f877', 1404: '1546793665-c74683f339c1',
+        1405: '1558857563-b371033873b8',
+
+        1501: '1547592180-85f173990554',  1502: '1547592180-85f173990554',
+        1503: '1546069901-ba9599a7e63c',  1504: '1496116218417-1a781b1c416c',
+        1505: '1525351484163-7529414344d8',
+
+        1601: '1626645738196-c2a7c87a8f58', 1602: '1610057099431-d73a1c9d2f2f',
+        1603: '1575932444877-5106bee2a599', 1604: '1585937421612-70a008356fbe',
+        1605: '1608270586620-248524c67de9',
+
+        1701: '1512058564366-18510be2db19', 1702: '1603133872878-684f208fb84b',
+        1703: '1584118624012-df056829fbd0', 1704: '1546793665-c74683f339c1',
+        1705: '1516684732162-798a0062be99',
+
+        1801: '1569718212165-3a8278d5f624', 1802: '1555126634-323283e090fa',
+        1803: '1546793665-c74683f339c1',  1804: '1575932444877-5106bee2a599',
+        1805: '1558857563-b371033873b8',
+
+        1901: '1574071318508-1cdbab80d002', 1902: '1565299624946-b28f40a0ae38',
+        1903: '1590947132387-155cc02f3212', 1904: '1518013431117-eb1465fa5752',
+        1905: '1554866585-cd94860890b7',
+
+        2001: '1587049352846-4a222e784d38', 2002: '1546173159-315724a31696',
+        2003: '1547514701-42782101795e',  2004: '1537640538966-79f369143f8f',
+        2005: '1550258987-190a2d41a8ba',
+
+        2101: '1608270586620-248524c67de9', 2102: '1461023058943-07fcbe16d735',
+        2103: '1566478989037-eec170784d0b', 2104: '1584556812952-905ffd0c611a'
+        /* 2105 电池：无合适实拍图，保留 SVG 插画 */
     };
     const imgURL = key => IMG[key]
         ? 'https://images.unsplash.com/photo-' + IMG[key] + '?auto=format&fit=crop&w=320&h=320&q=70'
@@ -1076,6 +1152,176 @@ body.dark .msg-item .mi { background: #332C00; color: var(--mt-yellow); }
             { id: 803, name: '薯片大包装', price: 9, cat: '零食', sales: 3320, desc: '原味 / 番茄味随机', art: ['pack', '#E8973C', '#C0392B'] },
             { id: 804, name: '抽纸 3 包', price: 16, cat: '日用', sales: 1201, desc: '原木浆，柔韧亲肤', art: ['tissue', '#7FA8D6', '#5B8DB8'] },
             { id: 805, name: '电池 5 号 8 粒', price: 22, cat: '日用', sales: 402, desc: '碱性电池', art: ['battery', '#4A4A52'] }
+          ] },
+        { id: 9, name: '蜀香火锅', art: ['pot', '#7E3526', '#E5484D'], cat: 'food',
+          rating: 4.9, monthSales: 1860, distance: 3.4, minutes: 42,
+          minPrice: 60, deliveryFee: 6, packingFee: 3,
+          tags: ['品质联盟', '到店自取'],
+          discounts: [{ threshold: 80, cut: 15 }, { threshold: 150, cut: 35 }],
+          desc: '牛油老锅底，越煮越香',
+          menu: [
+            { id: 901, name: '经典九宫格火锅', price: 128, orig: 148, cat: '锅底', sales: 622, desc: '牛油老锅底，麻辣鲜香', art: ['pot', '#7E3526', '#E5484D'] },
+            { id: 902, name: '鸳鸯锅', price: 138, cat: '锅底', sales: 408, desc: '麻辣 + 菌汤，一锅两味', art: ['pot', '#8C3A2E', '#E8A33D'] },
+            { id: 903, name: '精品肥牛卷', price: 48, cat: '涮品', sales: 1201, desc: '雪花肥牛，涮 8 秒即食', art: ['skewer', '#7E3526', '#C2410C'] },
+            { id: 904, name: '手打虾滑', price: 42, cat: '涮品', sales: 866, desc: '现打虾滑，Q 弹爆汁', art: ['sashimi', '#5C6B7A', '#EE8A8A'] },
+            { id: 905, name: '时蔬拼盘', price: 32, cat: '涮品', sales: 1002, desc: '6 种时令蔬菜', art: ['veggie', '#4E8A4E', '#7CB342'] },
+            { id: 906, name: '手工冰粉', price: 8, cat: '甜品', sales: 1502, desc: '红糖醪糟冰粉', art: ['glass', '#5C8A8A', '#7FC4C4'] }
+          ] },
+        { id: 10, name: '轻食沙拉屋', art: ['veggie', '#5E9E4A', '#8BC34A'], cat: 'food',
+          rating: 4.7, monthSales: 1240, distance: 1.6, minutes: 26,
+          minPrice: 30, deliveryFee: 4, packingFee: 2,
+          tags: ['低卡轻食', '准时达'],
+          discounts: [{ threshold: 39, cut: 6 }, { threshold: 69, cut: 14 }],
+          desc: '健身餐 · 低卡 · 无添加',
+          menu: [
+            { id: 1001, name: '牛油果鸡胸沙拉', price: 42, cat: '热销', sales: 640, desc: '牛油果 + 烤鸡胸 + 藜麦', art: ['veggie', '#5E9E4A', '#8BC34A'] },
+            { id: 1002, name: '藜麦能量碗', price: 38, cat: '热销', sales: 428, desc: '藜麦、鹰嘴豆、烤南瓜', art: ['ricebowl', '#5E9E4A', '#F0C05A'] },
+            { id: 1003, name: '烟熏三文鱼沙拉', price: 52, orig: 58, cat: '热销', sales: 302, desc: '挪威三文鱼 + 凯撒酱', art: ['sashimi', '#5C6B7A', '#F08A5D'] },
+            { id: 1004, name: '地中海希腊沙拉', price: 32, cat: '轻食', sales: 260, desc: '菲达芝士 + 橄榄', art: ['veggie', '#2E8FE0', '#8BC34A'] },
+            { id: 1005, name: '冷压鲜橙汁', price: 18, cat: '饮品', sales: 512, desc: 'NFC 鲜榨不加水', art: ['glass', '#F08A2E', '#F2A93B'] }
+          ] },
+        { id: 11, name: '匠心烘焙', art: ['cake', '#D9A05B', '#A9704A'], cat: 'dessert',
+          rating: 4.8, monthSales: 980, distance: 2.1, minutes: 30,
+          minPrice: 25, deliveryFee: 3, packingFee: 2,
+          tags: ['现烤现发', '品牌商家'],
+          discounts: [{ threshold: 35, cut: 6 }, { threshold: 66, cut: 14 }],
+          desc: '凌晨四点开工的老面烘焙',
+          menu: [
+            { id: 1101, name: '黄油牛角包', price: 18, cat: '热销', sales: 812, desc: '27 层起酥，法式黄油', art: ['cake', '#D9A05B', '#B4472A'] },
+            { id: 1102, name: '乡村全麦吐司', price: 22, cat: '热销', sales: 601, desc: '天然酵母，无添加糖', art: ['cake', '#B08968', '#F0D9A8'] },
+            { id: 1103, name: '肉桂卷', price: 16, cat: '热销', sales: 502, desc: '瑞典肉桂卷，撒糖霜', art: ['cake', '#C9A15C', '#8A5A3B'] },
+            { id: 1104, name: '原味贝果', price: 15, cat: '烘焙', sales: 388, desc: '低油低糖，有嚼劲', art: ['cake', '#E8C46A', '#D9A05B'] },
+            { id: 1105, name: '芋泥蛋糕卷', price: 28, cat: '烘焙', sales: 291, desc: '荔浦芋泥 + 动物奶油', art: ['cake', '#C9A0DC', '#8A6A9E'] }
+          ] },
+        { id: 12, name: '半糖时光', art: ['cup', '#C9A0DC', '#8A6A9E'], cat: 'dessert',
+          rating: 4.8, monthSales: 4200, distance: 0.8, minutes: 20,
+          minPrice: 15, deliveryFee: 2, packingFee: 1,
+          tags: ['品牌商家', '准时达'],
+          discounts: [{ threshold: 20, cut: 3 }, { threshold: 45, cut: 8 }],
+          desc: '鲜果现切，真茶真奶',
+          menu: [
+            { id: 1201, name: '珍珠奶茶', price: 16, cat: '热销', sales: 3201, desc: '黑糖珍珠 + 锡兰红茶', art: ['cup', '#C9A0DC', '#8A5A3B'] },
+            { id: 1202, name: '芋泥波波奶茶', price: 20, cat: '热销', sales: 1802, desc: '荔浦芋泥 + 芋圆波波', art: ['cup', '#C9A0DC', '#A9704A'] },
+            { id: 1203, name: '满杯红柚', price: 22, orig: 26, cat: '热销', sales: 1201, desc: '现剥红柚 + 茉莉绿茶', art: ['glass', '#F08A5D', '#E8555E'] },
+            { id: 1204, name: '抹茶拿铁', price: 19, cat: '饮品', sales: 903, desc: '宇治抹茶 + 鲜奶', art: ['glass', '#5E9E4A', '#8BC34A'] },
+            { id: 1205, name: '手打柠檬茶', price: 12, cat: '饮品', sales: 2011, desc: '香水柠檬现捶', art: ['glass', '#F2C14E', '#C9E06A'] }
+          ] },
+        { id: 13, name: '意面工坊', art: ['noodles', '#D9772E', '#F0D9A8'], cat: 'food',
+          rating: 4.6, monthSales: 860, distance: 2.8, minutes: 34,
+          minPrice: 35, deliveryFee: 4, packingFee: 2,
+          tags: ['西式简餐', '准时达'],
+          discounts: [{ threshold: 45, cut: 8 }, { threshold: 88, cut: 18 }],
+          desc: '手工现制意面，酱汁现熬',
+          menu: [
+            { id: 1301, name: '番茄肉酱意面', price: 42, cat: '热销', sales: 512, desc: '波隆那肉酱，慢炖 3 小时', art: ['noodles', '#E5544B', '#F0D9A8'] },
+            { id: 1302, name: '奶油培根意面', price: 48, cat: '热销', sales: 401, desc: '经典 Carbonara', art: ['noodles', '#D9A05B', '#FFF6E8'] },
+            { id: 1303, name: '海鲜意面', price: 58, cat: '热销', sales: 208, desc: '大虾、青口、鱿鱼', art: ['noodles', '#5C6B7A', '#F2A93B'] },
+            { id: 1304, name: '蒜香面包', price: 12, cat: '小食', sales: 602, desc: '法棍 + 蒜香黄油', art: ['burger', '#E8A33D', '#B4472A'] },
+            { id: 1305, name: '凯撒沙拉', price: 32, cat: '轻食', sales: 344, desc: '罗马生菜 + 帕玛森', art: ['veggie', '#5E9E4A', '#8BC34A'] }
+          ] },
+        { id: 14, name: '老北京炸酱面', art: ['noodles', '#A0522D', '#F0D9A8'], cat: 'food',
+          rating: 4.7, monthSales: 1120, distance: 2.6, minutes: 31,
+          minPrice: 20, deliveryFee: 3, packingFee: 1,
+          tags: ['老字号', '品质联盟'],
+          discounts: [{ threshold: 25, cut: 4 }, { threshold: 45, cut: 9 }],
+          desc: '六必居干黄酱，小碗干炸',
+          menu: [
+            { id: 1401, name: '老北京炸酱面', price: 22, cat: '热销', sales: 901, desc: '手擀面 + 八种菜码', art: ['noodles', '#A0522D', '#F0D9A8'] },
+            { id: 1402, name: '三鲜打卤面', price: 20, cat: '热销', sales: 622, desc: '木耳鸡蛋五花肉卤', art: ['noodles', '#C9A15C', '#FFF6E8'] },
+            { id: 1403, name: '炸灌肠', price: 15, cat: '小吃', sales: 302, desc: '蒜汁外酥里嫩', art: ['fries', '#D9A05B', '#F2B33D'] },
+            { id: 1404, name: '凉拌木耳', price: 12, cat: '小吃', sales: 288, desc: '酸辣开胃', art: ['veggie', '#4E4A4E', '#7CB342'] },
+            { id: 1405, name: '冰镇酸梅汤', price: 8, cat: '饮品', sales: 666, desc: '乌梅桂花熬制', art: ['glass', '#6B4A5C', '#7A3E5C'] }
+          ] },
+        { id: 15, name: '深夜粥铺', art: ['soupbowl', '#E8E0D0', '#F5EDD8'], cat: 'food',
+          rating: 4.8, monthSales: 1420, distance: 1.1, minutes: 24,
+          minPrice: 15, deliveryFee: 2, packingFee: 1,
+          tags: ['24 小时', '养胃早餐'],
+          discounts: [{ threshold: 22, cut: 3 }, { threshold: 40, cut: 7 }],
+          desc: '砂锅现熬，凌晨三点不打烊',
+          menu: [
+            { id: 1501, name: '皮蛋瘦肉粥', price: 18, cat: '热销', sales: 1201, desc: '绵密生滚粥', art: ['soupbowl', '#E8E0D0', '#F5EDD8'] },
+            { id: 1502, name: '南瓜小米粥', price: 12, cat: '热销', sales: 902, desc: '养胃暖身', art: ['soupbowl', '#F0C05A', '#F2A93B'] },
+            { id: 1503, name: '鲜虾砂锅粥', price: 38, orig: 45, cat: '热销', sales: 411, desc: '潮汕做法，膏蟹鲜虾', art: ['soupbowl', '#C9A15C', '#EE8A8A'] },
+            { id: 1504, name: '韭黄煎饺', price: 15, cat: '小吃', sales: 522, desc: '锅气十足', art: ['dumpling', '#E8E0D0', '#F5EDD8'] },
+            { id: 1505, name: '流油咸鸭蛋', price: 4, cat: '小吃', sales: 801, desc: '红心流油', art: ['custard', '#E8C46A', '#F2B33D'] }
+          ] },
+        { id: 16, name: '韩式炸鸡啤酒', art: ['bucket', '#C0392B', '#D98324'], cat: 'food',
+          rating: 4.7, monthSales: 2280, distance: 1.9, minutes: 29,
+          minPrice: 35, deliveryFee: 3, packingFee: 2,
+          tags: ['韩式风味', '准时达'],
+          discounts: [{ threshold: 40, cut: 7 }, { threshold: 70, cut: 15 }],
+          desc: '双裹工艺，外脆里嫩多汁',
+          menu: [
+            { id: 1601, name: '甜辣炸鸡（整只）', price: 48, cat: '热销', sales: 1502, desc: '韩式甜辣酱', art: ['bucket', '#C0392B', '#D98324'] },
+            { id: 1602, name: '蒜香酱油炸鸡', price: 52, cat: '热销', sales: 1108, desc: '蒜香酱油裹粉', art: ['drumstick', '#A0522D', '#CC7A24'] },
+            { id: 1603, name: '半半炸鸡', price: 55, orig: 62, cat: '热销', sales: 801, desc: '一半甜辣一半原味', art: ['bucket', '#D98324', '#E8A33D'] },
+            { id: 1604, name: '韩式泡菜饼', price: 22, cat: '小食', sales: 402, desc: '泡菜 + 海鲜面糊', art: ['dumpling', '#E8A33D', '#C2410C'] },
+            { id: 1605, name: '冰镇烧酒', price: 15, cat: '酒水', sales: 602, desc: '配炸鸡绝了', art: ['bottle', '#7FC4C4'] }
+          ] },
+        { id: 17, name: '川香小炒', art: ['grill', '#B04A2E', '#C2410C'], cat: 'food',
+          rating: 4.6, monthSales: 1740, distance: 3.0, minutes: 36,
+          minPrice: 25, deliveryFee: 3, packingFee: 1,
+          tags: ['现炒锅气', '品质联盟'],
+          discounts: [{ threshold: 30, cut: 5 }, { threshold: 55, cut: 11 }],
+          desc: '猛火现炒，锅气十足',
+          menu: [
+            { id: 1701, name: '宫保鸡丁', price: 38, cat: '热销', sales: 801, desc: '花生脆、荔枝口', art: ['grill', '#B04A2E', '#C2410C'] },
+            { id: 1702, name: '麻婆豆腐', price: 28, cat: '热销', sales: 688, desc: '牛肉末 + 花椒面', art: ['soupbowl', '#E5544B', '#D9772E'] },
+            { id: 1703, name: '鱼香肉丝', price: 32, cat: '热销', sales: 512, desc: '无鱼却有鱼香', art: ['noodles', '#D9772E', '#F0D9A8'] },
+            { id: 1704, name: '干煸四季豆', price: 22, cat: '素菜', sales: 402, desc: '干煸出虎皮', art: ['veggie', '#4E7A3E', '#5E9E4A'] },
+            { id: 1705, name: '珍珠米饭', price: 2, cat: '主食', sales: 2001, desc: '五常大米', art: ['ricebowl', '#B08968', '#FFF6E8'] }
+          ] },
+        { id: 18, name: '云腿米线', art: ['noodles', '#C9A15C', '#F0D9A8'], cat: 'food',
+          rating: 4.8, monthSales: 1600, distance: 2.2, minutes: 28,
+          minPrice: 20, deliveryFee: 3, packingFee: 1,
+          tags: ['云南风味', '准时达'],
+          discounts: [{ threshold: 28, cut: 5 }, { threshold: 50, cut: 10 }],
+          desc: '建水汽锅鸡高汤打底',
+          menu: [
+            { id: 1801, name: '过桥米线', price: 32, cat: '热销', sales: 901, desc: '十几种配菜现烫', art: ['noodles', '#C9A15C', '#F0D9A8'] },
+            { id: 1802, name: '砂锅米线', price: 28, cat: '热销', sales: 702, desc: '砂锅保温，汤头浓郁', art: ['soupbowl', '#B04A2E', '#F0D9A8'] },
+            { id: 1803, name: '凉米线', price: 18, cat: '热销', sales: 388, desc: '酸辣开胃，夏日限定', art: ['noodles', '#5E9E4A', '#F0D9A8'] },
+            { id: 1804, name: '小酥肉', price: 18, cat: '小吃', sales: 601, desc: '花椒香酥', art: ['drumstick', '#A0522D', '#D98324'] },
+            { id: 1805, name: '木瓜水', price: 8, cat: '饮品', sales: 433, desc: '云南传统冰饮', art: ['glass', '#8BC34A', '#C9E06A'] }
+          ] },
+        { id: 19, name: '那不勒斯披萨', art: ['burger', '#E8A33D', '#C2410C'], cat: 'food',
+          rating: 4.7, monthSales: 1040, distance: 3.2, minutes: 38,
+          minPrice: 40, deliveryFee: 5, packingFee: 2,
+          tags: ['手作窑烤', '品牌商家'],
+          discounts: [{ threshold: 60, cut: 12 }, { threshold: 100, cut: 22 }],
+          desc: '48 小时低温发酵面团，窑烤 90 秒',
+          menu: [
+            { id: 1901, name: '玛格丽特披萨', price: 58, cat: '热销', sales: 402, desc: '水牛芝士 + 罗勒', art: ['burger', '#E8A33D', '#C2410C'] },
+            { id: 1902, name: '榴莲忘返披萨', price: 78, cat: '热销', sales: 355, desc: '猫山王榴莲 + 双层芝士', art: ['burger', '#F0C05A', '#F2A93B'] },
+            { id: 1903, name: '四色芝士披萨', price: 62, cat: '热销', sales: 288, desc: '四种芝士拉丝', art: ['burger', '#F2C14E', '#E8A33D'] },
+            { id: 1904, name: '迷迭香薯角', price: 18, cat: '小食', sales: 501, desc: '外脆内绵', art: ['fries', '#D9A05B', '#F2B33D'] },
+            { id: 1905, name: '冰镇可乐', price: 10, cat: '饮品', sales: 702, desc: '玻璃瓶装', art: ['can', '#B4472A'] }
+          ] },
+        { id: 20, name: '鲜榨果饮 · 果切', art: ['fruit', '#F08A2E'], cat: 'fruit',
+          rating: 4.8, monthSales: 1980, distance: 1.4, minutes: 23,
+          minPrice: 18, deliveryFee: 2, packingFee: 1,
+          tags: ['现切现榨', '坏果包赔'],
+          discounts: [{ threshold: 25, cut: 4 }, { threshold: 49, cut: 9 }],
+          desc: '当季水果，现切现榨不加一滴水',
+          menu: [
+            { id: 2001, name: '手捣西瓜汁 1L', price: 22, cat: '热销', sales: 901, desc: '麒麟西瓜现榨', art: ['glass', '#3E7C3A', '#E8555E'] },
+            { id: 2002, name: '杨枝甘露', price: 24, cat: '热销', sales: 702, desc: '芒果西柚西米', art: ['glass', '#F2C14E', '#F2A93B'] },
+            { id: 2003, name: 'NFC 鲜橙汁', price: 20, cat: '热销', sales: 588, desc: '一箱橙子一杯汁', art: ['glass', '#F08A2E', '#F2A93B'] },
+            { id: 2004, name: '当季果切拼盘', price: 32, orig: 38, cat: '果切', sales: 466, desc: '5 种水果冰镇直送', art: ['grapes', '#8FAE3E'] },
+            { id: 2005, name: '菠萝整颗去皮', price: 18, cat: '果切', sales: 302, desc: '无眼菠萝，免刀免洗', art: ['fruit', '#F2B01E'] }
+          ] },
+        { id: 21, name: '全球优选超市', art: ['goods', '#5B6470', '#2E8FE0'], cat: 'market',
+          rating: 4.7, monthSales: 3100, distance: 0.7, minutes: 19,
+          minPrice: 30, deliveryFee: 3, packingFee: 0,
+          tags: ['24 小时', '进口直采'],
+          discounts: [{ threshold: 49, cut: 8 }, { threshold: 99, cut: 18 }],
+          desc: '进口零食日用，一站配齐',
+          menu: [
+            { id: 2101, name: '进口气泡水 24 罐', price: 89, cat: '酒水', sales: 402, desc: '无糖 0 卡', art: ['can', '#4FA3E0'] },
+            { id: 2102, name: '挂耳咖啡 10 片装', price: 46, cat: '日用', sales: 288, desc: '中深烘，冷萃也行', art: ['coffee', '#4A4A52', '#6B4A32'] },
+            { id: 2103, name: '海盐苏打饼干', price: 13, cat: '零食', sales: 901, desc: '低糖高纤', art: ['pack', '#7FA8D6', '#4E7A9E'] },
+            { id: 2104, name: '压缩毛巾 20 粒', price: 25, cat: '日用', sales: 340, desc: '加厚便携', art: ['tissue', '#5B8DB8', '#7FA8D6'] },
+            { id: 2105, name: '七号电池 4 粒', price: 15, cat: '日用', sales: 180, desc: '碱性耐用', art: ['battery', '#4A4A52'] }
           ] }
     ];
 
@@ -2080,6 +2326,60 @@ body.dark .msg-item .mi { background: #332C00; color: var(--mt-yellow); }
             tabbarHTML('orders') +
         '</div>';
     }
+    /* 配送路线示意图（手绘 SVG：街区块 + 骑手轨迹 + 商家/收货点） */
+    function mapHTML(shop, progress, showRider) {
+        const prog = Math.min(Math.max(progress == null ? 0.45 : progress, 0.1), 0.94);
+        // 路线：M48 124 → 上 → 右 → 上 → 右到收货点
+        const seg = [
+            [48, 124], [48, 78], [106, 78], [106, 36], [292, 36]
+        ];
+        const lens = [46, 58, 42, 186], total = lens.reduce((s, v) => s + v, 0);
+        let target = total * prog, pos = seg[0];
+        for (let i = 0; i < lens.length; i++) {
+            if (target <= lens[i]) {
+                const t = target / lens[i];
+                pos = [seg[i][0] + (seg[i + 1][0] - seg[i][0]) * t, seg[i][1] + (seg[i + 1][1] - seg[i][1]) * t];
+                break;
+            }
+            target -= lens[i];
+        }
+        return '<div class="map-card">' +
+            '<svg viewBox="0 0 340 170" role="img" aria-label="配送路线示意图">' +
+                '<rect width="340" height="170" fill="var(--map-bg)"/>' +
+                '<rect class="map-block" x="10" y="10" width="76" height="52" rx="7"/>' +
+                '<rect class="map-block" x="126" y="10" width="96" height="52" rx="7"/>' +
+                '<rect class="map-block" x="252" y="10" width="78" height="52" rx="7"/>' +
+                '<rect class="map-block" x="10" y="94" width="76" height="66" rx="7"/>' +
+                '<rect class="map-block" x="126" y="94" width="96" height="66" rx="7"/>' +
+                '<rect class="map-block" x="252" y="94" width="78" height="66" rx="7"/>' +
+                '<path class="map-road" d="M0 78 H340 M0 36 H340 M106 0 V170 M232 0 V170"/>' +
+                '<path class="map-street" d="M0 124 H340 M48 0 V170"/>' +
+                '<path class="map-route" d="M48 124 L48 78 L106 78 L106 36 L292 36"/>' +
+                '<g transform="translate(48,124)">' +
+                    '<circle r="10" fill="var(--mt-surface)" stroke="var(--mt-black)" stroke-width="2.5"/>' +
+                    '<circle r="3.6" fill="var(--mt-black)"/>' +
+                '</g>' +
+                '<text class="map-label" x="62" y="128">商家 · ' + esc(shop.name) + '</text>' +
+                '<g transform="translate(292,36)">' +
+                    '<circle r="11" fill="var(--mt-yellow)" stroke="var(--mt-black)" stroke-width="2.5"/>' +
+                    '<path d="M-3.4 1.2 1.6 5.4M-3.6 5.4 -1 -3.4 4.4 -1.2" stroke="var(--mt-black)" stroke-width="1.8" fill="none" stroke-linecap="round"/>' +
+                '</g>' +
+                '<text class="map-label" x="292" y="18" text-anchor="end">收货地址</text>' +
+                (showRider
+                    ? '<g transform="translate(' + pos[0].toFixed(1) + ',' + pos[1].toFixed(1) + ')">' +
+                        '<circle class="map-rider-pulse" r="12" fill="var(--mt-yellow-deep)"/>' +
+                        '<circle r="12" fill="var(--mt-yellow)" stroke="#fff" stroke-width="2.5"/>' +
+                        '<g transform="translate(-7,-7)">' +
+                            '<svg width="14" height="14" viewBox="0 0 24 24">' +
+                                '<use href="#i-bike" style="color:var(--mt-black)"/>' +
+                            '</svg>' +
+                        '</g>' +
+                      '</g>'
+                    : '') +
+            '</svg>' +
+        '</div>';
+    }
+
     function renderOrderDetail(orderId) {
         const order = state.orders.find(o => o.id === orderId);
         if (!order) {
@@ -2103,6 +2403,7 @@ body.dark .msg-item .mi { background: #332C00; color: var(--mt-yellow); }
                 '<h1>订单详情</h1>' +
             '</div>' +
             '<div class="card" style="padding:16px 14px"><div class="timeline">' + timeline + '</div></div>' +
+            mapHTML(shop, st >= 3 ? 1 : [0.28, 0.55, 0.82][st], st < 3) +
             (st < 3
                 ? '<div class="rider">' +
                     '<span class="av">' + icon('bike') + '</span>' +
@@ -2129,11 +2430,23 @@ body.dark .msg-item .mi { background: #332C00; color: var(--mt-yellow); }
             '<div class="card">' +
                 '<div class="row"><span style="font-size:15px"><b>' + esc(shop.name) + '</b></span></div>' +
                 '<div class="order-items">' +
-                    order.items.map(i => '<div class="oi"><span class="nm">' + esc(i.name) +
-                        (i.spec ? '<span style="color:var(--mt-text-3);font-size:11px">（' + esc(i.spec) + '）</span>' : '') +
-                        '</span>' +
-                        '<span class="qt">×' + i.qty + '</span>' +
-                        '<span>' + money(i.price * i.qty) + '</span></div>').join('') +
+                    order.items.map(i => {
+                        const img = imgURL(i.id);
+                        const art = DISH_INDEX.get(i.id);
+                        return '<div class="oi">' +
+                            (img
+                                ? '<span class="art-wrap thumb" style="--ac:' + ((art && art.dish.art) ? art.dish.art[1] : 'var(--mt-yellow)') + '">' +
+                                  '<svg class="art" viewBox="0 0 120 120" aria-hidden="true"></svg>' +
+                                  '<img class="photo" src="' + esc(img) + '" alt="" loading="lazy" decoding="async"></span>'
+                                : (art
+                                    ? artHTML(art.dish.art[0], art.dish.art[1], art.dish.art[2]).replace('class="art-wrap"', 'class="art-wrap thumb"')
+                                    : '')) +
+                            '<span class="nm">' + esc(i.name) +
+                                (i.spec ? '<span style="color:var(--mt-text-3);font-size:11px">（' + esc(i.spec) + '）</span>' : '') +
+                            '</span>' +
+                            '<span class="qt">×' + i.qty + '</span>' +
+                            '<span>' + money(i.price * i.qty) + '</span></div>';
+                    }).join('') +
                 '</div>' +
                 '<div class="bill-row"><span>商品小计</span><span class="amt">' + money(order.subtotal) + '</span></div>' +
                 '<div class="bill-row"><span>打包费</span><span class="amt">' + money(order.packing) + '</span></div>' +
