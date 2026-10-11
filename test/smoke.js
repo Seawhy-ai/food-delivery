@@ -423,6 +423,46 @@ ok('交互元素 user-select: none（防双击选字）', html.indexOf('user-sel
 const vpMeta = ($('meta[name="viewport"]') || {}).content || '';
 ok('viewport 未禁用捏合缩放', !/user-scalable\s*=\s*no/i.test(vpMeta) && !/maximum-scale/i.test(vpMeta), vpMeta);
 
+// ============================================================
+// 15. iOS 桌面版（PWA / 添加到主屏幕）
+// ============================================================
+ok('声明 apple-mobile-web-app-capable', /apple-mobile-web-app-capable"\s+content="yes"/.test(html));
+ok('声明状态栏样式 black-translucent', /apple-mobile-web-app-status-bar-style"\s+content="black-translucent"/.test(html));
+ok('声明 apple-mobile-web-app-title', html.indexOf('apple-mobile-web-app-title') !== -1);
+ok('内嵌 apple-touch-icon（data URI PNG）',
+    /<link rel="apple-touch-icon" href="data:image\/png;base64,/.test(html));
+ok('内嵌 Web App Manifest',
+    /<link rel="manifest" href="data:application\/manifest\+json;base64,/.test(html));
+(() => {
+    const m = html.match(/rel="manifest" href="data:application\/manifest\+json;base64,([^"]+)"/);
+    if (!m) { ok('manifest 可解析', false); return; }
+    let mf = {};
+    try { mf = JSON.parse(Buffer.from(m[1], 'base64').toString('utf8')); } catch (e) { ok('manifest 可解析', false, e.message); return; }
+    ok('manifest 字段齐全', mf.name === '袋鼠外卖' && mf.display === 'standalone' &&
+        mf.theme_color === '#FFD100' && Array.isArray(mf.icons) && mf.icons.length >= 2,
+        JSON.stringify({ display: mf.display, icons: (mf.icons || []).length }));
+    ok('manifest 图标是合法 PNG', (() => {
+        const ic = (mf.icons || [])[0];
+        if (!ic || ic.src.indexOf('data:image/png;base64,') !== 0) return false;
+        const buf = Buffer.from(ic.src.slice(22), 'base64');
+        return buf.length > 1000 && buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4E && buf[3] === 0x47;
+    })());
+})();
+ok('声明 format-detection（电话号不变成链接）', /format-detection"\s+content="telephone=no"/.test(html));
+ok('图标是合法 PNG（180x180）', (() => {
+    const m = html.match(/rel="apple-touch-icon" href="data:image\/png;base64,([^"]+)"/);
+    if (!m) return false;
+    const buf = Buffer.from(m[1], 'base64');
+    return buf.length > 3000 && buf.slice(1, 4).toString() === 'PNG';
+})());
+ok('独立模式安全区适配（--safe-t 已定义并用于吸顶条）',
+    html.indexOf('--safe-t: env(safe-area-inset-top') !== -1 &&
+    html.indexOf('padding-top: calc(12px + var(--safe-t))') !== -1);
+ok('独立模式会加 body.standalone 标记', html.indexOf("classList.add('standalone')") !== -1);
+ok('独立模式禁用下拉刷新', html.indexOf('body.standalone, body.standalone .app { overscroll-behavior: none; }') !== -1);
+ok('iOS 非独立模式显示添加到主屏幕引导', html.indexOf('添加到主屏幕，像 App 一样用') !== -1);
+ok('图标引用通过 <use>（i-bike 用于地图骑手）', html.indexOf('#i-bike') !== -1);
+
 console.log(results.join('\n'));
 console.log('\n' + (failed === 0 ? '✅ 全部 ' + results.length + ' 项通过' : '❌ ' + failed + ' / ' + results.length + ' 项失败'));
 process.exit(failed === 0 ? 0 : 1);
