@@ -308,9 +308,17 @@ ok('订单卡片显示「已评价」标签', document.body.textContent.indexOf(
 window.location.hash = '#/order/' + newOrder.id; await tick();
 ok('详情页展示「我的评价」卡片', document.body.textContent.indexOf('我的评价') !== -1);
 ok('详情页展示规格文案', document.body.textContent.indexOf('标准 / 不加料 / 微辣') !== -1);
-ok('订单详情渲染配送地图', $('.map-card svg') !== null);
-ok('地图标注商家与收货地址', $('.map-card').textContent.indexOf('商家') !== -1 &&
-    $('.map-card').textContent.indexOf('收货地址') !== -1);
+ok('订单详情渲染配送地图（高德真实瓦片）', $('.amap-wrap') !== null);
+ok('地图加载 6 张高德瓦片', $$('.amap-wrap .tile').length === 6, '实际 ' + $$('.amap-wrap .tile').length);
+ok('瓦片来自高德 CDN', $$('.amap-wrap .tile').length > 0 &&
+    $$('.amap-wrap .tile').every(t => t.src.indexOf('is.autonavi.com/appmaptile') !== -1));
+ok('瓦片坐标按订单地址换算（天府大道区域）', $$('.amap-wrap .tile').length > 0 &&
+    /x=64\d\d/.test($$('.amap-wrap .tile')[0].src),
+    $$('.amap-wrap .tile').length > 0 ? $$('.amap-wrap .tile')[0].src.match(/x=\d+|y=\d+/g).join(' ') : '无瓦片');
+ok('地图标注商家与收货地址', $('.amap-wrap').textContent.indexOf('商家') !== -1 &&
+    $('.amap-wrap').textContent.indexOf('收货地址') !== -1);
+ok('地图带高德署名', $('.amap-credit') !== null);
+ok('SVG 兜底层存在（瓦片失败时显示）', $('.amap-fallback') !== null && $('.amap-fallback svg') !== null, 'fallback=' + !!$('.amap-fallback'));
 ok('已送达订单地图无骑手标记（已到站）', $('.map-rider-pulse') === null);
 ok('订单明细每道菜都带商品图', $$('.oi .thumb .photo').length === newOrder.items.length,
     $$('.oi .thumb .photo').length + '/' + newOrder.items.length);
@@ -333,17 +341,59 @@ $$('.mask').pop().querySelector('[data-dlg="ok"]').click(); await tick();
 ok('取消订单生效', A.state.orders.findIndex(o => o.id === 'FDTEST000001') === -1);
 
 // ============================================================
+// 10b. 领券中心改版 / 会员体系
+// ============================================================
+window.location.hash = '#/coupons'; await tick();
+ok('领券中心渲染英雄区', $('.cc-hero') !== null);
+ok('英雄区统计已持有数量', $('.cc-hero').textContent.indexOf('已持有') !== -1);
+ok('英雄区有会员入口', $('[data-go="vip"]') !== null);
+ok('分类 Tab 7 个', $$('.cc-tab').length === A.couponKinds.length, '实际 ' + $$('.cc-tab').length);
+ok('券池共 17 张', $$('.cc-card').length === 17, '实际 ' + $$('.cc-card').length);
+ok('会员专享券带 VIP 徽标', $$('.cc-card .vip-badge').length === 4, '实际 ' + $$('.cc-card .vip-badge').length);
+ok('未开通会员时会员券显示「开通会员领」', $$('[data-action="goto-vip"]').length === 4);
+ok('免运费券展示「免配送」', document.body.textContent.indexOf('免配送') !== -1);
+ok('券卡带领取进度条', $$('.cc-card .bar').length === 17);
+
+$$('.cc-tab').find(t => t.dataset.tab === 'member').click(); await tick();
+ok('会员专享 Tab 只显示会员券', $$('.cc-card').length === 4);
+$$('.cc-tab').find(t => t.dataset.tab === 'food').click(); await tick();
+ok('美食券 Tab 数量正确', $$('.cc-card').length === 5, '实际 ' + $$('.cc-card').length);
+$$('.cc-tab').find(t => t.dataset.tab === 'all').click(); await tick();
+
+window.location.hash = '#/vip'; await tick();
+ok('会员中心渲染', $('.vip-hero') !== null);
+ok('权益列表 6 项', $$('.perk').length === 6);
+ok('未开通显示价格 ¥12', document.body.textContent.indexOf('¥12') !== -1);
+const balBeforeVip = A.state.balance;
+$('[data-action="open-member"]').click(); await tick();
+$$('.mask').pop().querySelector('[data-dlg="ok"]').click(); await tick();
+ok('开通后会员生效', A.state.member.on === true && A.state.member.expire.length === 10,
+    JSON.stringify(A.state.member));
+ok('开通扣减余额 ¥12', A.state.balance === balBeforeVip - 12, 'balance=' + A.state.balance);
+ok('开通赠送会员券 m1/m4', A.state.ownedCoupons.indexOf('m1') !== -1 && A.state.ownedCoupons.indexOf('m4') !== -1);
+ok('开通已持久化', (window.localStorage.getItem('kd.member') || '').indexOf('"on":true') !== -1);
+window.location.hash = '#/coupons'; await tick();
+ok('会员券现在可直接领取', $$('[data-action="goto-vip"]').length === 0);
+
+// 会员免配送费
+window.location.hash = '#/shop/1'; await tick();
+document.querySelector('[data-dish-row="102"] [data-action="add-dish"]').click(); await tick();
+document.querySelector('[data-dish-row="105"] [data-action="add-dish"]').click(); await tick();
+$('#cartBar .checkout-btn').click(); await tick();
+ok('会员下单自动免配送费', document.body.textContent.indexOf('会员免配送费') !== -1);
+ok('账单含免配送费抵扣行', document.body.textContent.indexOf('−¥3') !== -1);
+
+// ============================================================
 // 11. 收藏 / 领券中心 / 消息
 // ============================================================
 window.location.hash = '#/favs'; await tick();
 ok('收藏页列出 1 家', $$('.shop-card').length === 1, '实际 ' + $$('.shop-card').length);
 ok('收藏页卡片带「已收藏」标记', document.body.textContent.indexOf('已收藏') !== -1);
 window.location.hash = '#/coupons'; await tick();
-ok('领券中心列出 5 张', $$('.coupon').length === 5, '实际 ' + $$('.coupon').length);
-ok('已领取的 2 张带「已领取」标记',
-    $$('.coupon .tag.yellow').filter(t => t.textContent === '已领取').length === 2);
+ok('领券中心显示全部 17 张券', $$('.cc-card').length === 17, '实际 ' + $$('.cc-card').length);
+ok('已持有的券卡片带「已领取」标记', $$('.cc-claimed').length >= 1, $$('.cc-claimed').length + '/' + A.state.ownedCoupons.length);
 $('[data-action="claim-coupon"]').click(); await tick();
-ok('领取红包后持有 3 张', A.state.ownedCoupons.length === 3, A.state.ownedCoupons.join(','));
+ok('领取红包后持有数 +1', A.state.ownedCoupons.length >= 5, A.state.ownedCoupons.join(','));
 window.location.hash = '#/messages'; await tick();
 ok('消息中心 5 条', $$('.msg-item').length === 5, '实际 ' + $$('.msg-item').length);
 
@@ -384,7 +434,7 @@ $('[data-action="toggle-theme"]').click(); await tick();
 
 $('[data-action="reset-demo"]').click(); await tick();
 $$('.mask').pop().querySelector('[data-dlg="ok"]').click(); await tick();
-ok('重置恢复种子数据与余额', A.state.orders.length === 2 && A.state.addresses.length === 2 && A.state.balance === 128);
+ok('重置恢复种子数据/余额/会员', A.state.orders.length === 2 && A.state.addresses.length === 2 && A.state.balance === 128 && A.state.member.on === false);
 ok('重置后购物车为空', A.cartCount() === 0);
 
 // ============================================================

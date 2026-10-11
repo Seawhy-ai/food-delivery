@@ -591,7 +591,22 @@ body.dark .msg-item .mi { background: #332C00; color: var(--mt-yellow); }
 .balance-row .v { flex: 1; text-align: right; font-size: 13px; color: var(--mt-text-3); }
 .balance-row .v em { font-style: normal; color: var(--mt-red); font-weight: 700; }
 
-/* 配送地图（手绘 SVG，主题跟随） */
+/* 高德真实地图：瓦片网格 + 覆盖层（商家/收货点/骑手） */
+.amap-wrap { position: relative; height: 170px; overflow: hidden; background: var(--map-bg); }
+.amap-grid { position: absolute; top: 0; left: 0; display: grid; grid-template-columns: repeat(3, 256px); grid-auto-rows: 256px; width: 768px; }
+.amap-grid .tile { width: 256px; height: 256px; display: block; }
+.amap-overlay { position: absolute; inset: 0; width: 100%; height: 100%; }
+.map-pin-label { font-size: 11px; fill: var(--mt-text); font-weight: 700; paint-order: stroke; stroke: rgba(255,255,255,.92); stroke-width: 3px; }
+.amap-fallback { position: absolute; inset: 0; }
+.amap-fallback .map-card { margin: 0; box-shadow: none; border-radius: 0; height: 100%; }
+.amap-wrap.tiles-failed .amap-grid { display: none; }
+.amap-fallback { position: absolute; inset: 0; }
+.amap-fallback .map-card { margin: 0; box-shadow: none; border-radius: 0; height: 100%; }
+.amap-wrap.tiles-failed .amap-grid { display: none; }
+.amap-credit { position: absolute; right: 6px; bottom: 4px; font-size: 9px; color: var(--mt-text-3); background: rgba(255,255,255,.7); padding: 0 4px; border-radius: 3px; }
+body.dark .amap-credit { background: rgba(0,0,0,.55); color: var(--mt-text-2); }
+
+/* 配送地图（SVG 兜底） */
 .map-card { position: relative; border-radius: var(--mt-radius-lg); overflow: hidden; margin: 10px 12px; box-shadow: var(--mt-shadow-sm); background: var(--map-bg); }
 .map-card svg { display: block; width: 100%; height: auto; }
 :root { --map-bg: #EAF0E6; --map-block: #DCE6D6; --map-street: #FFFFFF; --map-road: #F7F3E8; }
@@ -606,6 +621,94 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
 
 /* 订单明细里的商品缩略图 */
 .oi .thumb { width: 44px; height: 44px; border-radius: 9px; flex-shrink: 0; }
+
+/* ============================ 领券中心 / 会员 ============================ */
+.cc-hero {
+    background: linear-gradient(150deg, #2B2B30 0%, #16161A 60%, #241E00 100%);
+    padding: calc(18px + var(--safe-t)) 16px 22px; color: #fff;
+    position: relative; overflow: hidden;
+}
+.cc-hero::after {
+    content: ''; position: absolute; right: -30px; top: -30px; width: 140px; height: 140px;
+    border-radius: 50%; background: var(--mt-yellow); opacity: .13;
+}
+.cc-hero .t { font-size: 20px; font-weight: 800; letter-spacing: .5px; }
+.cc-hero .s { font-size: 12px; opacity: .62; margin-top: 3px; }
+.cc-hero .stat { display: flex; gap: 26px; margin-top: 16px; }
+.cc-hero .stat .n { font-size: 20px; font-weight: 800; color: var(--mt-yellow); }
+.cc-hero .stat .n em { font-style: normal; font-size: 11px; margin-left: 1px; }
+.cc-hero .stat .l { font-size: 11px; opacity: .6; margin-top: 1px; }
+.cc-vip-entry {
+    position: absolute; right: 16px; top: calc(18px + var(--safe-t));
+    display: flex; align-items: center; gap: 4px;
+    padding: 7px 13px; border-radius: 999px;
+    background: linear-gradient(135deg, #F7E7B0, #E0B25A); color: #3A2E00;
+    font-size: 12px; font-weight: 700;
+}
+
+.cc-tabs { display: flex; gap: 6px; padding: 12px 12px 4px; overflow-x: auto; background: var(--mt-bg); }
+.cc-tab { flex-shrink: 0; padding: 7px 14px; border-radius: 999px; font-size: 13px; background: var(--mt-surface); color: var(--mt-text-2); }
+.cc-tab.on { background: var(--mt-black); color: var(--mt-yellow); font-weight: 700; }
+
+.cc-list { padding: 10px 12px 24px; display: flex; flex-direction: column; gap: 11px; }
+.cc-card {
+    display: flex; align-items: stretch; background: var(--mt-surface);
+    border-radius: var(--mt-radius); overflow: hidden; box-shadow: var(--mt-shadow-sm);
+}
+.cc-card .l {
+    width: 96px; flex-shrink: 0; padding: 14px 0; text-align: center; color: #fff;
+    display: flex; flex-direction: column; justify-content: center; gap: 1px;
+    background: linear-gradient(140deg, #FF6B5E, #E60012);
+}
+.cc-card.vip .l { background: linear-gradient(140deg, #3A3A42, #17171B); }
+.cc-card.off .l { background: var(--mt-line); color: var(--mt-text-3); }
+.cc-card .l .amt { font-size: 26px; font-weight: 800; line-height: 1; }
+.cc-card .l .amt em { font-style: normal; font-size: 13px; }
+.cc-card .l .amt.ship { font-size: 15px; }
+.cc-card .l .th { font-size: 10.5px; opacity: .85; }
+.cc-card .r { flex: 1; min-width: 0; padding: 12px 12px 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+.cc-card .r .t { font-size: 14.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.cc-card .r .e { font-size: 11.5px; color: var(--mt-text-3); }
+.cc-card .r .bar { height: 4px; border-radius: 4px; background: var(--mt-surface-2); overflow: hidden; margin-top: 3px; }
+.cc-card .r .bar i { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--mt-yellow), var(--mt-orange)); }
+.cc-card .r .p { font-size: 10.5px; color: var(--mt-text-3); }
+.cc-card .act { display: flex; align-items: center; padding: 0 14px 0 0; flex-shrink: 0; }
+.cc-claim { background: var(--mt-red); color: #fff; padding: 8px 15px; border-radius: 999px; font-size: 13px; font-weight: 700; }
+.cc-claim:disabled { background: var(--mt-line); color: var(--mt-text-3); }
+.cc-claim.vip { background: linear-gradient(135deg, #3A3A42, #17171B); color: var(--mt-yellow); }
+.cc-claimed { font-size: 12px; color: var(--mt-text-3); padding: 5px 10px; border-radius: 999px; border: 1px solid var(--mt-border); }
+.vip-badge {
+    font-size: 10px; font-weight: 800; padding: 1.5px 5px; border-radius: 4px;
+    background: linear-gradient(135deg, #F7E7B0, #E0B25A); color: #3A2E00; letter-spacing: .5px;
+}
+.section-title { padding: 16px 14px 4px; font-size: 13px; font-weight: 700; color: var(--mt-text-2); }
+
+/* ============================ 会员 ============================ */
+.vip-hero { background: linear-gradient(150deg, #3A3A42 0%, #17171B 55%, #2A2200 100%); padding: calc(22px + var(--safe-t)) 16px 54px; color: #fff; position: relative; overflow: hidden; }
+.vip-hero::after { content: ''; position: absolute; right: -40px; bottom: -50px; width: 180px; height: 180px; border-radius: 50%; background: var(--mt-yellow); opacity: .1; }
+.vip-card {
+    margin: -34px 12px 0; background: linear-gradient(135deg, #3A3A42, #17171B);
+    border-radius: var(--mt-radius-lg); padding: 18px 16px; color: #fff; position: relative; z-index: 1;
+    box-shadow: var(--mt-shadow); overflow: hidden;
+}
+.vip-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(120deg, transparent 30%, rgba(255,209,0,.14) 50%, transparent 70%); }
+.vip-card .row1 { display: flex; align-items: center; gap: 10px; position: relative; }
+.vip-card .crown { display: flex; }
+.vip-card .crown .ic { width: 26px; height: 26px; color: var(--mt-yellow); }
+.vip-card .un { font-size: 17px; font-weight: 800; }
+.vip-card .ex { font-size: 11.5px; opacity: .6; margin-top: 2px; }
+.vip-badge-lg { margin-left: auto; background: linear-gradient(135deg, #F7E7B0, #E0B25A); color: #3A2E00; font-size: 11.5px; font-weight: 800; padding: 5px 11px; border-radius: 999px; }
+.vip-perks { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 14px 12px 0; }
+.perk { background: var(--mt-surface); border-radius: var(--mt-radius); padding: 14px; box-shadow: var(--mt-shadow-sm); }
+.perk .pi { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; }
+.perk .pi .ic { width: 17px; height: 17px; color: var(--mt-yellow-deep); }
+.perk .pt { font-size: 13.5px; font-weight: 700; }
+.perk .pd { font-size: 11.5px; color: var(--mt-text-3); line-height: 1.5; }
+.vip-cta { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; padding: 12px 14px calc(12px + var(--safe-b)); background: var(--mt-surface); border-top: 1px solid var(--mt-line); display: flex; align-items: center; gap: 12px; z-index: 70; }
+.vip-cta .sum { flex: 1; font-size: 12px; color: var(--mt-text-2); }
+.vip-cta .sum em { font-style: normal; color: var(--mt-red); font-weight: 800; font-size: 17px; }
+.btn-vip { background: linear-gradient(135deg, #3A3A42, #17171B); color: var(--mt-yellow); font-weight: 800; padding: 12px 28px; border-radius: 999px; font-size: 15px; }
+.member-tag { font-size: 10px; font-weight: 800; padding: 1.5px 5px; border-radius: 4px; background: linear-gradient(135deg, #F7E7B0, #E0B25A); color: #3A2E00; letter-spacing: .5px; }
 
 @media (min-width: 481px) {
     .tabbar, .submit-bar { box-shadow: 0 0 0 1px var(--mt-line), 0 0 40px rgba(0, 0, 0, .05); }
@@ -1374,13 +1477,32 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
           ] }
     ];
 
+    /* 券池：kind 用于领券中心筛选；ship=true 为免运费券；vip=true 仅会员可领 */
     const COUPONS = [
-        { id: 'c1', title: '新人专享红包', amount: 5,  threshold: 0,   scope: '全平台可用', expire: '2026-12-31' },
-        { id: 'c2', title: '午餐红包',     amount: 3,  threshold: 20,  scope: '10:00-14:00 可用', expire: '2026-11-30' },
-        { id: 'c3', title: '满 50 减 12',  amount: 12, threshold: 50,  scope: '限美食类目', expire: '2026-12-15' },
-        { id: 'c4', title: '满 100 减 30', amount: 30, threshold: 100, scope: '限品质联盟商家', expire: '2026-11-15' },
-        { id: 'c5', title: '会员专享红包', amount: 8,  threshold: 40,  scope: '美团会员权益', expire: '2026-12-20' }
+        { id: 'c1', title: '新人专享红包',      amount: 5,  threshold: 0,   scope: '全平台可用',        expire: '2026-12-31', kind: 'all',     total: 10000, claimed: 6120 },
+        { id: 'c2', title: '午餐红包',         amount: 3,  threshold: 20,  scope: '10:00-14:00 可用',  expire: '2026-11-30', kind: 'all',     total: 8000,  claimed: 5310 },
+        { id: 'c9', title: '夜宵红包',         amount: 6,  threshold: 25,  scope: '21:00 后可用',      expire: '2026-12-31', kind: 'all',     total: 5000,  claimed: 2620 },
+        { id: 'c3', title: '满 50 减 12',      amount: 12, threshold: 50,  scope: '限美食类目',        expire: '2026-12-15', kind: 'food',    total: 5000,  claimed: 3910 },
+        { id: 'c4', title: '满 100 减 30',     amount: 30, threshold: 100, scope: '限品质联盟商家',    expire: '2026-11-15', kind: 'food',    total: 2000,  claimed: 1820 },
+        { id: 'c11', title: '火锅烧烤专用券',   amount: 20, threshold: 90,  scope: '限火锅 · 烧烤',     expire: '2026-12-10', kind: 'food',    total: 3000,  claimed: 1450 },
+        { id: 'c12', title: '西式简餐券',      amount: 10, threshold: 45,  scope: '限意面 · 披萨',     expire: '2026-12-08', kind: 'food',    total: 2500,  claimed: 980 },
+        { id: 'c13', title: '面食粥铺券',      amount: 6,  threshold: 25,  scope: '限面馆 · 粥铺',     expire: '2026-12-22', kind: 'food',    total: 4000,  claimed: 1750 },
+        { id: 'c5', title: '下午茶红包',       amount: 8,  threshold: 30,  scope: '限甜品饮品',        expire: '2026-12-20', kind: 'dessert', total: 3000,  claimed: 1460 },
+        { id: 'c6', title: '甜品饮品满 40 减 10', amount: 10, threshold: 40, scope: '限甜品饮品',     expire: '2026-12-25', kind: 'dessert', total: 4000,  claimed: 2130 },
+        { id: 'c7', title: '超市便利满 49 减 8', amount: 8, threshold: 49,  scope: '限超市便利',        expire: '2026-12-18', kind: 'market',  total: 6000,  claimed: 3240 },
+        { id: 'c8', title: '超市便利满 99 减 18', amount: 18, threshold: 99, scope: '限超市便利',       expire: '2026-11-28', kind: 'market',  total: 3000,  claimed: 1520 },
+        { id: 'c10', title: '免配送费券',      amount: 0,  threshold: 0,   scope: '任意订单免配送费',   expire: '2026-12-31', kind: 'ship',    total: 2000,  claimed: 930, ship: true },
+        { id: 'm1', title: '会员 · 满 30 减 10', amount: 10, threshold: 30,  scope: '会员专享 · 全平台', expire: '2026-12-31', kind: 'member',  total: 1000,  claimed: 420, vip: true },
+        { id: 'm2', title: '会员 · 满 60 减 25', amount: 25, threshold: 60,  scope: '会员专享 · 全平台', expire: '2026-12-31', kind: 'member',  total: 800,   claimed: 315, vip: true },
+        { id: 'm3', title: '会员 · 满 100 减 40', amount: 40, threshold: 100, scope: '会员专享 · 全平台', expire: '2026-12-31', kind: 'member',  total: 500,   claimed: 186, vip: true },
+        { id: 'm4', title: '会员免配送费券',    amount: 0,  threshold: 0,   scope: '会员专享 · 免配送费', expire: '2026-12-31', kind: 'member', total: 1000,  claimed: 524, vip: true, ship: true }
     ];
+    const COUPON_KINDS = [
+        { id: 'all', name: '全部' }, { id: 'all2', name: '通用' }, { id: 'food', name: '美食' },
+        { id: 'dessert', name: '甜品饮品' }, { id: 'market', name: '超市便利' },
+        { id: 'ship', name: '免运费' }, { id: 'member', name: '会员专享' }
+    ];
+    const MEMBER_FEE = 12, MEMBER_DAYS = 30;
 
     const DEFAULT_ADDRESSES = [
         { id: 'a1', name: '张小美', phone: '138****8888', tag: '公司', detail: '四川省成都市武侯区天府大道 1000 号 写字楼 A 座 18F', isDefault: true },
@@ -1626,6 +1748,8 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         searchHistory: [], searchKeyword: '',
         category: 'all', sort: 'recommend',
         orderFilter: 'all', shopTab: 'menu',
+        couponTab: 'all',
+        member: { on: false, expire: '' },
         reviewDraft: { rating: 0, tags: [] }
     };
 
@@ -1661,6 +1785,8 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         const balRaw = readJSON('kd.balance', null);
         const bal = balRaw == null ? NaN : Number(balRaw);
         state.balance = isNaN(bal) ? 128 : bal;
+        const mem = readJSON('kd.member', null);
+        state.member = (mem && typeof mem === 'object') ? mem : { on: false, expire: '' };
         state.addressId = (state.addresses.find(a => a.isDefault) || state.addresses[0]).id;
     }
     const saveCart = () => store('kd.cart', JSON.stringify(state.cart));
@@ -1670,6 +1796,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
     const saveFavs = () => store('kd.favs', JSON.stringify(state.favorites));
     const saveCoupons = () => store('kd.coupons', JSON.stringify(state.ownedCoupons));
     const saveBalance = () => store('kd.balance', JSON.stringify(state.balance));
+    const saveMember = () => store('kd.member', JSON.stringify(state.member));
 
     /* ======================================================================
      * 5. 购物车 & 费用
@@ -1692,16 +1819,20 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
             .sort((a, b) => a.threshold - b.threshold)[0];
         return next ? { need: next.threshold - subtotal, cut: next.cut } : null;
     }
-    function bill(shop, lines, couponId) {
+    function bill(shop, lines, couponId, memberFreeShip) {
         const subtotal = lines.reduce((s, l) => s + (l.unit != null ? l.unit : l.dish.price) * l.qty, 0);
         const qty = lines.reduce((s, l) => s + l.qty, 0);
         const packing = shop ? shop.packingFee * qty : 0;
         const delivery = shop ? shop.deliveryFee : 0;
         const discount = discountFor(shop, subtotal);
         const coupon = couponId ? COUPON_BY_ID.get(couponId) : null;
-        const couponCut = (coupon && subtotal >= coupon.threshold) ? coupon.amount : 0;
-        const total = Math.max(subtotal + packing + delivery - discount - couponCut, 0);
-        return { subtotal: subtotal, qty: qty, packing: packing, delivery: delivery, discount: discount, couponCut: couponCut, total: total };
+        const couponOk = coupon && subtotal >= coupon.threshold;
+        const couponCut = (couponOk && !coupon.ship) ? coupon.amount : 0;
+        const couponShip = (couponOk && coupon.ship) ? delivery : 0;
+        const memberShip = memberFreeShip ? delivery : 0;
+        const total = Math.max(subtotal + packing + delivery - discount - couponCut - Math.max(couponShip, memberShip), 0);
+        return { subtotal: subtotal, qty: qty, packing: packing, delivery: delivery, discount: discount,
+                 couponCut: couponCut, shipCut: Math.max(couponShip, memberShip), total: total };
     }
 
     function addDish(id, picks) {
@@ -2219,7 +2350,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
             '</div>';
         }
         const addr = state.addresses.find(a => a.id === state.addressId) || currentAddress();
-        const b = bill(shop, lines, state.couponId);
+        const b = bill(shop, lines, state.couponId, state.member.on);
         const coupon = state.couponId ? COUPON_BY_ID.get(state.couponId) : null;
         const usable = state.ownedCoupons.filter(cid => {
             const c = COUPON_BY_ID.get(cid);
@@ -2276,6 +2407,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                 '<div class="bill-row"><span>配送费</span><span class="amt">' + money(b.delivery) + '</span></div>' +
                 (b.discount ? '<div class="bill-row cut"><span>满减优惠</span><span class="amt">−' + money(b.discount) + '</span></div>' : '') +
                 (b.couponCut ? '<div class="bill-row cut"><span>红包抵扣</span><span class="amt">−' + money(b.couponCut) + '</span></div>' : '') +
+                (b.shipCut ? '<div class="bill-row cut"><span>' + (state.member.on ? '会员免配送费' : '免运费券') + '</span><span class="amt">−' + money(b.shipCut) + '</span></div>' : '') +
                 '<div class="balance-row">' +
                     '<span class="k">余额支付</span>' +
                     '<span class="v">可用 <em>' + money(state.balance) + '</em>' +
@@ -2375,7 +2507,84 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
             tabbarHTML('orders') +
         '</div>';
     }
-    /* 配送路线示意图（手绘 SVG：街区块 + 骑手轨迹 + 商家/收货点） */
+    /* 真实地图瓦片：高德（免 key），按订单地址换算瓦片坐标 */
+    const CHENGDU_SPOTS = [
+        { kw: '天府大道', lng: 104.0652, lat: 30.5590 },
+        { kw: '天府软件园', lng: 104.0680, lat: 30.5450 },
+        { kw: '环球中心', lng: 104.0610, lat: 30.5730 },
+        { kw: '春熙路', lng: 104.0810, lat: 30.6570 },
+        { kw: '宽窄巷子', lng: 104.0530, lat: 30.6640 },
+        { kw: '锦江', lng: 104.0800, lat: 30.6300 },
+        { kw: '高新区', lng: 104.0630, lat: 30.5400 },
+        { kw: '武侯', lng: 104.0430, lat: 30.6420 },
+        { kw: '锦江区', lng: 104.0800, lat: 30.6600 }
+    ];
+    const CITY_CENTER = { lng: 104.0657, lat: 30.6598 };   // 天府广场
+    function geocode(addr) {
+        const a = String(addr || '');
+        for (const s of CHENGDU_SPOTS) if (a.indexOf(s.kw) !== -1) return s;
+        return CITY_CENTER;
+    }
+    function lngLatToTile(lng, lat, z) {
+        const n = Math.pow(2, z);
+        const x = (lng + 180) / 360 * n;
+        const latRad = lat * Math.PI / 180;
+        const y = (1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2 * n;
+        return { x: x, y: y, fx: x, fy: y };
+    }
+    /* 高德瓦片地图：3×2 张 256px 瓦片，目标地址落在容器中心 */
+    function amapHTML(lng, lat, distanceKm, seed, showRider) {
+        const Z = 13, COLS = 3, ROWS = 2;
+        const t = lngLatToTile(lng, lat, Z);
+        const cx = Math.floor(t.fx), cy = Math.floor(t.fy);
+        const offX = 1, offY = 0;
+        let tiles = '';
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                const x = cx + c - offX, y = cy + r - offY;
+                const sub = ((x % 4) + 4) % 4 + 1;
+                tiles += '<img class="tile" src="https://webrd0' + sub + '.is.autonavi.com/appmaptile' +
+                    '?lang=zh_cn&size=1&scale=1&style=7&x=' + x + '&y=' + y + '&z=' + Z + '"' +
+                    ' alt="" loading="lazy" decoding="async">';
+            }
+        }
+        // 目标地址在瓦片画布上的像素位置
+        const px = (t.fx - (cx - offX)) * 256;
+        const py = (t.fy - (cy - offY)) * 256;
+        const tx = 228 - px, ty = 85 - py;
+        // 商家按配送距离反向偏移（z13 下 1km ≈ 59px）
+        const k = 59 / Math.cos(lat * Math.PI / 180);
+        const ang = (seed % 360) * Math.PI / 180;
+        const sx = tx + Math.cos(ang) * Math.max(distanceKm, 0.4) * k;
+        const sy = ty - Math.sin(ang) * Math.max(distanceKm, 0.4) * k * 0.72;
+        return '<div class="amap-wrap">' +
+            '<div class="amap-fallback">' + mapHTML(null, 0.45, showRider) + '</div>' +
+            '<div class="amap-grid" style="transform:translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px)">' + tiles + '</div>' +
+            '<svg class="amap-overlay" viewBox="0 0 456 170">' +
+                '<path d="M' + sx.toFixed(1) + ' ' + sy.toFixed(1) + ' L228 85" stroke="var(--mt-yellow-deep)" stroke-width="3" stroke-dasharray=".5 8" stroke-linecap="round" fill="none"/>' +
+                (showRider
+                    ? '<g transform="translate(' + ((sx + 228) / 2).toFixed(1) + ',' + ((sy + 85) / 2).toFixed(1) + ')">' +
+                        '<circle class="map-rider-pulse" r="13" fill="var(--mt-yellow-deep)"/>' +
+                        '<circle r="13" fill="var(--mt-yellow)" stroke="#fff" stroke-width="2.5"/>' +
+                        '<g transform="translate(-7.5,-7.5)"><svg width="15" height="15" viewBox="0 0 24 24"><use href="#i-bike" style="color:var(--mt-black)"/></svg></g>' +
+                      '</g>'
+                    : '') +
+                '<g transform="translate(' + sx.toFixed(1) + ',' + sy.toFixed(1) + ')">' +
+                    '<circle r="10" fill="var(--mt-surface)" stroke="var(--mt-black)" stroke-width="2.5"/>' +
+                    '<circle r="3.4" fill="var(--mt-black)"/>' +
+                '</g>' +
+                '<g transform="translate(228,85)">' +
+                    '<circle r="11" fill="var(--mt-yellow)" stroke="var(--mt-black)" stroke-width="2.5"/>' +
+                    '<path d="M-3.4 1.2 1.6 5.4M-3.6 5.4 -1 -3.4 4.4 -1.2" stroke="var(--mt-black)" stroke-width="1.8" fill="none" stroke-linecap="round"/>' +
+                '</g>' +
+                '<text x="' + (sx + 14).toFixed(1) + '" y="' + (sy + 4).toFixed(1) + '" class="map-pin-label">商家</text>' +
+                '<text x="242" y="89" class="map-pin-label">收货地址</text>' +
+            '</svg>' +
+            '<span class="amap-credit">© 高德地图</span>' +
+        '</div>';
+    }
+
+    /* 配送路线示意图（SVG 兜底：地图瓦片加载失败时显示） */
     function mapHTML(shop, progress, showRider) {
         const prog = Math.min(Math.max(progress == null ? 0.45 : progress, 0.1), 0.94);
         // 路线：M48 124 → 上 → 右 → 上 → 右到收货点
@@ -2408,7 +2617,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                     '<circle r="10" fill="var(--mt-surface)" stroke="var(--mt-black)" stroke-width="2.5"/>' +
                     '<circle r="3.6" fill="var(--mt-black)"/>' +
                 '</g>' +
-                '<text class="map-label" x="62" y="128">商家 · ' + esc(shop.name) + '</text>' +
+                '<text class="map-label" x="62" y="128">商家</text>' +
                 '<g transform="translate(292,36)">' +
                     '<circle r="11" fill="var(--mt-yellow)" stroke="var(--mt-black)" stroke-width="2.5"/>' +
                     '<path d="M-3.4 1.2 1.6 5.4M-3.6 5.4 -1 -3.4 4.4 -1.2" stroke="var(--mt-black)" stroke-width="1.8" fill="none" stroke-linecap="round"/>' +
@@ -2452,7 +2661,8 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                 '<h1>订单详情</h1>' +
             '</div>' +
             '<div class="card" style="padding:16px 14px"><div class="timeline">' + timeline + '</div></div>' +
-            mapHTML(shop, st >= 3 ? 1 : [0.28, 0.55, 0.82][st], st < 3) +
+            amapHTML(geocode(order.address).lng, geocode(order.address).lat,
+                     Number(order.distance) || 1, order.shopId * 47 + 11, st < 3) +
             (st < 3
                 ? '<div class="rider">' +
                     '<span class="av">' + icon('bike') + '</span>' +
@@ -2502,6 +2712,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                 '<div class="bill-row"><span>配送费</span><span class="amt">' + money(order.delivery) + '</span></div>' +
                 (order.discount ? '<div class="bill-row cut"><span>满减优惠</span><span class="amt">−' + money(order.discount) + '</span></div>' : '') +
                 (order.couponCut ? '<div class="bill-row cut"><span>红包抵扣</span><span class="amt">−' + money(order.couponCut) + '</span></div>' : '') +
+                (order.shipCut ? '<div class="bill-row cut"><span>免配送费</span><span class="amt">−' + money(order.shipCut) + '</span></div>' : '') +
                 (order.balanceCut ? '<div class="bill-row cut"><span>余额抵扣</span><span class="amt">−' + money(order.balanceCut) + '</span></div>' : '') +
                 '<div class="bill-row total"><span>实付</span><span class="amt">' + money(order.payable != null ? order.payable : order.total) + '</span></div>' +
             '</div>' +
@@ -2561,6 +2772,11 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                 '<button type="button" class="menu-row" data-go="address">' +
                     '<span class="mi">' + icon('pin') + '</span><span class="mt">收货地址</span>' +
                     '<span class="mv">' + state.addresses.length + ' 个</span><span class="caret">' + icon('chev-r') + '</span></button>' +
+                '<button type="button" class="menu-row" data-go="vip">' +
+                    '<span class="mi">' + icon('star') + '</span><span class="mt">袋鼠会员' +
+                        (state.member.on ? ' <span class="member-tag">VIP</span>' : '') + '</span>' +
+                    '<span class="mv">' + (state.member.on ? '免配送费生效中' : '未开通') + '</span>' +
+                    '<span class="caret">' + icon('chev-r') + '</span></button>' +
                 '<button type="button" class="menu-row" data-go="coupons">' +
                     '<span class="mi">' + icon('gift') + '</span><span class="mt">领券中心</span>' +
                     '<span class="mv">持 ' + state.ownedCoupons.length + ' 张</span><span class="caret">' + icon('chev-r') + '</span></button>' +
@@ -2640,33 +2856,125 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
             tabbarHTML('profile') +
         '</div>';
     }
+    function couponMatches(c, tab) {
+        if (tab === 'all') return true;
+        if (tab === 'all2') return c.kind === 'all';
+        if (tab === 'member') return !!c.vip;
+        return c.kind === tab;
+    }
     function renderCouponCenter() {
+        const tab = state.couponTab;
+        const list = COUPONS.filter(c => couponMatches(c, tab))
+            .slice().sort((a, b) => {
+                const ao = state.ownedCoupons.indexOf(a.id) !== -1 ? 1 : 0;
+                const bo = state.ownedCoupons.indexOf(b.id) !== -1 ? 1 : 0;
+                if (ao !== bo) return ao - bo;
+                return b.amount - a.amount;
+            });
+        const saved = state.ownedCoupons.reduce((s, id) => {
+            const c = COUPON_BY_ID.get(id);
+            return s + (c ? (c.ship ? 8 : c.amount) : 0);
+        }, 0);
+        const claimable = COUPONS.filter(c => state.ownedCoupons.indexOf(c.id) === -1 &&
+            (!c.vip || state.member.on)).length;
+
         return '<div class="page">' +
-            '<div class="subheader">' +
-                '<button type="button" class="back" data-go="profile" aria-label="返回">' + icon('back') + '</button>' +
-                '<h1>领券中心</h1>' +
-                '<span class="tag yellow" style="margin-left:auto">已持有 ' + state.ownedCoupons.length + ' 张</span>' +
+            '<div class="cc-hero">' +
+                '<div class="t">领券中心</div>' +
+                '<div class="s">红包与商家满减可叠加，领取后自动入包</div>' +
+                '<div class="stat">' +
+                    '<div><div class="n">' + state.ownedCoupons.length + '<em>张</em></div><div class="l">已持有</div></div>' +
+                    '<div><div class="n">¥' + saved + '</div><div class="l">累计可省</div></div>' +
+                    '<div><div class="n">' + claimable + '<em>张</em></div><div class="l">可领取</div></div>' +
+                '</div>' +
+                '<button type="button" class="cc-vip-entry" data-go="vip">' + icon('star', 'fill') + '会员专享</button>' +
             '</div>' +
-            COUPONS.map(c => {
-                const owned = state.ownedCoupons.indexOf(c.id) !== -1;
-                return '<div class="coupon' + (owned ? ' used' : '') + '">' +
-                    '<span class="l"><span class="amt"><em>¥</em>' + c.amount + '</span>' +
-                        '<span class="th">' + (c.threshold ? '满 ' + c.threshold + ' 可用' : '无门槛') + '</span></span>' +
-                    '<span class="r"><span class="t">' + esc(c.title) + '</span>' +
-                        '<span class="e">' + esc(c.scope) + ' · ' + esc(c.expire) + ' 到期</span></span>' +
-                    '<span style="display:flex;align-items:center;padding-right:14px">' +
-                        (owned
-                            ? '<span class="tag yellow">已领取</span>'
-                            : '<button type="button" class="btn-sm solid" data-action="claim-coupon" data-id="' + c.id + '">领取</button>') +
-                    '</span>' +
-                '</div>';
-            }).join('') +
-            '<div style="padding:0 14px 24px;font-size:11.5px;color:var(--mt-text-3)">' +
-                '红包与商家满减可叠加；领取后在「结算 → 红包」里选用。' +
+            '<div class="cc-tabs">' +
+                COUPON_KINDS.map(k => '<button type="button" class="cc-tab' + (tab === k.id ? ' on' : '') + '"' +
+                    ' data-action="coupon-tab" data-tab="' + k.id + '">' + k.name + '</button>').join('') +
             '</div>' +
+            (list.length
+                ? '<div class="cc-list">' + list.map(c => {
+                    const owned = state.ownedCoupons.indexOf(c.id) !== -1;
+                    const pct = Math.min(Math.round(c.claimed / c.total * 100), 100);
+                    const needVip = c.vip && !state.member.on;
+                    const ship = !!c.ship;
+                    return '<div class="cc-card' + (c.vip ? ' vip' : '') + (owned ? ' off' : '') + '">' +
+                        '<div class="l"><span class="amt' + (ship ? ' ship' : '') + '">' +
+                            (ship ? '免配送' : '<em>¥</em>' + c.amount) + '</span>' +
+                            '<span class="th">' + (ship ? '运费全额抵扣' : (c.threshold ? '满 ' + c.threshold + ' 可用' : '无门槛')) + '</span></div>' +
+                        '<div class="r">' +
+                            '<div class="t">' + esc(c.title) + (c.vip ? '<span class="vip-badge">VIP</span>' : '') + '</div>' +
+                            '<div class="e">' + esc(c.scope) + ' · ' + esc(c.expire) + ' 到期</div>' +
+                            '<div class="bar"><i style="width:' + pct + '%"></i></div>' +
+                            '<div class="p">已领 ' + pct + '% · 剩余 ' + (c.total - c.claimed) + ' 张</div>' +
+                        '</div>' +
+                        '<div class="act">' +
+                            (owned
+                                ? '<span class="cc-claimed">已领取</span>'
+                                : (needVip
+                                    ? '<button type="button" class="cc-claim vip" data-action="goto-vip">开通会员领</button>'
+                                    : '<button type="button" class="cc-claim" data-action="claim-coupon" data-id="' + c.id + '">领取</button>')) +
+                        '</div>' +
+                    '</div>';
+                }).join('') + '</div>'
+                : emptyState('ticket', '该分类暂无可领的券', '换个分类看看吧')) +
             tabbarHTML('profile') +
         '</div>';
     }
+
+    function renderVip() {
+        const on = state.member.on;
+        const perks = [
+            ['bike', '全场免配送费', '会员下单自动免配送费，无需领券'],
+            ['ticket', '会员专享券', '4 张高额会员券，最高满 100 减 40'],
+            ['star', '积分加倍', '每笔订单积分 ×2，可兑换周边'],
+            ['gift', '每月红包礼包', '每月 1 日自动发放 3 张会员券'],
+            ['wallet', '会员价商品', '部分商品享会员专属价'],
+            ['msg', '专属客服', '会员通道优先接入，30 秒响应']
+        ];
+        return '<div class="page" style="padding-bottom:96px">' +
+            '<div class="subheader">' +
+                '<button type="button" class="back" data-go="coupons" aria-label="返回">' + icon('back') + '</button>' +
+                '<h1>会员中心</h1>' +
+            '</div>' +
+            '<div class="vip-hero">' +
+                '<div style="font-size:12px;opacity:.6;letter-spacing:2px">袋鼠外卖</div>' +
+                '<div style="font-size:24px;font-weight:800;margin-top:4px">袋鼠会员</div>' +
+                '<div style="font-size:12px;opacity:.6;margin-top:4px">' +
+                    (on ? '会员有效期至 ' + esc(state.member.expire) : '开通即享 6 项专属权益，本月限时 ¥' + MEMBER_FEE) +
+                '</div>' +
+            '</div>' +
+            '<div class="vip-card">' +
+                '<div class="row1">' +
+                    '<span class="crown">' + icon('star', 'fill') + '</span>' +
+                    '<span><div class="un">' + (on ? '会员用户' : '普通用户') + '</div>' +
+                    '<div class="ex">' + (on ? '权益已激活 · 自动免配送费' : '开通后本单立省配送费') + '</div></span>' +
+                    '<span class="vip-badge-lg">' + (on ? 'VIP' : '未开通') + '</span>' +
+                '</div>' +
+            '</div>' +
+            '<div class="vip-perks">' +
+                perks.map(p => '<div class="perk">' +
+                    '<div class="pi">' + icon(p[0]) + '<span class="pt">' + esc(p[1]) + '</span></div>' +
+                    '<div class="pd">' + esc(p[2]) + '</div>' +
+                '</div>').join('') +
+            '</div>' +
+            '<div class="card" style="padding:14px;font-size:11.5px;color:var(--mt-text-3);line-height:1.7;margin-top:14px">' +
+                '· 会员权益在有效期内无限次使用<br>' +
+                '· 会员免配送费与满减、红包可叠加<br>' +
+                '· 本页为演示环境，开通仅扣减本地模拟余额，不产生真实交易' +
+            '</div>' +
+            '<div class="vip-cta">' +
+                '<div class="sum">' + (on
+                    ? '会员生效中 · ' + esc(state.member.expire) + ' 到期'
+                    : '开通仅需 <em>¥' + MEMBER_FEE + '</em> / ' + MEMBER_DAYS + ' 天') + '</div>' +
+                (on
+                    ? '<button type="button" class="btn-sm" data-action="cancel-member">关闭自动续费</button>'
+                    : '<button type="button" class="btn-vip" data-action="open-member">立即开通</button>') +
+            '</div>' +
+        '</div>';
+    }
+
     function renderMessages() {
         return '<div class="page">' +
             '<div class="subheader">' +
@@ -2723,6 +3031,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
             case 'profile':  html = renderProfile(); break;
             case 'address':  html = renderAddress(); break;
             case 'favs':     html = renderFavs(); break;
+            case 'vip':      html = renderVip(); break;
             case 'coupons':  html = renderCouponCenter(); break;
             case 'messages': html = renderMessages(); break;
             default:         html = renderHome();
@@ -2751,7 +3060,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         const shop = cartShop();
         const lines = cartLines();
         if (!shop || !lines.length) { toast('购物车是空的'); return; }
-        const b = bill(shop, lines, state.couponId);
+        const b = bill(shop, lines, state.couponId, state.member.on);
         const addr = state.addresses.find(a => a.id === state.addressId) || currentAddress();
         const now = new Date();
         const pad = n => String(n).padStart(2, '0');
@@ -2770,7 +3079,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                 return { id: dd.id, name: dd.name, price: l.unit, qty: l.qty, spec: l.picks.join(' / ') };
             }),
             subtotal: b.subtotal, packing: b.packing, delivery: b.delivery,
-            discount: b.discount, couponCut: b.couponCut, total: b.total,
+            discount: b.discount, couponCut: b.couponCut, shipCut: b.shipCut, total: b.total,
             balanceCut: balanceCut, payable: b.total - balanceCut,
             reviewed: false
         };
@@ -2945,8 +3254,31 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                 saveFavs();
                 renderApp();
             },
+            'coupon-tab': () => { state.couponTab = el.dataset.tab; renderApp(); },
+            'goto-vip': () => go('vip'),
+            'open-member': () => {
+                if (state.balance < MEMBER_FEE) { toast('余额不足，请先充值'); go('profile'); return; }
+                confirmDialog({ title: '开通袋鼠会员', message: '将使用余额 ¥' + MEMBER_FEE + ' 开通 ' + MEMBER_DAYS + ' 天会员，期间下单自动免配送费并解锁会员专享券。', okText: '确认开通' }).then(ok => {
+                    if (!ok) return;
+                    const d = new Date(); d.setDate(d.getDate() + MEMBER_DAYS);
+                    const pad = n => String(n).padStart(2, '0');
+                    state.member = { on: true, expire: d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) };
+                    state.balance -= MEMBER_FEE;
+                    saveMember(); saveBalance();
+                    ['m1', 'm4'].forEach(id => { if (state.ownedCoupons.indexOf(id) === -1) state.ownedCoupons.push(id); });
+                    saveCoupons();
+                    toast('会员已开通，免配送费已生效');
+                    renderApp();
+                });
+            },
+            'cancel-member': () => {
+                state.member = { on: false, expire: '' };
+                saveMember(); toast('已关闭自动续费，权益保留至到期'); renderApp();
+            },
             'claim-coupon': () => {
                 const id = el.dataset.id;
+                const c = COUPON_BY_ID.get(id);
+                if (c && c.vip && !state.member.on) { toast('会员专享券，请先开通会员'); go('vip'); return; }
                 if (state.ownedCoupons.indexOf(id) !== -1) { toast('已经领过啦'); return; }
                 state.ownedCoupons.push(id);
                 saveCoupons();
@@ -3050,6 +3382,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                     state.searchHistory = []; state.searchKeyword = '';
                     state.couponId = null; state.addressId = 'a1';
                     state.favorites = []; state.ownedCoupons = ['c1', 'c2'];
+                    state.member = { on: false, expire: '' };
                     state.balance = 128; state.useBalance = true;
                     toast('已重置'); go('home'); renderApp();
                 });
@@ -3110,6 +3443,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         shops: SHOPS, coupons: COUPONS,
         shopById: id => SHOP_BY_ID.get(Number(id)), parseHash: parseHash,
         art: artHTML, icon: icon, imgURL: imgURL,
+        memberFee: MEMBER_FEE, couponKinds: COUPON_KINDS,
         liveStatus: liveStatus, shopReviews: shopReviews, shopRating: shopRating,
         specsOf: specsOf, specUnitPrice: specUnitPrice, nextDiscountGap: nextDiscountGap
     };
