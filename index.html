@@ -174,15 +174,14 @@ body.dark :focus-visible { outline-color: var(--mt-yellow); }
 .kingkong { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px 0; padding: 16px 8px 8px; }
 .kk-item { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 4px 0 6px; border-radius: 12px; }
 .kk-ico {
-    width: 46px; height: 46px; border-radius: 15px; display: flex;
+    width: 48px; height: 48px; border-radius: 16px; display: flex;
     align-items: center; justify-content: center; position: relative;
 }
 .kk-ico::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: var(--k); opacity: .13; }
-.kk-ico .ic { position: relative; width: 24px; height: 24px; color: var(--k); z-index: 1; }
+.kk-ico .ic { position: relative; width: 28px; height: 28px; z-index: 1; }
 .kk-name { font-size: 11.5px; color: var(--mt-text-2); white-space: nowrap; }
-.kk-item.on .kk-ico { background: var(--k); }
-.kk-item.on .kk-ico::after { display: none; }
-.kk-item.on .kk-ico .ic { color: #fff; stroke-width: 2; }
+.kk-item.on .kk-ico { box-shadow: 0 0 0 2.5px var(--k), 0 4px 10px color-mix(in srgb, var(--k) 30%, transparent); }
+.kk-item.on .kk-ico::after { opacity: .2; }
 .kk-item.on .kk-name { color: var(--k); font-weight: 700; }
 
 /* ============================ 瓷片区 ============================ */
@@ -556,6 +555,15 @@ body.dark .dialog-actions .ok { color: var(--mt-yellow); }
 .spec-opt .delta { font-size: 11px; color: var(--mt-text-3); margin-left: 3px; }
 .spec-opt.on { background: var(--mt-yellow-soft); border-color: var(--mt-yellow-deep); color: var(--mt-black); font-weight: 600; }
 body.dark .spec-opt.on { background: #3D3600; border-color: var(--mt-yellow); color: var(--mt-yellow); }
+.spec-qty-group { margin-top: 10px; }
+.spec-qty-row { display: flex; align-items: center; gap: 16px; padding: 4px 0 2px; }
+.spec-qty-row .q { min-width: 30px; text-align: center; font-size: 16px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.spec-q {
+    width: 32px; height: 32px; border-radius: 50%; border: none; font-size: 18px; font-weight: 700;
+    background: var(--mt-yellow); color: var(--mt-black); line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+}
+.spec-q.off { background: var(--mt-surface-2); color: var(--mt-text-3); }
 .spec-foot { display: flex; align-items: center; gap: 12px; padding: 12px 16px calc(12px + var(--safe-b)); border-top: 1px solid var(--mt-line); }
 .spec-foot .price { flex: 1; }
 
@@ -624,13 +632,17 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
 
 /* ============================ 领券中心 / 会员 ============================ */
 .cc-hero {
-    background: linear-gradient(150deg, #2B2B30 0%, #16161A 60%, #241E00 100%);
-    padding: calc(18px + var(--safe-t)) 16px 22px; color: #fff;
+    background: linear-gradient(150deg, #43181A 0%, #1B1B20 52%, #2A2200 100%);
+    padding: calc(18px + var(--safe-t)) 16px 24px; color: #fff;
     position: relative; overflow: hidden;
 }
 .cc-hero::after {
     content: ''; position: absolute; right: -30px; top: -30px; width: 140px; height: 140px;
     border-radius: 50%; background: var(--mt-yellow); opacity: .13;
+}
+.cc-hero::before {
+    content: ''; position: absolute; left: -46px; bottom: -60px; width: 150px; height: 150px;
+    border-radius: 50%; border: 22px solid rgba(230, 0, 18, .22);
 }
 .cc-hero .t { font-size: 20px; font-weight: 800; letter-spacing: .5px; }
 .cc-hero .s { font-size: 12px; opacity: .62; margin-top: 3px; }
@@ -646,37 +658,76 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
     font-size: 12px; font-weight: 700;
 }
 
-.cc-tabs { display: flex; gap: 6px; padding: 12px 12px 4px; overflow-x: auto; background: var(--mt-bg); }
-.cc-tab { flex-shrink: 0; padding: 7px 14px; border-radius: 999px; font-size: 13px; background: var(--mt-surface); color: var(--mt-text-2); }
-.cc-tab.on { background: var(--mt-black); color: var(--mt-yellow); font-weight: 700; }
+.cc-tabs {
+    display: flex; gap: 7px; padding: 12px 12px 6px; overflow-x: auto; background: var(--mt-bg);
+    position: sticky; top: 0; z-index: 20;
+}
+.cc-tab {
+    flex-shrink: 0; padding: 7px 15px; border-radius: 999px; font-size: 13px;
+    background: var(--mt-surface); color: var(--mt-text-2);
+    box-shadow: 0 1px 4px rgba(90, 60, 0, .07);
+}
+.cc-tab.on {
+    background: linear-gradient(135deg, #FFE566, #FFD100);
+    color: var(--mt-black); font-weight: 800;
+    box-shadow: 0 3px 8px rgba(255, 190, 0, .35);
+}
 
-.cc-list { padding: 10px 12px 24px; display: flex; flex-direction: column; gap: 11px; }
+.cc-list { padding: 10px 12px 24px; display: flex; flex-direction: column; gap: 12px; }
 .cc-card {
     display: flex; align-items: stretch; background: var(--mt-surface);
     border-radius: var(--mt-radius); overflow: hidden; box-shadow: var(--mt-shadow-sm);
+    position: relative;
 }
+/* 票券缺口：左右各咬掉一个半圆，更像真券 */
+.cc-card::before, .cc-card::after {
+    content: ''; position: absolute; width: 13px; height: 13px; border-radius: 50%;
+    background: var(--mt-bg); top: 50%; transform: translateY(-50%); z-index: 1;
+}
+.cc-card::before { left: 90px; }
+.cc-card::after { right: -6.5px; }
 .cc-card .l {
     width: 96px; flex-shrink: 0; padding: 14px 0; text-align: center; color: #fff;
     display: flex; flex-direction: column; justify-content: center; gap: 1px;
     background: linear-gradient(140deg, #FF6B5E, #E60012);
+    position: relative;
+}
+.cc-card .l::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(120% 90% at 20% 0%, rgba(255, 255, 255, .28), transparent 55%);
 }
 .cc-card.vip .l { background: linear-gradient(140deg, #3A3A42, #17171B); }
 .cc-card.off .l { background: var(--mt-line); color: var(--mt-text-3); }
+.cc-card .r { border-left: 1.5px dashed var(--mt-border); }
 .cc-card .l .amt { font-size: 26px; font-weight: 800; line-height: 1; }
 .cc-card .l .amt em { font-style: normal; font-size: 13px; }
 .cc-card .l .amt.ship { font-size: 15px; }
 .cc-card .l .th { font-size: 10.5px; opacity: .85; }
-.cc-card .r { flex: 1; min-width: 0; padding: 12px 12px 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+.cc-card .r { flex: 1; min-width: 0; padding: 12px 12px 12px 16px; display: flex; flex-direction: column; gap: 4px; }
 .cc-card .r .t { font-size: 14.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .cc-card .r .e { font-size: 11.5px; color: var(--mt-text-3); }
 .cc-card .r .bar { height: 4px; border-radius: 4px; background: var(--mt-surface-2); overflow: hidden; margin-top: 3px; }
 .cc-card .r .bar i { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--mt-yellow), var(--mt-orange)); }
 .cc-card .r .p { font-size: 10.5px; color: var(--mt-text-3); }
 .cc-card .act { display: flex; align-items: center; padding: 0 14px 0 0; flex-shrink: 0; }
-.cc-claim { background: var(--mt-red); color: #fff; padding: 8px 15px; border-radius: 999px; font-size: 13px; font-weight: 700; }
-.cc-claim:disabled { background: var(--mt-line); color: var(--mt-text-3); }
-.cc-claim.vip { background: linear-gradient(135deg, #3A3A42, #17171B); color: var(--mt-yellow); }
+.cc-claim {
+    background: linear-gradient(135deg, #FF5A4E, #E60012); color: #fff;
+    padding: 8px 15px; border-radius: 999px; font-size: 13px; font-weight: 700;
+    box-shadow: 0 3px 8px rgba(230, 0, 18, .3);
+}
+.cc-claim:disabled { background: var(--mt-line); color: var(--mt-text-3); box-shadow: none; }
+.cc-claim.vip { background: linear-gradient(135deg, #3A3A42, #17171B); color: var(--mt-yellow); box-shadow: none; }
 .cc-claimed { font-size: 12px; color: var(--mt-text-3); padding: 5px 10px; border-radius: 999px; border: 1px solid var(--mt-border); }
+.shop-badge {
+    font-size: 10px; font-weight: 800; padding: 1.5px 6px; border-radius: 4px;
+    background: #FDECEC; color: var(--mt-red); border: 1px solid rgba(230, 0, 18, .25);
+}
+body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
+.best-badge {
+    font-style: normal; font-size: 10px; font-weight: 800; padding: 1.5px 6px;
+    border-radius: 4px; margin-right: 5px; vertical-align: 1px;
+    background: linear-gradient(135deg, #FF5A4E, #E60012); color: #fff; letter-spacing: .5px;
+}
 .vip-badge {
     font-size: 10px; font-weight: 800; padding: 1.5px 5px; border-radius: 4px;
     background: linear-gradient(135deg, #F7E7B0, #E0B25A); color: #3A2E00; letter-spacing: .5px;
@@ -714,80 +765,70 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
     .tabbar, .submit-bar { box-shadow: 0 0 0 1px var(--mt-line), 0 0 40px rgba(0, 0, 0, .05); }
 }
 
-    /* ===== 地图主界面 ===== */
-    .map-page { padding-bottom: calc(var(--tab-h) + var(--safe-b) + 8px); }
-    .map-top { position: sticky; top: 0; z-index: 30; background: var(--mt-yellow-grad);
-        padding: calc(10px + var(--safe-t)) 12px 10px; }
-    .map-search { display: flex; align-items: center; gap: 8px; background: var(--mt-surface);
-        border-radius: 22px; padding: 9px 14px; color: var(--mt-text-3); font-size: 13px; }
-    .map-search svg { color: var(--mt-text-3); }
-    .map-cats { display: flex; gap: 8px; overflow-x: auto; padding: 10px 12px 2px; -webkit-overflow-scrolling: touch; }
-    .map-cats .mc { flex: 0 0 auto; padding: 6px 13px; border-radius: 16px; background: var(--mt-surface-2);
-        color: var(--mt-text-2); font-size: 12.5px; border: 1px solid transparent; white-space: nowrap; }
-    .map-cats .mc.on { background: var(--mt-yellow); color: var(--mt-black); border-color: var(--mt-yellow-deep); font-weight: 700; }
-    .map-stage { position: relative; width: 100%; overflow: hidden; background: #dfe7ea; }
-    .map-inner { position: relative; width: 1024px; height: 640px; transform-origin: top left; }
-    .map-tiles { position: absolute; inset: 0; }
-    .map-tiles .mtile { position: absolute; width: 256px; height: 256px; display: block; }
-    .map-pins { position: absolute; inset: 0; }
-    .mpin { position: absolute; transform: translate(-50%, -100%); display: flex; flex-direction: column;
-        align-items: center; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-    .mpin-dot { width: 18px; height: 18px; border-radius: 50% 50% 50% 0; background: var(--pc, #E5484D);
-        border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.3); transform: rotate(45deg); }
-    .mpin.on .mpin-dot { width: 26px; height: 26px; box-shadow: 0 0 0 5px rgba(255,209,0,.45), 0 2px 8px rgba(0,0,0,.35); }
-    .mpin-label { margin-top: 7px; background: #fff; color: #222; font-size: 11px; font-weight: 700;
-        padding: 2px 8px; border-radius: 10px; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,.18);
-        max-width: 130px; overflow: hidden; text-overflow: ellipsis; }
-    .map-me { position: absolute; width: 18px; height: 18px; transform: translate(-50%, -50%); }
-    .map-me .dot { position: absolute; left: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%;
-        background: #2E8FE0; border: 3px solid #fff; box-shadow: 0 0 0 4px rgba(46,143,224,.25); }
-    .map-me .ring { position: absolute; left: -8px; top: -8px; width: 34px; height: 34px; border-radius: 50%;
-        border: 2px solid rgba(46,143,224,.5); animation: mePulse 1.6s infinite; }
-    @keyframes mePulse { 0% { transform: scale(.6); opacity: .9; } 100% { transform: scale(1.4); opacity: 0; } }
-    .map-fabs { position: absolute; right: 12px; bottom: 14px; display: flex; flex-direction: column; gap: 10px; z-index: 20; }
-    .map-fab { width: 46px; height: 46px; border-radius: 50%; background: var(--mt-surface);
-        box-shadow: 0 4px 12px rgba(0,0,0,.18); display: flex; align-items: center; justify-content: center;
-        color: var(--mt-yellow-deep); border: 1px solid var(--mt-line); }
-    .map-fab svg { width: 22px; height: 22px; }
-    .map-hint { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%);
-        background: rgba(0,0,0,.6); color: #fff; font-size: 11.5px; padding: 5px 12px; border-radius: 14px; white-space: nowrap; }
-    .map-pop { margin: 10px 12px; background: var(--mt-surface); border-radius: 16px; box-shadow: var(--mt-shadow-sm); padding: 14px; }
-    .map-pop .mp-head { display: flex; gap: 10px; align-items: center; }
-    .map-pop .mp-name { font-size: 16px; font-weight: 800; }
-    .map-pop .mp-meta { font-size: 11.5px; color: var(--mt-text-3); margin-top: 3px; display: flex; gap: 8px; flex-wrap: wrap; }
-    .map-pop .mp-tags { margin-top: 6px; display: flex; gap: 5px; flex-wrap: wrap; }
-    .map-pop .mp-actions { display: flex; gap: 8px; margin-top: 12px; }
-    .map-pop .mp-actions button { flex: 1; padding: 10px; border-radius: 12px; border: none; font-size: 13px; font-weight: 700; }
-    .map-pop .mp-go { background: var(--mt-yellow); color: var(--mt-black); }
-    .map-pop .mp-grp { background: #E5484D; color: #fff; }
-    .map-pop .mp-fav { flex: 0 0 44px; background: var(--mt-surface-2); color: var(--mt-text-3); }
-    .map-pop .mp-fav.on { color: #E5484D; }
-    .map-list { display: flex; gap: 10px; overflow-x: auto; padding: 4px 12px 12px; -webkit-overflow-scrolling: touch; }
-    .map-list .ml { flex: 0 0 142px; background: var(--mt-surface); border-radius: 14px; padding: 10px;
-        box-shadow: var(--mt-shadow-sm); cursor: pointer; text-align: left; border: 2px solid transparent; }
-    .map-list .ml.on { border-color: var(--mt-yellow-deep); }
-    .map-list .ml .ml-n { font-size: 13px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .map-list .ml .ml-m { font-size: 11px; color: var(--mt-text-3); margin-top: 4px; }
-
     /* ===== 抽奖 ===== */
     .lottery-page { padding-bottom: calc(var(--tab-h) + var(--safe-b)); }
-    .lottery-hero { background: linear-gradient(135deg, #FF7A3D, #E5484D); color: #fff; padding: 22px 16px 26px; text-align: center; }
-    .lottery-hero h1 { font-size: 20px; }
-    .lottery-hero .lh-sub { font-size: 12px; opacity: .9; margin-top: 6px; }
-    .lottery-hero .lottery-prize { font-size: 13px; margin-top: 10px; }
-    .lottery-hero .lottery-prize b { font-size: 15px; }
-    .lottery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 16px 14px; max-width: 360px; margin: 0 auto; }
-    .lc-cell { background: var(--mt-surface); border-radius: 14px; padding: 14px 6px; text-align: center; border: 2px solid transparent; }
-    .lc-cell.lit { border-color: var(--mt-yellow-deep); background: #FFF6DC; box-shadow: 0 0 12px rgba(255,209,0,.5); }
+    .lottery-hero {
+        background:
+            radial-gradient(130% 100% at 85% -10%, rgba(255, 214, 90, .5), transparent 55%),
+            radial-gradient(120% 110% at 0% 110%, rgba(230, 0, 18, .55), transparent 60%),
+            linear-gradient(150deg, #FF9A3D, #E5484D 70%, #C0392B);
+        color: #fff; padding: 26px 16px 40px; text-align: center;
+        position: relative; overflow: hidden;
+    }
+    .lottery-hero::before {
+        content: ''; position: absolute; left: -34px; top: -34px; width: 110px; height: 110px;
+        border-radius: 50%; border: 16px solid rgba(255, 255, 255, .16);
+    }
+    .lottery-hero::after {
+        content: ''; position: absolute; right: 26px; top: 18px; width: 12px; height: 12px;
+        border-radius: 50%; background: #FFE566; opacity: .85;
+        box-shadow: 44px 26px 0 -3px rgba(255, 255, 255, .4), 18px 62px 0 -4px rgba(255, 229, 102, .6);
+    }
+    .lottery-hero h1 { font-size: 21px; letter-spacing: 2px; text-shadow: 0 2px 8px rgba(122, 30, 0, .35); }
+    .lottery-hero .lh-sub {
+        display: inline-block; font-size: 12px; margin-top: 8px; padding: 4px 14px;
+        border-radius: 999px; background: rgba(255, 255, 255, .18);
+    }
+    .lottery-hero .lottery-prize { font-size: 13px; margin-top: 12px; }
+    .lottery-hero .lottery-prize b { font-size: 16px; color: #FFE566; }
+    .lottery-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px;
+        max-width: 360px; margin: -22px auto 0; position: relative; z-index: 1;
+        padding: 16px 13px; border-radius: 20px;
+        background: linear-gradient(180deg, #FFF9E8, var(--mt-surface) 70%);
+        box-shadow: 0 8px 24px rgba(122, 60, 0, .16);
+    }
+    body.dark .lottery-grid { background: linear-gradient(180deg, #332B14, var(--mt-surface) 70%); }
+    .lc-cell {
+        background: linear-gradient(180deg, var(--mt-surface), var(--mt-surface-2));
+        border-radius: 14px; padding: 15px 6px; text-align: center;
+        border: 2px solid transparent; transition: transform .12s, box-shadow .12s, border-color .12s;
+    }
+    .lc-cell.lit {
+        border-color: var(--mt-yellow-deep); background: #FFF6DC;
+        box-shadow: 0 0 14px rgba(255, 190, 0, .55), inset 0 0 8px rgba(255, 209, 0, .3);
+        transform: scale(1.05);
+    }
+    body.dark .lc-cell.lit { background: #3D3600; }
     .lc-cell .lc-t { font-size: 13px; font-weight: 800; color: #E5484D; }
     .lc-cell .lc-s { font-size: 10.5px; color: var(--mt-text-3); margin-top: 3px; }
-    .lc-btn { grid-column: 2; background: linear-gradient(135deg, #FFD100, #FF9A3D); border: none; border-radius: 14px;
-        padding: 14px 0; font-weight: 800; color: #3a2400; cursor: pointer; display: flex; flex-direction: column;
-        align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(255,154,61,.4); }
-    .lc-btn .lc-btn-t { font-size: 16px; }
-    .lc-btn .lc-btn-s { font-size: 10.5px; opacity: .8; margin-top: 2px; }
-    .lottery-info { text-align: center; font-size: 12px; color: var(--mt-text-3); padding: 0 14px 14px; line-height: 1.7; }
-    .lottery-info b { color: var(--mt-yellow-deep); }
+    .lc-btn {
+        grid-column: 2; background: conic-gradient(from 210deg, #FFE566, #FFB13D, #FFD100, #FF9A3D, #FFE566);
+        border: none; border-radius: 14px; padding: 14px 0; font-weight: 800; color: #4A2600;
+        cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        box-shadow: 0 5px 14px rgba(255, 154, 61, .5), inset 0 0 0 2.5px rgba(255, 255, 255, .5);
+        animation: lcGlow 1.8s ease-in-out infinite;
+    }
+    @keyframes lcGlow {
+        0%, 100% { box-shadow: 0 5px 14px rgba(255, 154, 61, .5), inset 0 0 0 2.5px rgba(255, 255, 255, .5); }
+        50% { box-shadow: 0 5px 22px rgba(255, 120, 30, .75), inset 0 0 0 2.5px rgba(255, 255, 255, .65); }
+    }
+    .lc-btn .lc-btn-t { font-size: 17px; letter-spacing: 1px; }
+    .lc-btn .lc-btn-s { font-size: 10.5px; opacity: .82; margin-top: 2px; }
+    .lottery-info {
+        text-align: center; font-size: 12px; color: var(--mt-text-3); padding: 12px 14px 14px; line-height: 1.7;
+    }
+    .lottery-info b { color: #E5484D; }
 
     /* ===== 团购券 ===== */
     .gp-hero { background: linear-gradient(135deg, #E5484D, #C0392B); color: #fff; padding: 18px 16px; }
@@ -882,6 +923,52 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
      * ==================================================================== */
     const icon = (name, cls) =>
         '<svg class="ic' + (cls ? ' ' + cls : '') + '" aria-hidden="true" focusable="false"><use href="#i-' + name + '"></use></svg>';
+
+    /* 金刚区彩色扁平小图标（美团风：多色块面，非纯线条） */
+    const KICO = {
+        all: '<rect x="8" y="8" width="14" height="14" rx="4.5" fill="#FF7A3D"/><rect x="26" y="8" width="14" height="14" rx="4.5" fill="#FFC53D"/><rect x="8" y="26" width="14" height="14" rx="4.5" fill="#2E8FE0"/><rect x="26" y="26" width="14" height="14" rx="4.5" fill="#3E9E4A"/>',
+        food: '<path d="M16 20v-9M22 20v-7M28 20v-9" stroke="#F2C14E" stroke-width="2.8" stroke-linecap="round"/>' +
+              '<path d="M31 4l11 12" stroke="#8C5A2E" stroke-width="2.8" stroke-linecap="round"/>' +
+              '<rect x="8" y="23" width="32" height="5" rx="2.5" fill="#B4472A"/>' +
+              '<path d="M10 28h28a14 14 0 0 1-28 0z" fill="#E8622C"/>' +
+              '<circle cx="20" cy="33" r="2" fill="#FFD9A8"/><circle cx="28" cy="31.5" r="2" fill="#FFD9A8"/>',
+        dessert: '<rect x="28.5" y="3" width="4.4" height="12" rx="2.2" transform="rotate(20 30.7 9)" fill="#E5484D"/>' +
+              '<path d="M15 15h18l-2.3 25a3 3 0 0 1-3 2.7h-7.4a3 3 0 0 1-3-2.7z" fill="#F5E6C8"/>' +
+              '<path d="M17.2 25h13.6l-1.3 15a3 3 0 0 1-3 2.7h-5a3 3 0 0 1-3-2.7z" fill="#C9A15C"/>' +
+              '<rect x="13" y="10.5" width="22" height="5.5" rx="2.75" fill="#D93B3B"/>' +
+              '<circle cx="21.5" cy="37" r="1.9" fill="#6B4A32"/><circle cx="26.5" cy="38" r="1.9" fill="#6B4A32"/><circle cx="24" cy="34" r="1.9" fill="#6B4A32"/>',
+        market: '<path d="M8 8h32l2.4 9.6H5.6z" fill="#E5484D"/>' +
+              '<path d="M6 17.6h36v3H6z" fill="#C0392B"/>' +
+              '<rect x="10" y="20.6" width="28" height="19.4" rx="2" fill="#5B8DB8"/>' +
+              '<rect x="19.5" y="27" width="9" height="13" rx="1" fill="#F5E6C8"/>' +
+              '<rect x="13" y="24.5" width="4.6" height="4.6" rx="1" fill="#F5E6C8"/><rect x="30.4" y="24.5" width="4.6" height="4.6" rx="1" fill="#F5E6C8"/>',
+        fruit: '<path d="M24 15.5c-.4-5-4.4-8-9.5-8 .6 5 4.4 8 9.5 8z" fill="#8FAE3E"/>' +
+              '<path d="M24 15.5c.4-5 4.4-8 9.5-8-.6 5-4.4 8-9.5 8z" fill="#3E9E4A"/>' +
+              '<circle cx="24" cy="29" r="12.5" fill="#F08A2E"/>' +
+              '<circle cx="19.5" cy="24.5" r="3.6" fill="#F2B33D" opacity=".85"/>' +
+              '<circle cx="30" cy="32" r="2.2" fill="#F2B33D" opacity=".7"/>',
+        group: '<rect x="6" y="13" width="36" height="22" rx="4.5" fill="#E5484D"/>' +
+              '<path d="M31 15.5v17" stroke="#fff" stroke-width="1.6" stroke-dasharray="2.6 2.6" opacity=".85"/>' +
+              '<path d="M15.5 19.5l4.5 5.5 4.5-5.5M20 25v7.5M16.8 27h6.4M16.8 30h6.4" stroke="#FFD100" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+        errand: '<circle cx="12.5" cy="35" r="4.6" fill="#5B6470"/><circle cx="35.5" cy="35" r="4.6" fill="#5B6470"/>' +
+              '<rect x="25" y="10" width="13" height="9.5" rx="2" fill="#7A5CD6"/>' +
+              '<path d="M12.5 35c-.5-7 4.5-11.5 11-11.5h3.5l3-6.5h4" stroke="#7A5CD6" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
+              '<path d="M23 23.5l2.5 5.5h9" stroke="#7A5CD6" stroke-width="2.8" fill="none" stroke-linecap="round"/>',
+        coupon: '<rect x="10" y="7" width="28" height="34" rx="4.5" fill="#E5484D"/>' +
+              '<path d="M10 11.5c4.2 6.2 8.4 8.6 14 8.6s9.8-2.4 14-8.6" stroke="#FFD100" stroke-width="2.4" fill="none"/>' +
+              '<circle cx="24" cy="27" r="6.4" fill="#FFD100"/>' +
+              '<path d="M21.2 25.2l2.8 3.4 2.8-3.4M24 28.6v3.6M20.8 27.4h6.4" stroke="#C98A1B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+        ranking: '<path d="M14 8h20v10.5a10 10 0 0 1-20 0z" fill="#FFC53D"/>' +
+              '<path d="M14 10.5H7.5a6.5 6.5 0 0 0 7 8M34 10.5h6.5a6.5 6.5 0 0 1-7 8" stroke="#C98A1B" stroke-width="2.4" fill="none" stroke-linecap="round"/>' +
+              '<path d="M24 11.5l1.5 3 3.3.5-2.4 2.3.6 3.3-3-1.6-3 1.6.6-3.3-2.4-2.3 3.3-.5z" fill="#fff"/>' +
+              '<rect x="21" y="28.5" width="6" height="6" fill="#C98A1B"/>' +
+              '<rect x="14.5" y="34.5" width="19" height="5.5" rx="2.2" fill="#C98A1B"/>',
+        more: '<circle cx="16" cy="16" r="6.5" fill="#FF7A3D"/><circle cx="32" cy="16" r="6.5" fill="#2E8FE0"/>' +
+              '<circle cx="16" cy="32" r="6.5" fill="#3E9E4A"/><circle cx="32" cy="32" r="6.5" fill="#E0568E"/>'
+    };
+    const kIcon = id => KICO[id]
+        ? '<svg class="ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false">' + KICO[id] + '</svg>'
+        : icon((CATEGORIES.find(c => c.id === id) || {}).ic || 'grid');
 
     function shade(hex, amt) {
         const n = parseInt(hex.slice(1), 16);
@@ -1222,6 +1309,12 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         s13: '1621996346565-e3dbc646d9a9', s14: '1585032226651-759b368d7246',
         s15: '1547592180-85f173990554', s16: '1626645738196-c2a7c87a8f58',
         s17: '1512058564366-18510be2db19', s18: '1569718212165-3a8278d5f624',
+        /* 品牌奶茶店封面（22-31，全部经下载拼图人工核对内容） */
+        s22: '1571934811356-5cc061b6821f', s23: '1577595166653-c4b06b30fa18',
+        s24: '1579954115545-a95591f28bfc', s25: '1613478223719-2ab802602423',
+        s26: '1592663527359-cf6642f54cff', s27: '1556679343-c7306c1976bc',
+        s28: '1541658016709-82535e94bc69', s29: '1499638673689-79a0b5115d87',
+        s30: '1525385133512-2f3bdd039054', s31: '1541167760496-1628856ab772',
         s19: '1513104890138-7c749659a591', s20: '1587049352846-4a222e784d38',
         s21: '1566478989037-eec170784d0b',
 
@@ -1590,6 +1683,142 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
             { id: 2103, name: '海盐苏打饼干', price: 13, cat: '零食', sales: 901, desc: '低糖高纤', art: ['pack', '#7FA8D6', '#4E7A9E'] },
             { id: 2104, name: '压缩毛巾 20 粒', price: 25, cat: '日用', sales: 340, desc: '加厚便携', art: ['tissue', '#5B8DB8', '#7FA8D6'] },
             { id: 2105, name: '七号电池 4 粒', price: 15, cat: '日用', sales: 180, desc: '碱性耐用', art: ['battery', '#4A4A52'] }
+          ] },
+        /* ===== 真实品牌奶茶店（价格贴近门店实价） ===== */
+        { id: 22, name: '霸王茶姬 CHAGEE', art: ['cup', '#B4472A', '#F5E6C8'], cat: 'dessert',
+          rating: 4.9, monthSales: 8600, distance: 1.1, minutes: 26,
+          minPrice: 15, deliveryFee: 3, packingFee: 1,
+          tags: ['原叶鲜奶茶', '健康低负担'],
+          discounts: [{ threshold: 20, cut: 3 }, { threshold: 40, cut: 7 }],
+          desc: '以原叶鲜奶茶为主的国风茶饮，茶香清晰',
+          menu: [
+            { id: 2201, name: '伯牙绝弦（大杯）', price: 17, cat: '热销', sales: 3200, desc: '茉莉雪芽 + 鲜牛奶，招牌原叶鲜奶茶', art: ['cup', '#B4472A', '#F5E6C8'] },
+            { id: 2202, name: '桂馥兰香（大杯）', price: 17, cat: '热销', sales: 2100, desc: '桂花乌龙 + 鲜牛奶', art: ['cup', '#C9A15C', '#F5E6C8'] },
+            { id: 2203, name: '青青糯山', price: 16, cat: '热销', sales: 1800, desc: '糯米香绿茶 + 牛乳，谷香清甜', art: ['cup', '#3E9E4A', '#F5E6C8'] },
+            { id: 2204, name: '花田乌龙', price: 15, cat: '热销', sales: 1500, desc: '台式乌龙轻乳茶', art: ['cup', '#E8A33D', '#F5E6C8'] },
+            { id: 2205, name: '万里木兰（大杯）', price: 18, cat: '热销', sales: 2600, desc: ' 云南高山红茶 + 鲜牛奶', art: ['cup', '#A0522D', '#F5E6C8'] },
+            { id: 2206, name: '醒时春', price: 16, cat: '推荐', sales: 990, desc: '春兰茶底轻乳茶，清新回甘', art: ['cup', '#5B8DB8', '#F5E6C8'] }
+          ] },
+        { id: 23, name: '喜茶 HEYTEA', art: ['glass', '#5B6470', '#F2A93B'], cat: 'dessert',
+          rating: 4.8, monthSales: 6200, distance: 1.9, minutes: 30,
+          minPrice: 20, deliveryFee: 4, packingFee: 1,
+          tags: ['真奶真茶', '芝士现打'],
+          discounts: [{ threshold: 30, cut: 5 }, { threshold: 59, cut: 10 }],
+          desc: '首创芝士茶，真茶真奶真水果',
+          menu: [
+            { id: 2301, name: '多肉葡萄', price: 29, cat: '热销', sales: 2800, desc: '绿妍茶底 + 阳光玫瑰 + 芝士奶盖', art: ['glass', '#7A5CD6', '#9B6BC7'] },
+            { id: 2302, name: '芝芝莓莓', price: 25, cat: '热销', sales: 2200, desc: '当季草莓 + 茉莉初雪', art: ['glass', '#E0568E', '#F08A8A'] },
+            { id: 2303, name: '烤黑糖波波牛乳', price: 19, cat: '热销', sales: 2600, desc: '手炒黑糖 + 鲜牛乳 + 波波', art: ['cup', '#6B4A32', '#C9A15C'] },
+            { id: 2304, name: '多肉芒芒甘露', price: 25, cat: '热销', sales: 1900, desc: '芒果 + 西柚粒 + 椰奶', art: ['glass', '#F2C14E', '#F2A93B'] },
+            { id: 2305, name: '芝芝绿妍', price: 16, cat: '推荐', sales: 1400, desc: '绿妍茶汤 + 轻芝士奶盖', art: ['glass', '#3E9E4A', '#8BC34A'] },
+            { id: 2306, name: '多肉桃李', price: 22, cat: '推荐', sales: 1100, desc: '水蜜桃果肉 + 绿妍茶底', art: ['glass', '#F08A8A', '#F5B5B5'] }
+          ] },
+        { id: 24, name: '奈雪的茶', art: ['glass', '#E0568E', '#F2A93B'], cat: 'dessert',
+          rating: 4.8, monthSales: 5100, distance: 2.2, minutes: 33,
+          minPrice: 20, deliveryFee: 4, packingFee: 1,
+          tags: ['鲜果茶', '软欧包'],
+          discounts: [{ threshold: 30, cut: 6 }, { threshold: 60, cut: 12 }],
+          desc: '一杯好茶，一口软欧包',
+          menu: [
+            { id: 2401, name: '霸气芝士草莓', price: 29, cat: '热销', sales: 2400, desc: '当季草莓 + 奶盖茶', art: ['glass', '#E0568E', '#F08A8A'] },
+            { id: 2402, name: '霸气橙子', price: 25, cat: '热销', sales: 1800, desc: '整颗橙子鲜果茶', art: ['glass', '#F08A2E', '#F2A93B'] },
+            { id: 2403, name: '霸气玉油柑', price: 23, cat: '热销', sales: 1300, desc: '油甘果 + 茉莉初雪，回甘明显', art: ['glass', '#8FAE3E', '#B4D46B'] },
+            { id: 2404, name: '珍珠奶茶', price: 16, cat: '热销', sales: 2000, desc: '经典奶茶 + 黑糖珍珠', art: ['cup', '#A0522D', '#C9A15C'] },
+            { id: 2405, name: '奈雪初露', price: 19, cat: '推荐', sales: 900, desc: '茉莉毛尖轻乳茶', art: ['cup', '#5B8DB8', '#F5E6C8'] },
+            { id: 2406, name: '草莓魔法棒', price: 22, cat: '烘焙', sales: 800, desc: '奶油 + 当季草莓软欧包', art: ['cake', '#E0568E', '#F5E6C8'] }
+          ] },
+        { id: 25, name: '蜜雪冰城', art: ['cup', '#D93B3B', '#F5E6C8'], cat: 'dessert',
+          rating: 4.7, monthSales: 9800, distance: 0.5, minutes: 15,
+          minPrice: 6, deliveryFee: 2, packingFee: 0,
+          tags: ['高性价比', '雪王IP'],
+          discounts: [{ threshold: 9, cut: 2 }, { threshold: 19, cut: 4 }],
+          desc: '你爱我我爱你，蜜雪冰城甜蜜蜜',
+          menu: [
+            { id: 2501, name: '冰鲜柠檬水（大杯）', price: 4, cat: '热销', sales: 5200, desc: '现切柠檬 + 冰块，招牌 4 元', art: ['glass', '#F2C14E', '#F2E14E'] },
+            { id: 2502, name: '摇摇奶昔', price: 6, cat: '热销', sales: 3100, desc: '冰淇淋 + 牛乳摇出奶盖', art: ['cup', '#D93B3B', '#F5E6C8'] },
+            { id: 2503, name: '珍珠奶茶', price: 6, cat: '热销', sales: 4200, desc: '经典珍珠奶茶，甜蜜暴击', art: ['cup', '#A0522D', '#C9A15C'] },
+            { id: 2504, name: '满杯百香果', price: 7, cat: '热销', sales: 2200, desc: '整颗百香果，酸甜清爽', art: ['glass', '#F08A2E', '#F2C14E'] },
+            { id: 2505, name: '蜜桃四季春', price: 7, cat: '推荐', sales: 1700, desc: '蜜桃果酱 + 四季春茶', art: ['glass', '#F5B5B5', '#F08A8A'] },
+            { id: 2506, name: '新鲜冰淇淋圣代', price: 6, cat: '甜品', sales: 2600, desc: '脆皮筒 + 淋酱', art: ['custard', '#D93B3B', '#F5E6C8'] },
+            { id: 2507, name: '脆皮甜筒', price: 3, cat: '甜品', sales: 5100, desc: '3 元甜筒，雪王同款', art: ['custard', '#F2C14E', '#F5E6C8'] }
+          ] },
+        { id: 26, name: '茶百道', art: ['cup', '#2E8FE0', '#F5E6C8'], cat: 'dessert',
+          rating: 4.8, monthSales: 6800, distance: 1.3, minutes: 24,
+          minPrice: 15, deliveryFee: 3, packingFee: 1,
+          tags: ['鲜果与茶', '招牌豆乳'],
+          discounts: [{ threshold: 20, cut: 4 }, { threshold: 39, cut: 8 }],
+          desc: '鲜果与茶，一杯鲜爽',
+          menu: [
+            { id: 2601, name: '豆乳玉麒麟', price: 16, cat: '热销', sales: 2900, desc: '黄豆粉 + 奶盖 + 玉麒麟茶底', art: ['cup', '#2E8FE0', '#F5E6C8'] },
+            { id: 2602, name: '杨枝甘露', price: 18, cat: '热销', sales: 2500, desc: '芒果西柚西米露', art: ['glass', '#F2C14E', '#F2A93B'] },
+            { id: 2603, name: '茉莉奶绿', price: 14, cat: '热销', sales: 2100, desc: '茉莉绿茶 + 鲜奶', art: ['cup', '#3E9E4A', '#F5E6C8'] },
+            { id: 2604, name: '超级杯水果茶', price: 22, cat: '热销', sales: 1600, desc: '半杯都是真水果 1000cc', art: ['glass', '#F08A2E', '#F2A93B'] },
+            { id: 2605, name: '珍珠奶茶', price: 13, cat: '推荐', sales: 2300, desc: '经典还原，甜度可选', art: ['cup', '#A0522D', '#C9A15C'] }
+          ] },
+        { id: 27, name: '古茗', art: ['cup', '#3E9E4A', '#F5E6C8'], cat: 'dessert',
+          rating: 4.8, monthSales: 7400, distance: 1.6, minutes: 27,
+          minPrice: 15, deliveryFee: 3, packingFee: 1,
+          tags: ['真鲜奶', '现制水果'],
+          discounts: [{ threshold: 20, cut: 4 }, { threshold: 40, cut: 9 }],
+          desc: '每天一杯喝不腻',
+          menu: [
+            { id: 2701, name: '布蕾大满贯', price: 16, cat: '热销', sales: 2700, desc: '焦糖布蕾 + 珍珠 + 红豆', art: ['custard', '#C9A15C', '#F5E6C8'] },
+            { id: 2702, name: '芝士多肉桃桃', price: 18, cat: '热销', sales: 2000, desc: '水蜜桃 + 芝士奶盖', art: ['glass', '#F5B5B5', '#F08A8A'] },
+            { id: 2703, name: '招牌珍珠奶茶', price: 12, cat: '热销', sales: 3300, desc: '古茗经典款', art: ['cup', '#A0522D', '#C9A15C'] },
+            { id: 2704, name: '杨枝甘露', price: 16, cat: '热销', sales: 1900, desc: '芒果 + 西米 + 西柚', art: ['glass', '#F2C14E', '#F2A93B'] },
+            { id: 2705, name: '黑糖波波牛乳', price: 15, cat: '推荐', sales: 1500, desc: '挂壁黑糖 + 鲜牛乳', art: ['cup', '#6B4A32', '#C9A15C'] }
+          ] },
+        { id: 28, name: '沪上阿姨', art: ['cup', '#7A5CD6', '#F5E6C8'], cat: 'dessert',
+          rating: 4.7, monthSales: 5600, distance: 2.0, minutes: 31,
+          minPrice: 15, deliveryFee: 3, packingFee: 1,
+          tags: ['五谷茶饮', '现煮谷物'],
+          discounts: [{ threshold: 20, cut: 4 }, { threshold: 40, cut: 8 }],
+          desc: '现煮五谷茶饮的原创者',
+          menu: [
+            { id: 2801, name: '血糯米奶茶', price: 14, cat: '热销', sales: 3000, desc: '现煮血糯米 + 醇厚奶茶，招牌', art: ['cup', '#7A5CD6', '#C9A15C'] },
+            { id: 2802, name: '红豆奶茶', price: 13, cat: '热销', sales: 2200, desc: '绵密红豆 + 奶茶', art: ['cup', '#B4472A', '#C9A15C'] },
+            { id: 2803, name: '芝士葡萄奶盖', price: 18, cat: '热销', sales: 1600, desc: '巨峰葡萄 + 轻芝士', art: ['glass', '#7A5CD6', '#9B6BC7'] },
+            { id: 2804, name: '杨枝甘露', price: 17, cat: '推荐', sales: 1400, desc: '芒果西柚西米', art: ['glass', '#F2C14E', '#F2A93B'] },
+            { id: 2805, name: '谷谷茶奶', price: 13, cat: '推荐', sales: 1100, desc: '燕麦藜麦五谷茶奶', art: ['cup', '#C9A15C', '#F5E6C8'] }
+          ] },
+        { id: 29, name: '书亦烧仙草', art: ['glass', '#8C5A2E', '#F5E6C8'], cat: 'dessert',
+          rating: 4.7, monthSales: 4900, distance: 1.5, minutes: 25,
+          minPrice: 12, deliveryFee: 2, packingFee: 1,
+          tags: ['烧仙草', '芋圆'],
+          discounts: [{ threshold: 15, cut: 3 }, { threshold: 30, cut: 6 }],
+          desc: '半杯都是料',
+          menu: [
+            { id: 2901, name: '烧仙草奶茶', price: 13, cat: '热销', sales: 2800, desc: '古法烧仙草 + 奶茶，招牌', art: ['glass', '#6B4A32', '#4A3526'] },
+            { id: 2902, name: '芋圆烧仙草', price: 15, cat: '热销', sales: 1900, desc: '手作芋圆 + 仙草冻', art: ['glass', '#9B6BC7', '#6B4A32'] },
+            { id: 2903, name: '桂花酸梅汤', price: 10, cat: '热销', sales: 1600, desc: '桂花点缀，生津解腻', art: ['glass', '#B4472A', '#D98324'] },
+            { id: 2904, name: '珍珠烤奶', price: 12, cat: '推荐', sales: 1700, desc: '炭烤风味 + 珍珠', art: ['cup', '#A0522D', '#C9A15C'] },
+            { id: 2905, name: '杨枝甘露', price: 16, cat: '推荐', sales: 1200, desc: '芒果西柚西米', art: ['glass', '#F2C14E', '#F2A93B'] }
+          ] },
+        { id: 30, name: 'CoCo都可', art: ['cup', '#E8A33D', '#F5E6C8'], cat: 'dessert',
+          rating: 4.7, monthSales: 6100, distance: 1.0, minutes: 22,
+          minPrice: 12, deliveryFee: 2, packingFee: 1,
+          tags: ['三兄弟', '鲜芋'],
+          discounts: [{ threshold: 15, cut: 3 }, { threshold: 30, cut: 7 }],
+          desc: '都是为你，CoCo都可',
+          menu: [
+            { id: 3001, name: '奶茶三兄弟', price: 15, cat: '热销', sales: 2900, desc: '珍珠 + 布丁 + 仙草，招牌', art: ['cup', '#A0522D', '#C9A15C'] },
+            { id: 3002, name: '鲜芋奶茶', price: 15, cat: '热销', sales: 2300, desc: '手蒸芋头 + 绵密奶茶', art: ['cup', '#9B6BC7', '#C9A15C'] },
+            { id: 3003, name: '百香双响炮', price: 14, cat: '热销', sales: 2000, desc: '百香果 + 珍珠 + 椰果', art: ['glass', '#F08A2E', '#F2C14E'] },
+            { id: 3004, name: '柠檬蜜', price: 10, cat: '热销', sales: 2400, desc: '蜂蜜柠檬，酸甜平衡', art: ['glass', '#F2C14E', '#F2E14E'] },
+            { id: 3005, name: '珍珠奶茶', price: 12, cat: '推荐', sales: 2100, desc: '经典款，甜度冰量可调', art: ['cup', '#A0522D', '#C9A15C'] }
+          ] },
+        { id: 31, name: '一点点', art: ['cup', '#4A6FA5', '#F5E6C8'], cat: 'dessert',
+          rating: 4.8, monthSales: 7000, distance: 0.8, minutes: 20,
+          minPrice: 10, deliveryFee: 2, packingFee: 1,
+          tags: ['波霸', '现点现摇'],
+          discounts: [{ threshold: 15, cut: 3 }, { threshold: 30, cut: 6 }],
+          desc: '找好茶 · 一点点',
+          menu: [
+            { id: 3101, name: '波霸奶茶', price: 14, cat: '热销', sales: 3400, desc: '大颗波霸 + 浓醇奶茶，招牌', art: ['cup', '#4A6FA5', '#C9A15C'] },
+            { id: 3102, name: '四季奶青', price: 13, cat: '热销', sales: 2600, desc: '四季春茶底 + 奶青', art: ['cup', '#3E9E4A', '#F5E6C8'] },
+            { id: 3103, name: '红茶玛奇朵', price: 15, cat: '热销', sales: 1900, desc: '海盐奶盖 + 锡兰红茶', art: ['glass', '#A0522D', '#F5E6C8'] },
+            { id: 3104, name: '乌龙奶茶', price: 13, cat: '推荐', sales: 1700, desc: '高山乌龙 + 奶茶', art: ['cup', '#E8A33D', '#F5E6C8'] },
+            { id: 3105, name: '椰果奶茶', price: 13, cat: '推荐', sales: 1500, desc: '爽脆椰果 + 奶茶', art: ['cup', '#4A6FA5', '#C9A15C'] }
           ] }
     ];
 
@@ -1615,7 +1844,18 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         /* 抽奖产出的券（落入红包，可正常使用） */
         { id: 'lc5',  title: '抽奖 · ¥5 无门槛',  amount: 5,  threshold: 0,  scope: '抽奖获得 · 全场通用',   expire: '2026-12-31', kind: 'all', total: 9999, claimed: 0 },
         { id: 'lc6',  title: '抽奖 · 免配送费',   amount: 0,  threshold: 0,  scope: '抽奖获得 · 任意订单免配送', expire: '2026-12-31', kind: 'all', total: 9999, claimed: 0, ship: true },
-        { id: 'lc20', title: '抽奖 · ¥20 红包',   amount: 20, threshold: 50, scope: '抽奖获得 · 满 50 可用',  expire: '2026-12-31', kind: 'all', total: 9999, claimed: 0 }
+        { id: 'lc20', title: '抽奖 · ¥20 红包',   amount: 20, threshold: 50, scope: '抽奖获得 · 满 50 可用',  expire: '2026-12-31', kind: 'all', total: 9999, claimed: 0 },
+        /* 商家专属券：shopId 指定门店，仅在该店下单可用 */
+        { id: 't1',  title: '霸王茶姬 · 满 30 减 6', amount: 6,  threshold: 30, scope: '仅限霸王茶姬门店使用',  expire: '2026-12-31', kind: 'dessert', total: 3000, claimed: 1210, shopId: 22 },
+        { id: 't2',  title: '喜茶 · 满 50 减 10',   amount: 10, threshold: 50, scope: '仅限喜茶门店使用',      expire: '2026-12-31', kind: 'dessert', total: 2000, claimed: 860,  shopId: 23 },
+        { id: 't3',  title: '奈雪的茶 · 满 40 减 8', amount: 8,  threshold: 40, scope: '仅限奈雪的茶门店使用',  expire: '2026-12-31', kind: 'dessert', total: 2500, claimed: 930,  shopId: 24 },
+        { id: 't4',  title: '蜜雪冰城 · 无门槛减 3', amount: 3,  threshold: 0,  scope: '仅限蜜雪冰城门店使用',  expire: '2026-12-31', kind: 'dessert', total: 8000, claimed: 4300, shopId: 25 },
+        { id: 't5',  title: '茶百道 · 满 25 减 5',  amount: 5,  threshold: 25, scope: '仅限茶百道门店使用',    expire: '2026-12-31', kind: 'dessert', total: 4000, claimed: 1650, shopId: 26 },
+        { id: 't6',  title: '古茗 · 满 20 减 4',    amount: 4,  threshold: 20, scope: '仅限古茗门店使用',      expire: '2026-12-31', kind: 'dessert', total: 5000, claimed: 2200, shopId: 27 },
+        { id: 't7',  title: '沪上阿姨 · 满 25 减 5', amount: 5,  threshold: 25, scope: '仅限沪上阿姨门店使用',  expire: '2026-12-31', kind: 'dessert', total: 3500, claimed: 1380, shopId: 28 },
+        { id: 't8',  title: '书亦烧仙草 · 满 20 减 4', amount: 4, threshold: 20, scope: '仅限书亦烧仙草门店使用', expire: '2026-12-31', kind: 'dessert', total: 4500, claimed: 1870, shopId: 29 },
+        { id: 't9',  title: 'CoCo都可 · 满 20 减 4', amount: 4,  threshold: 20, scope: '仅限CoCo都可门店使用',  expire: '2026-12-31', kind: 'dessert', total: 5000, claimed: 2050, shopId: 30 },
+        { id: 't10', title: '一点点 · 满 15 减 3',  amount: 3,  threshold: 15, scope: '仅限一点点门店使用',    expire: '2026-12-31', kind: 'dessert', total: 6000, claimed: 2600, shopId: 31 }
     ];
     const COUPON_KINDS = [
         { id: 'all', name: '全部' }, { id: 'all2', name: '通用' }, { id: 'food', name: '美食' },
@@ -1623,6 +1863,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         { id: 'ship', name: '免运费' }, { id: 'group', name: '团购' }, { id: 'member', name: '会员专享' }
     ];
     const MEMBER_FEE = 12, MEMBER_DAYS = 30;
+    const MAX_QTY = 20;   // 单个菜品（同一规格行）最多可点数量
 
     /* 商家地理位置（成都，用于地图标点；Web Mercator 投影换算像素） */
     const MAP_CENTER = { lng: 104.0668, lat: 30.6598, z: 13 };   // 我的位置（天府广场一带）
@@ -1633,15 +1874,14 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         10: [104.0418, 30.6448], 11: [104.0818, 30.6898], 12: [104.0518, 30.6848],
         13: [104.1018, 30.6748], 14: [104.0318, 30.6498], 15: [104.0668, 30.6748],
         16: [104.0918, 30.6348], 17: [104.0468, 30.6348], 18: [104.1068, 30.6598],
-        19: [104.0268, 30.6698], 20: [104.0768, 30.6298], 21: [104.0568, 30.6948]
+        19: [104.0268, 30.6698], 20: [104.0768, 30.6298], 21: [104.0568, 30.6948],
+        /* 品牌奶茶店（22-31） */
+        22: [104.0608, 30.6648], 23: [104.0858, 30.6628], 24: [104.0528, 30.6528],
+        25: [104.0728, 30.6568], 26: [104.0648, 30.6488], 27: [104.0418, 30.6678],
+        28: [104.0908, 30.6778], 29: [104.0818, 30.6498], 30: [104.0268, 30.6548],
+        31: [104.0608, 30.6718]
     };
     function shopLngLat(id) { return SHOP_GEO[id] || [MAP_CENTER.lng, MAP_CENTER.lat]; }
-    /* 经纬度 → 容器内像素（以 MAP_CENTER 为画布中心，虚拟坐标 1024×640） */
-    function geoToPixel(lng, lat, cw, ch, z) {
-        const c = lngLatToTile(MAP_CENTER.lng, MAP_CENTER.lat, z);
-        const p = lngLatToTile(lng, lat, z);
-        return { x: cw / 2 - c.fx * 256 + p.fx * 256, y: ch / 2 - c.fy * 256 + p.fy * 256 };
-    }
 
     /* 团购券：品牌店铺套餐（查看 / 领取） */
     const GROUP_DEALS = [
@@ -1931,7 +2171,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         ownedCoupons: ['c1', 'c2'],          // 已领取的红包
         favorites: [],                       // 收藏的商家
         balance: 128, useBalance: true,
-        couponId: null, addressId: null,
+        couponId: null, addressId: null, couponOptOut: false,
         timeSlot: TIME_SLOTS[0], remark: '',
         searchHistory: [], searchKeyword: '',
         category: 'all', sort: 'recommend',
@@ -1941,7 +2181,6 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         claimedGroups: [],
         points: 0,
         freeDraws: 1, lastDrawDate: '',
-        mapSel: null, mapCat: 'all',
         reviewDraft: { rating: 0, tags: [] }
     };
 
@@ -1956,7 +2195,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                 const picks = Array.isArray(l.picks) ? l.picks.filter(p => typeof p === 'string') : [];
                 lines.push({
                     key: lineKey(dishId, picks), dishId: dishId, picks: picks,
-                    qty: qty, unit: specUnitPrice(entry.dish, picks)
+                    qty: Math.min(qty, MAX_QTY), unit: specUnitPrice(entry.dish, picks)
                 });
             });
             const sid = SHOP_BY_ID.has(raw.shopId) ? raw.shopId : null;
@@ -2030,7 +2269,8 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         const delivery = shop ? shop.deliveryFee : 0;
         const discount = discountFor(shop, subtotal);
         const coupon = couponId ? COUPON_BY_ID.get(couponId) : null;
-        const couponOk = coupon && subtotal >= coupon.threshold;
+        const couponOk = coupon && subtotal >= coupon.threshold &&
+            (!coupon.shopId || (shop && coupon.shopId === shop.id));
         const couponCut = (couponOk && !coupon.ship) ? coupon.amount : 0;
         const couponShip = (couponOk && coupon.ship) ? delivery : 0;
         const memberShip = memberFreeShip ? delivery : 0;
@@ -2039,7 +2279,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                  couponCut: couponCut, shipCut: Math.max(couponShip, memberShip), total: total };
     }
 
-    function addDish(id, picks) {
+    function addDish(id, picks, nArg) {
         const entry = DISH_INDEX.get(Number(id));
         if (!entry) return;
         const shop = entry.shop;
@@ -2049,18 +2289,25 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         if (state.cart.shopId && state.cart.shopId !== shop.id && cartCount() > 0) {
             const other = SHOP_BY_ID.get(state.cart.shopId);
             confirmDialog({ title: '更换商家', message: '购物车中已有「' + other.name + '」的商品，切换商家需要先清空购物车。', okText: '清空并添加' })
-                .then(ok => { if (!ok) return; state.cart = { shopId: shop.id, lines: [] }; addDish(id, picks); });
+                .then(ok => { if (!ok) return; state.cart = { shopId: shop.id, lines: [] }; state.couponId = null; addDish(id, picks, nArg); });
             return;
         }
         picks = picks || [];
         state.cart.shopId = shop.id;
         const key = lineKey(id, picks);
         const found = state.cart.lines.find(l => l.key === key);
-        if (found) found.qty += 1;
-        else state.cart.lines.push({
-            key: key, dishId: Number(id), picks: picks,
-            qty: 1, unit: specUnitPrice(entry.dish, picks)
-        });
+        const n = Math.max(1, Math.min(Math.floor(Number(nArg)) || 1, MAX_QTY));
+        if (found) {
+            const room = MAX_QTY - found.qty;
+            if (room <= 0) { toast('单品最多可点 ' + MAX_QTY + ' 份'); return; }
+            found.qty += Math.min(n, room);
+            if (n > room) toast('已达单品上限 ' + MAX_QTY + ' 份');
+        } else {
+            state.cart.lines.push({
+                key: key, dishId: Number(id), picks: picks,
+                qty: n, unit: specUnitPrice(entry.dish, picks)
+            });
+        }
         saveCart();
         refreshShopUI();
     }
@@ -2081,7 +2328,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         if (idx < 0) return;
         minusLine(state.cart.lines[idx].key);
     }
-    function clearCart() { state.cart = { shopId: null, lines: [] }; state.couponId = null; saveCart(); refreshShopUI(); }
+    function clearCart() { state.cart = { shopId: null, lines: [] }; state.couponId = null; state.couponOptOut = false; saveCart(); refreshShopUI(); }
 
     /* ---------- 规格选择面板 ---------- */
     function openSpecSheet(dishId) {
@@ -2091,6 +2338,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         if (!groups.length) { addDish(dishId, []); return; }
         const picks = groups.map(g => g.opts[0][0]);
         const unit = () => specUnitPrice(entry.dish, picks);
+        let qty = 1;
 
         function bodyHTML() {
             return groups.map((g, gi) =>
@@ -2099,7 +2347,13 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                     '<button type="button" class="spec-opt' + (picks[gi] === o[0] ? ' on' : '') + '"' +
                     ' data-gi="' + gi + '" data-v="' + esc(o[0]) + '">' + esc(o[0]) +
                     (o[1] ? '<span class="delta">+' + money(o[1]) + '</span>' : '') + '</button>').join('') +
-                '</div></div>').join('');
+                '</div></div>').join('') +
+                '<div class="spec-qty-group"><div class="gname">份数</div>' +
+                    '<div class="spec-qty-row">' +
+                        '<button type="button" class="spec-q' + (qty <= 1 ? ' off' : '') + '" data-spec-qminus aria-label="减少份数">−</button>' +
+                        '<span class="q">' + qty + '</span>' +
+                        '<button type="button" class="spec-q' + (qty >= MAX_QTY ? ' off' : '') + '" data-spec-qplus aria-label="增加份数">+</button>' +
+                    '</div></div>';
         }
 
         const layer = document.createElement('div');
@@ -2117,6 +2371,13 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
 
         layer.addEventListener('click', e => {
             if (e.target.closest('[data-sheet="close"]') || e.target === layer) { layer.remove(); syncLock(); return; }
+            if (e.target.closest('[data-spec-qminus]') || e.target.closest('[data-spec-qplus]')) {
+                const plus = !!e.target.closest('[data-spec-qplus]');
+                qty = Math.max(1, Math.min(MAX_QTY, qty + (plus ? 1 : -1)));
+                layer.querySelector('.sheet-body').innerHTML = bodyHTML();
+                layer.querySelector('.spec-foot .price').innerHTML = priceHTML(unit() * qty);
+                return;
+            }
             const opt = e.target.closest('.spec-opt');
             if (opt) {
                 picks[Number(opt.dataset.gi)] = opt.dataset.v;
@@ -2126,8 +2387,8 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
             }
             if (e.target.closest('[data-spec-add]')) {
                 layer.remove(); syncLock();
-                addDish(dishId, picks);
-                toast('已加入购物车');
+                addDish(dishId, picks, qty);
+                toast('已加入购物车' + (qty > 1 ? ' × ' + qty : ''));
             }
         });
         $('#layerRoot').appendChild(layer);
@@ -2144,7 +2405,6 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
     const go = path => { location.hash = '#/' + path; };
     const TABS = [
         { id: 'home', name: '首页', ic: 'home', path: 'home' },
-        { id: 'map', name: '地图', ic: 'pin', path: 'map' },
         { id: 'orders', name: '订单', ic: 'receipt', path: 'orders' },
         { id: 'profile', name: '我的', ic: 'user', path: 'profile' }
     ];
@@ -2226,7 +2486,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                 CATEGORIES.map(c =>
                     '<button type="button" class="kk-item' + (state.category === c.id ? ' on' : '') + '"' +
                     ' style="--k:' + c.c + '" data-action="pick-category" data-cat="' + c.id + '">' +
-                        '<span class="kk-ico">' + icon(c.ic) + '</span>' +
+                        '<span class="kk-ico">' + kIcon(c.id) + '</span>' +
                         '<span class="kk-name">' + esc(c.name) + '</span>' +
                     '</button>').join('') +
             '</div></section>' +
@@ -2578,12 +2838,24 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
             '</div>';
         }
         const addr = state.addresses.find(a => a.id === state.addressId) || currentAddress();
+        /* 红包优选：按抵扣金额降序，最优券自动置顶选中；商家券仅限本店可用 */
+        const b0 = bill(shop, lines, null, state.member.on);
+        const couponValue = c => (c.ship ? shop.deliveryFee : c.amount);
+        const applicable = state.ownedCoupons.map(id => COUPON_BY_ID.get(id)).filter(c =>
+            c && (!c.shopId || c.shopId === shop.id) && b0.subtotal >= c.threshold);
+        if (state.couponId) {
+            const held = COUPON_BY_ID.get(state.couponId);
+            if (!held || (held.shopId && held.shopId !== shop.id) || b0.subtotal < held.threshold) state.couponId = null;
+        }
+        if (!state.couponId && !state.couponOptOut) {
+            const best = applicable.slice().sort((x, y) => couponValue(y) - couponValue(x))[0];
+            if (best) state.couponId = best.id;
+        }
         const b = bill(shop, lines, state.couponId, state.member.on);
         const coupon = state.couponId ? COUPON_BY_ID.get(state.couponId) : null;
-        const usable = state.ownedCoupons.filter(cid => {
-            const c = COUPON_BY_ID.get(cid);
-            return c && b.subtotal >= c.threshold;
-        }).length;
+        const bestCoupon = applicable.slice().sort((x, y) => couponValue(y) - couponValue(x))[0] || null;
+        const isBest = !!coupon && !!bestCoupon && coupon.id === bestCoupon.id;
+        const usable = applicable.length;
         const balanceCut = state.useBalance ? Math.min(state.balance, b.total) : 0;
         const payable = b.total - balanceCut;
         const nextGap = nextDiscountGap(shop, b.subtotal);
@@ -2622,7 +2894,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                 '<button type="button" class="row" data-action="choose-coupon">' +
                     '<span class="k">红包</span>' +
                     '<span class="v">' + (coupon
-                        ? '<span class="val-red">' + esc(coupon.title) + ' −' + money(coupon.amount) + '</span>'
+                        ? '<span class="val-red">' + (isBest ? '<i class="best-badge">最优</i>' : '') + esc(coupon.title) + ' −' + money(coupon.ship ? b.shipCut : coupon.amount) + '</span>'
                         : (usable ? usable + ' 个可用' : '暂无可用')) + '</span>' +
                     icon('chev-r', 'caret') +
                 '</button>' +
@@ -2760,8 +3032,8 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         const y = (1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2 * n;
         return { x: x, y: y, fx: x, fy: y };
     }
-    /* 高德瓦片地图：3×2 张 256px 瓦片，目标地址落在容器中心 */
-    function amapHTML(lng, lat, distanceKm, seed, showRider) {
+    /* 高德瓦片地图：3×2 张 256px 瓦片，目标地址落在容器中心；商家用真实品牌坐标标注 */
+    function amapHTML(lng, lat, distanceKm, shopId, showRider) {
         const Z = 13, COLS = 3, ROWS = 2;
         const t = lngLatToTile(lng, lat, Z);
         const cx = Math.floor(t.fx), cy = Math.floor(t.fy);
@@ -2780,11 +3052,16 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         const px = (t.fx - (cx - offX)) * 256;
         const py = (t.fy - (cy - offY)) * 256;
         const tx = 228 - px, ty = 85 - py;
-        // 商家按配送距离反向偏移（z13 下 1km ≈ 59px）
-        const k = 59 / Math.cos(lat * Math.PI / 180);
-        const ang = (seed % 360) * Math.PI / 180;
-        const sx = tx + Math.cos(ang) * Math.max(distanceKm, 0.4) * k;
-        const sy = ty - Math.sin(ang) * Math.max(distanceKm, 0.4) * k * 0.72;
+        // 商家按真实品牌坐标换算像素偏移，超出画布时沿同方向收边
+        const shop = SHOP_BY_ID.get(shopId);
+        const g = shopLngLat(shopId);
+        const gs = lngLatToTile(g[0], g[1], Z);
+        let sx = 228 + (gs.fx - t.fx) * 256;
+        let sy = 85 + (gs.fy - t.fy) * 256;
+        sx = Math.max(30, Math.min(426, sx));
+        sy = Math.max(26, Math.min(148, sy));
+        const brand = shop ? shop.art[1] : '#B4472A';
+        const brandName = shop ? shop.name : '商家';
         return '<div class="amap-wrap">' +
             '<div class="amap-fallback">' + mapHTML(null, 0.45, showRider) + '</div>' +
             '<div class="amap-grid" style="transform:translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px)">' + tiles + '</div>' +
@@ -2798,14 +3075,14 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                       '</g>'
                     : '') +
                 '<g transform="translate(' + sx.toFixed(1) + ',' + sy.toFixed(1) + ')">' +
-                    '<circle r="10" fill="var(--mt-surface)" stroke="var(--mt-black)" stroke-width="2.5"/>' +
-                    '<circle r="3.4" fill="var(--mt-black)"/>' +
+                    '<circle r="10" fill="' + brand + '" stroke="#fff" stroke-width="2.5"/>' +
+                    '<circle r="3.4" fill="#fff"/>' +
                 '</g>' +
                 '<g transform="translate(228,85)">' +
                     '<circle r="11" fill="var(--mt-yellow)" stroke="var(--mt-black)" stroke-width="2.5"/>' +
                     '<path d="M-3.4 1.2 1.6 5.4M-3.6 5.4 -1 -3.4 4.4 -1.2" stroke="var(--mt-black)" stroke-width="1.8" fill="none" stroke-linecap="round"/>' +
                 '</g>' +
-                '<text x="' + (sx + 14).toFixed(1) + '" y="' + (sy + 4).toFixed(1) + '" class="map-pin-label">商家</text>' +
+                '<text x="' + (sx + 14).toFixed(1) + '" y="' + (sy + 4).toFixed(1) + '" class="map-pin-label">' + esc(brandName) + '</text>' +
                 '<text x="242" y="89" class="map-pin-label">收货地址</text>' +
             '</svg>' +
             '<span class="amap-credit">© 高德地图</span>' +
@@ -2890,7 +3167,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
             '</div>' +
             '<div class="card" style="padding:16px 14px"><div class="timeline">' + timeline + '</div></div>' +
             amapHTML(geocode(order.address).lng, geocode(order.address).lat,
-                     Number(order.distance) || 1, order.shopId * 47 + 11, st < 3) +
+                     Number(order.distance) || 1, order.shopId, st < 3) +
             (st < 3
                 ? '<div class="rider">' +
                     '<span class="av">' + icon('bike') + '</span>' +
@@ -3155,7 +3432,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                             (ship ? '免配送' : '<em>¥</em>' + c.amount) + '</span>' +
                             '<span class="th">' + (ship ? '运费全额抵扣' : (c.threshold ? '满 ' + c.threshold + ' 可用' : '无门槛')) + '</span></div>' +
                         '<div class="r">' +
-                            '<div class="t">' + esc(c.title) + (c.vip ? '<span class="vip-badge">VIP</span>' : '') + '</div>' +
+                            '<div class="t">' + esc(c.title) + (c.vip ? '<span class="vip-badge">VIP</span>' : '') + (c.shopId ? '<span class="shop-badge">门店券</span>' : '') + '</div>' +
                             '<div class="e">' + esc(c.scope) + ' · ' + esc(c.expire) + ' 到期</div>' +
                             '<div class="bar"><i style="width:' + pct + '%"></i></div>' +
                             '<div class="p">已领 ' + pct + '% · 剩余 ' + (c.total - c.claimed) + ' 张</div>' +
@@ -3238,104 +3515,6 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         state.claimedGroups.push(id); saveGroups();
         return true;
     }
-    function mapTilesHTML() {
-        const z = MAP_CENTER.z;
-        const c = lngLatToTile(MAP_CENTER.lng, MAP_CENTER.lat, z);
-        const cx = Math.floor(c.fx), cy = Math.floor(c.fy);
-        const tx = 512 - c.fx * 256, ty = 320 - c.fy * 256;
-        let t = '';
-        for (let r = -1; r <= 3; r++) {
-            for (let col = -2; col <= 3; col++) {
-                const x = cx + col, y = cy + r;
-                const sub = ((x % 4) + 4) % 4 + 1;
-                t += '<img class="mtile" style="left:' + (x * 256) + 'px;top:' + (y * 256) + 'px" ' +
-                    'src="https://webrd0' + sub + '.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x=' + x + '&y=' + y + '&z=' + z + '" alt="" loading="lazy" decoding="async">';
-            }
-        }
-        return '<div class="map-tiles" style="transform:translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px)">' + t + '</div>';
-    }
-    function mapPinsHTML() {
-        const z = MAP_CENTER.z;
-        const c = lngLatToTile(MAP_CENTER.lng, MAP_CENTER.lat, z);
-        const cfx = c.fx * 256, cfy = c.fy * 256;
-        const list = SHOPS.filter(s => state.mapCat === 'all' || s.cat === state.mapCat);
-        return list.map(shop => {
-            const g = shopLngLat(shop.id), p = lngLatToTile(g[0], g[1], z);
-            const left = 512 - cfx + p.fx * 256, top = 320 - cfy + p.fy * 256;
-            const sel = state.mapSel === shop.id;
-            return '<button type="button" class="mpin' + (sel ? ' on' : '') + '" ' +
-                'style="left:' + left.toFixed(1) + 'px;top:' + top.toFixed(1) + 'px;--pc:' + shop.art[1] + '" ' +
-                'data-action="map-pick" data-id="' + shop.id + '" aria-label="查看 ' + esc(shop.name) + '">' +
-                '<span class="mpin-dot"></span>' +
-                (sel ? '<span class="mpin-label">' + esc(shop.name) + '</span>' : '') +
-                '</button>';
-        }).join('');
-    }
-    function renderMap() {
-        const sel = state.mapSel ? SHOP_BY_ID.get(state.mapSel) : null;
-        const cats = CATEGORIES.filter(c => ['food', 'dessert', 'market', 'fruit'].indexOf(c.id) !== -1);
-        const list = SHOPS.filter(s => state.mapCat === 'all' || s.cat === state.mapCat);
-        const pop = sel ? (
-            '<div class="map-pop">' +
-                '<div class="mp-head">' +
-                    artHTML(sel.art[0], sel.art[1], sel.art[2], imgURL('s' + sel.id)) +
-                    '<div class="mp-info">' +
-                        '<div class="mp-name">' + esc(sel.name) + '</div>' +
-                        '<div class="mp-meta">' +
-                            '<span class="stars">' + icon('star', 'fill') + '<span class="num">' + shopRating(sel.id, sel.rating).toFixed(1) + '</span></span>' +
-                            '<span>月售 ' + sel.monthSales + '</span>' +
-                            '<span>' + sel.minutes + ' 分钟</span>' +
-                            '<span>' + sel.distance + 'km</span>' +
-                        '</div>' +
-                        '<div class="mp-tags">' + sel.tags.map(t => '<span class="tag yellow">' + esc(t) + '</span>').join('') + '</div>' +
-                    '</div>' +
-                '</div>' +
-                '<div class="mp-actions">' +
-                    '<button type="button" class="mp-go" data-go="shop/' + sel.id + '">进店</button>' +
-                    '<button type="button" class="mp-grp" data-action="map-groupon" data-id="' + sel.id + '">领团购券</button>' +
-                    '<button type="button" class="mp-fav' + (state.favorites.indexOf(sel.id) !== -1 ? ' on' : '') + '" data-action="toggle-fav" data-id="' + sel.id + '">' + icon('heart') + '</button>' +
-                '</div>' +
-            '</div>'
-        ) : '';
-        const nearby = '<div class="map-list">' + list.map(s =>
-            '<button type="button" class="ml' + (state.mapSel === s.id ? ' on' : '') + '" data-action="map-pick" data-id="' + s.id + '">' +
-                '<div class="ml-n">' + esc(s.name) + '</div>' +
-                '<div class="ml-m">' + s.minutes + ' 分钟 · ' + s.distance + 'km · ' + shopRating(s.id, s.rating).toFixed(1) + ' 分</div>' +
-            '</button>').join('') + '</div>';
-        return '<div class="map-page">' +
-            '<div class="map-top">' +
-                '<div class="map-search" data-go="search">' + icon('search') + '<span>搜索商家、菜品、团购</span></div>' +
-            '</div>' +
-            '<div class="map-cats">' +
-                '<button type="button" class="mc' + (state.mapCat === 'all' ? ' on' : '') + '" data-action="map-cat" data-cat="all">全部</button>' +
-                cats.map(c => '<button type="button" class="mc' + (state.mapCat === c.id ? ' on' : '') + '" data-action="map-cat" data-cat="' + c.id + '">' + esc(c.name) + '</button>').join('') +
-            '</div>' +
-            '<div class="map-stage" id="mapStage">' +
-                '<div class="map-inner" id="mapInner">' +
-                    mapTilesHTML() +
-                    '<div class="map-pins">' + mapPinsHTML() + '</div>' +
-                    '<div class="map-me" style="left:512px;top:320px"><span class="dot"></span><span class="ring"></span></div>' +
-                '</div>' +
-                '<div class="map-fabs">' +
-                    '<button type="button" class="map-fab" data-go="lottery" aria-label="抽奖">' + icon('trophy') + '</button>' +
-                    '<button type="button" class="map-fab" data-go="groupon" aria-label="团购">' + icon('ticket') + '</button>' +
-                '</div>' +
-                (sel ? '' : '<div class="map-hint">点击地图上的店铺标记查看品牌详情 · 共 ' + SHOPS.length + ' 家门店</div>') +
-            '</div>' +
-            pop +
-            nearby +
-            tabbarHTML('map') +
-        '</div>';
-    }
-    function afterRenderMap() {
-        const inner = document.getElementById('mapInner');
-        const stage = document.getElementById('mapStage');
-        if (!inner || !stage) return;
-        const s = stage.clientWidth / 1024;
-        inner.style.transform = 'scale(' + s + ')';
-        stage.style.height = (640 * s) + 'px';
-    }
-
     function lotteryGridCells() { return [0, 1, 2, 7, 'btn', 3, 6, 5, 4]; }
     function renderLottery() {
         const cells = lotteryGridCells();
@@ -3507,7 +3686,6 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
             case 'vip':      html = renderVip(); break;
             case 'coupons':  html = renderCouponCenter(); break;
             case 'messages': html = renderMessages(); break;
-            case 'map':      html = renderMap(); break;
             case 'lottery':  html = renderLottery(); break;
             case 'groupon':  html = renderGroupon(); break;
             default:         html = renderHome();
@@ -3515,7 +3693,6 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         document.getElementById('app').innerHTML = html;
         window.scrollTo(0, 0);
         if (route.path === 'shop') afterRenderShop();
-        if (route.path === 'map') afterRenderMap();
         if (route.path === 'lottery') afterRenderLottery();
         if (route.path === 'checkout') {
             const remark = document.querySelector('[data-remark]');
@@ -3565,7 +3742,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         saveOrders();
         if (balanceCut) { state.balance -= balanceCut; saveBalance(); }
         state.cart = { shopId: null, lines: [] };
-        state.couponId = null; state.remark = ''; state.timeSlot = TIME_SLOTS[0];
+        state.couponId = null; state.couponOptOut = false; state.remark = ''; state.timeSlot = TIME_SLOTS[0];
         state.useBalance = true;
         saveCart();
         go('success/' + order.id);
@@ -3681,15 +3858,24 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
     }
     function showCouponSheet(selectedId) {
         const subtotal = cartSubtotal();
-        const mine = state.ownedCoupons.map(id => COUPON_BY_ID.get(id)).filter(Boolean);
+        const shop = parseHash().path === 'checkout' ? cartShop() : null;
+        const canUse = c => (!c.shopId || (shop && c.shopId === shop.id)) && (subtotal === 0 || subtotal >= c.threshold);
+        const val = c => (c.ship ? (shop ? shop.deliveryFee : 8) : c.amount);
+        const mine = state.ownedCoupons.map(id => COUPON_BY_ID.get(id)).filter(Boolean)
+            .sort((x, y) => (canUse(y) ? 1 : 0) - (canUse(x) ? 1 : 0) || val(y) - val(x));
+        const bestId = (mine.find(canUse) || {}).id || null;
         const body = mine.map(c => {
-            const usable = subtotal === 0 || subtotal >= c.threshold;
+            const usable = canUse(c);
+            const shopName = c.shopId && SHOP_BY_ID.get(c.shopId) ? SHOP_BY_ID.get(c.shopId).name : null;
             return '<button type="button" class="coupon' + (c.id === selectedId ? ' picked' : '') + (usable ? '' : ' used') + '"' +
                 ' data-pick-coupon="' + c.id + '"' + (usable ? '' : ' disabled') + '>' +
-                '<span class="l"><span class="amt"><em>¥</em>' + c.amount + '</span>' +
+                '<span class="l"><span class="amt">' + (c.ship ? '免配送' : '<em>¥</em>' + c.amount) + '</span>' +
                     '<span class="th">' + (c.threshold ? '满 ' + c.threshold + ' 可用' : '无门槛') + '</span></span>' +
-                '<span class="r"><span class="t">' + esc(c.title) + '</span>' +
-                    '<span class="e">' + esc(c.scope) + ' · ' + esc(c.expire) + ' 到期</span></span>' +
+                '<span class="r"><span class="t">' + (c.id === bestId ? '<i class="best-badge">最优</i>' : '') + esc(c.title) + '</span>' +
+                    '<span class="e">' + esc(c.scope) + ' · ' + esc(c.expire) + ' 到期</span>' +
+                    (shopName && !usable && shop && c.shopId !== shop.id
+                        ? '<span class="e" style="color:var(--mt-red)">仅限 ' + esc(shopName) + ' 门店使用</span>' : '') +
+                '</span>' +
             '</button>';
         }).join('') +
         (!mine.length ? '<div style="padding:26px;text-align:center;color:var(--mt-text-3)">还没有红包，去领券中心领几张吧</div>' : '') +
@@ -3703,6 +3889,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                 const id = btn.dataset.pickCoupon;
                 close();
                 state.couponId = (id === '__none') ? null : id;
+                state.couponOptOut = (id === '__none');
                 if (parseHash().path === 'checkout') renderApp();
                 else toast(id === '__none' ? '已取消选择' : '已选择红包');
                 return;
@@ -3777,15 +3964,6 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                 const g = GROUP_BY_ID.get(id);
                 toast('领取成功：' + (g ? g.title : '团购券'));
                 renderApp();
-            },
-            'map-pick': () => { state.mapSel = Number(el.dataset.id); renderApp(); },
-            'map-cat': () => { state.mapCat = el.dataset.cat; state.mapSel = null; renderApp(); },
-            'map-groupon': () => {
-                const id = Number(el.dataset.id);
-                const deals = GROUP_BY_SHOP[id] || [];
-                const first = deals.find(g => state.claimedGroups.indexOf(g.id) === -1);
-                if (first) { claimGroup(first.id); toast('已领取：' + first.title); renderApp(); }
-                else { toast('该店团购券已领完'); go('groupon'); }
             },
             'draw-lottery': () => {
                 const today = todayStr();
@@ -3895,12 +4073,11 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                     state.orders = SEED_ORDERS.slice();
                     state.addresses = DEFAULT_ADDRESSES.slice();
                     state.searchHistory = []; state.searchKeyword = '';
-                    state.couponId = null; state.addressId = 'a1';
+                    state.couponId = null; state.couponOptOut = false; state.addressId = 'a1';
                     state.favorites = []; state.ownedCoupons = ['c1', 'c2'];
                     state.member = { on: false, expire: '' };
                     state.claimedGroups = []; state.points = 0;
                     state.freeDraws = 1; state.lastDrawDate = todayStr();
-                    state.mapSel = null; state.mapCat = 'all';
                     state.balance = 128; state.useBalance = true;
                     toast('已重置'); go('home'); renderApp();
                 });

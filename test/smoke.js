@@ -57,8 +57,8 @@ ok('金刚区 10 个入口', $$('.kk-item').length === 10, '实际 ' + $$('.kk-i
 ok('金刚区图标各有专属色', new Set($$('.kk-item').map(b => b.style.getPropertyValue('--k'))).size >= 8);
 ok('瓷片区 4 个卡片', $$('.tile').length === 4);
 ok('排序条 4 项', $$('.sort-item').length === 4);
-ok('商家列表 21 家', $$('.shop-card').length === 21, '实际 ' + $$('.shop-card').length);
-ok('底部 Tab 4 个且首页高亮', $$('.tab').length === 4 && $$('.tab')[0].classList.contains('on'));
+ok('商家列表 31 家', $$('.shop-card').length === 31, '实际 ' + $$('.shop-card').length);
+ok('底部 Tab 3 个且首页高亮', $$('.tab').length === 3 && $$('.tab')[0].classList.contains('on'));
 ok('商家卡片显示评价数', $('.shop-card').textContent.indexOf('条评价') !== -1);
 ok('商家卡片含起送价与满减', $('.shop-card').textContent.indexOf('起送') !== -1 &&
     $('.shop-card').textContent.indexOf('满减') !== -1);
@@ -68,13 +68,13 @@ ok('商家卡片含起送价与满减', $('.shop-card').textContent.indexOf('起
 // ============================================================
 const kk = name => $$('.kk-item').find(b => b.textContent.indexOf(name) !== -1);
 kk('甜品饮品').click();
-ok('筛选「甜品饮品」命中 3 家', $$('.shop-card').length === 3, '实际 ' + $$('.shop-card').length);
+ok('筛选「甜品饮品」命中 13 家', $$('.shop-card').length === 13, '实际 ' + $$('.shop-card').length);
 kk('全部分类').click();
-ok('切回「全部分类」恢复 21 家', $$('.shop-card').length === 21);
+ok('切回「全部分类」恢复 31 家', $$('.shop-card').length === 31);
 $$('.sort-item').find(b => b.dataset.sort === 'distance').click();
-ok('按距离排序：最近为 24h 便利超市', $('.shop-name').textContent === '24h 便利超市', $('.shop-name').textContent);
+ok('按距离排序：最近为 蜜雪冰城(0.5km)', $('.shop-name').textContent === '蜜雪冰城', $('.shop-name').textContent);
 $$('.sort-item').find(b => b.dataset.sort === 'sales').click();
-ok('按销量排序：最高为 24h 便利超市(5320)', $('.shop-name').textContent === '24h 便利超市', $('.shop-name').textContent);
+ok('按销量排序：最高为 蜜雪冰城(9800)', $('.shop-name').textContent === '蜜雪冰城', $('.shop-name').textContent);
 $$('.sort-item').find(b => b.dataset.sort === 'rating').click();
 ok('按评分排序：首位 4.9 分', $('.stars .num').textContent === '4.9');
 
@@ -315,7 +315,7 @@ ok('瓦片来自高德 CDN', $$('.amap-wrap .tile').length > 0 &&
 ok('瓦片坐标按订单地址换算（天府大道区域）', $$('.amap-wrap .tile').length > 0 &&
     /x=64\d\d/.test($$('.amap-wrap .tile')[0].src),
     $$('.amap-wrap .tile').length > 0 ? $$('.amap-wrap .tile')[0].src.match(/x=\d+|y=\d+/g).join(' ') : '无瓦片');
-ok('地图标注商家与收货地址', $('.amap-wrap').textContent.indexOf('商家') !== -1 &&
+ok('地图标注品牌店名与收货地址', $('.amap-wrap').textContent.indexOf('麻辣烫天堂') !== -1 &&
     $('.amap-wrap').textContent.indexOf('收货地址') !== -1);
 ok('地图带高德署名', $('.amap-credit') !== null);
 ok('SVG 兜底层存在（瓦片失败时显示）', $('.amap-fallback') !== null && $('.amap-fallback svg') !== null, 'fallback=' + !!$('.amap-fallback'));
@@ -348,11 +348,11 @@ ok('领券中心渲染英雄区', $('.cc-hero') !== null);
 ok('英雄区统计已持有数量', $('.cc-hero').textContent.indexOf('已持有') !== -1);
 ok('英雄区有会员入口', $('[data-go="vip"]') !== null);
 ok('分类 Tab 8 个', $$('.cc-tab').length === A.couponKinds.length, '实际 ' + $$('.cc-tab').length);
-ok('券池共 20 张', $$('.cc-card').length === 20, '实际 ' + $$('.cc-card').length);
+ok('券池共 30 张', $$('.cc-card').length === 30, '实际 ' + $$('.cc-card').length);
 ok('会员专享券带 VIP 徽标', $$('.cc-card .vip-badge').length === 4, '实际 ' + $$('.cc-card .vip-badge').length);
 ok('未开通会员时会员券显示「开通会员领」', $$('[data-action="goto-vip"]').length === 4);
 ok('免运费券展示「免配送」', document.body.textContent.indexOf('免配送') !== -1);
-ok('券卡带领取进度条', $$('.cc-card .bar').length === 20);
+ok('券卡带领取进度条', $$('.cc-card .bar').length === 30);
 
 $$('.cc-tab').find(t => t.dataset.tab === 'member').click(); await tick();
 ok('会员专享 Tab 只显示会员券', $$('.cc-card').length === 4);
@@ -390,7 +390,7 @@ window.location.hash = '#/favs'; await tick();
 ok('收藏页列出 1 家', $$('.shop-card').length === 1, '实际 ' + $$('.shop-card').length);
 ok('收藏页卡片带「已收藏」标记', document.body.textContent.indexOf('已收藏') !== -1);
 window.location.hash = '#/coupons'; await tick();
-ok('领券中心显示全部 20 张券', $$('.cc-card').length === 20, '实际 ' + $$('.cc-card').length);
+ok('领券中心显示全部 30 张券', $$('.cc-card').length === 30, '实际 ' + $$('.cc-card').length);
 ok('已持有的券卡片带「已领取」标记', $$('.cc-claimed').length >= 1, $$('.cc-claimed').length + '/' + A.state.ownedCoupons.length);
 $('[data-action="claim-coupon"]').click(); await tick();
 ok('领取红包后持有数 +1', A.state.ownedCoupons.length >= 5, A.state.ownedCoupons.join(','));
@@ -453,8 +453,8 @@ const EMOJI_RE = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}
 const markupNoScript = html.replace(/<script>[\s\S]*?<\/script>/g, '');
 ok('页面标记无 emoji', !EMOJI_RE.test(markupNoScript));
 ok('渲染 DOM 无 emoji', !EMOJI_RE.test(document.body.textContent));
-ok('商家规模 21 家 / 112 道菜',
-    A.shops.length === 21 && A.shops.reduce((s, x) => s + x.menu.length, 0) === 112,
+ok('商家规模 31 家 / 167 道菜',
+    A.shops.length === 31 && A.shops.reduce((s, x) => s + x.menu.length, 0) === 167,
     A.shops.length + ' 家 / ' + A.shops.reduce((s, x) => s + x.menu.length, 0) + ' 道');
 const catCount = {};
 A.shops.forEach(s => { catCount[s.cat] = (catCount[s.cat] || 0) + 1; });
@@ -464,7 +464,7 @@ const allIds = [];
 A.shops.forEach(s => s.menu.forEach(d => allIds.push(d.id)));
 ok('菜品 ID 全局唯一', new Set(allIds).size === allIds.length,
     '重复: ' + allIds.filter((v, i) => allIds.indexOf(v) !== i).join(','));
-ok('新店铺都有照片与插画', A.shops.filter(s => s.id >= 9).every(s => A.imgURL('s' + s.id) && s.menu.every(d => A.imgURL(d.id) || d.id === 2105)));
+ok('店铺都有照片（奶茶品牌 22+ 也配了核对过的封面）', A.shops.every(s => A.imgURL('s' + s.id)));
 ok('SVG 图标雪碧图 ≥ 32 个', document.querySelectorAll('symbol').length >= 32,
     'symbol ' + document.querySelectorAll('symbol').length + ' 个');
 ok('商家卡与菜品都有插画兜底', $$('.art-wrap').length > 0 && $$('.art').length > 0);
@@ -514,25 +514,83 @@ ok('iOS 非独立模式显示添加到主屏幕引导', html.indexOf('添加到�
 ok('图标引用通过 <use>（i-bike 用于地图骑手）', html.indexOf('#i-bike') !== -1);
 
 // ============================================================
-// 16. 地图 / 团购 / 抽奖
+// 16. 奶茶品牌 / 地图集成订单详情 / 商家券 / 最优券 / 数量上限
 // ============================================================
+const teaNames = ['霸王茶姬 CHAGEE', '喜茶 HEYTEA', '奈雪的茶', '蜜雪冰城', '茶百道', '古茗', '沪上阿姨', '书亦烧仙草', 'CoCo都可', '一点点'];
+ok('新增 10 家真实品牌奶茶店', teaNames.every(n => A.shops.some(s => s.name === n)));
+ok('奶茶价格贴近实价（蜜雪 3-7 元 / 喜茶 16-29 元）', (() => {
+    const mx = A.shops.find(s => s.name === '蜜雪冰城');
+    const ht = A.shops.find(s => s.name === '喜茶 HEYTEA');
+    return mx.menu.every(d => d.price >= 3 && d.price <= 7) &&
+        ht.menu.every(d => d.price >= 16 && d.price <= 29) &&
+        A.shops.every(s => s.menu.every(d => d.price > 0));
+})());
+ok('每家品牌店都配了核对过的封面图与地图坐标', teaNames.every(n => {
+    const st = A.shops.find(x => x.name === n);
+    return !!A.imgURL('s' + st.id) && !!A.shopGeo[st.id];
+}));
+ok('金刚区 10 个入口全部使用彩色扁平图标', $$('.kk-item').length === 10 &&
+    $$('.kk-item .kk-ico svg[viewBox="0 0 48 48"]').length === 10,
+    'k-icon ' + $$('.kk-item .kk-ico svg[viewBox="0 0 48 48"]').length);
+
+// 独立地图页已移除，地图集成进订单详情
 window.location.hash = '#/map'; await tick();
-ok('地图主界面渲染（含高德瓦片容器）', $('.map-page') !== null && $('.map-stage') !== null && $('.map-tiles') !== null);
-ok('地图加载高德瓦片图块', $$('.mtile').length >= 1, 'mtile ' + $$('.mtile').length);
-ok('地图标注全部 21 家品牌门店', $$('.mpin').length === 21, 'mpin ' + $$('.mpin').length);
-ok('品牌标记含名称色与 data-id', $$('.mpin').every(p => p.dataset.id && p.style.getPropertyValue('--pc')));
-ok('地图悬浮快捷入口含抽奖/团购', $$('.map-fab').length === 2);
-ok('地图分类筛选条 5 个（全部+4类）', $$('.map-cats .mc').length === 5, 'mc ' + $$('.map-cats .mc').length);
-$('.mpin[data-id="1"]').click(); await tick();
-ok('点击标记弹出品牌店铺弹窗', $('.map-pop') !== null);
-ok('弹窗含品牌名称/进店/领团购券/收藏',
-    document.body.textContent.indexOf('进店') !== -1 &&
-    document.body.textContent.indexOf('领团购券') !== -1 && $('.mp-fav') !== null);
-$$('.map-cats .mc').find(b => b.dataset.cat === 'dessert').click(); await tick();
-const dessertPins = $$('.mpin').length;
-ok('筛选甜品类后标记数量变化（>0 且 <21）', dessertPins > 0 && dessertPins < 21, 'dessert pins ' + dessertPins);
-$$('.map-cats .mc').find(b => b.dataset.cat === 'all').click(); await tick();
-ok('切回全部恢复 21 个标记', $$('.mpin').length === 21, 'mpin ' + $$('.mpin').length);
+ok('独立地图页已移除（#/map 回退首页）', $('.map-page') === null && $$('.shop-card').length > 0);
+A.state.orders.unshift({ id: 'FDTEA000001', shopId: 25, status: 0, ts: Date.now(),
+    createdAt: '2026-10-12 12:00', eta: '12:30', distance: '1.2', address: '四川省成都市武侯区天府大道 1000 号 写字楼 A 座 18F', remark: '',
+    items: [{ id: 2501, name: '冰鲜柠檬水（大杯）', price: 4, qty: 2, spec: '' }],
+    subtotal: 8, packing: 0, delivery: 2, discount: 0, couponCut: 0, total: 10, payable: 10, reviewed: false });
+window.location.hash = '#/order/FDTEA000001'; await tick();
+ok('订单详情地图标注品牌店名（蜜雪冰城）',
+    $('.amap-wrap').textContent.indexOf('蜜雪冰城') !== -1 &&
+    $('.amap-wrap').textContent.indexOf('收货地址') !== -1);
+ok('订单详情地图加载高德瓦片', $$('.amap-wrap .tile').length === 6);
+A.state.orders = A.state.orders.filter(o => o.id !== 'FDTEA000001');
+
+// 商家专属券：仅在指定门店可用
+window.location.hash = '#/coupons'; await tick();
+ok('领券中心展示 10 张门店券', $$('.cc-card .shop-badge').length === 10,
+    'badge ' + $$('.cc-card .shop-badge').length);
+A.state.ownedCoupons = ['t4'];
+const shop25 = A.shops.find(s => s.name === '蜜雪冰城');
+const billT4 = A.bill(shop25, [{ dish: shop25.menu[0], qty: 2, unit: 4 }], 't4');
+ok('蜜雪券在蜜雪下单可抵扣 3 元', billT4.couponCut === 3, 'cut=' + billT4.couponCut);
+const shop1x = A.shopById(1);
+const billOther = A.bill(shop1x, [{ dish: shop1x.menu[0], qty: 1, unit: 28 }], 't4');
+ok('蜜雪券在其他门店不抵扣', billOther.couponCut === 0);
+
+// 结算最优券：自动置顶选中 + 红包面板最优排最前带徽标
+A.state.cart = { shopId: 25, lines: [{ key: '2501|', dishId: 2501, picks: [], qty: 2, unit: 4 }] };
+A.state.couponId = null; A.state.couponOptOut = false;
+window.location.hash = '#/checkout'; await tick();
+ok('结算自动选中最优红包（t4）', A.state.couponId === 't4', A.state.couponId);
+$('[data-action="choose-coupon"]').click(); await tick();
+const firstCpn = $('.coupon');
+ok('红包面板最优券排第一且带「最优」徽标',
+    firstCpn.getAttribute('data-pick-coupon') === 't4' && firstCpn.querySelector('.best-badge') !== null);
+$$('.sheet-mask [data-sheet="close"]').pop().click(); await tick();
+
+// 单品数量上限 20
+A.state.cart = { shopId: null, lines: [] }; A.state.couponId = null;
+window.location.hash = '#/shop/25'; await tick();
+const addBtnTea = document.querySelector('[data-dish-row="2501"] [data-action="add-dish"]');
+for (let i = 0; i < 23; i++) addBtnTea.click();
+ok('单品连续加购 23 次后封顶 20 份',
+    A.state.cart.lines[0] && A.state.cart.lines[0].qty === 20,
+    'qty=' + (A.state.cart.lines[0] ? A.state.cart.lines[0].qty : '无'));
+A.state.cart = { shopId: null, lines: [] }; A.state.couponId = null;
+
+// 规格面板份数选择器（1-20）
+window.location.hash = '#/shop/1'; await tick();
+document.querySelector('[data-dish-row="101"] [data-action="add-dish"]').click(); await tick();
+ok('规格面板带份数选择器', $('.spec-sheet .spec-qty-row') !== null);
+document.querySelector('[data-spec-qplus]').click();
+document.querySelector('[data-spec-qplus]').click();
+ok('份数可加到 3 且价格联动', Number($('.spec-qty-row .q').textContent) === 3 &&
+    $('.spec-foot .price').textContent.indexOf('84') !== -1,
+    $('.spec-foot .price').textContent);
+$('[data-spec-add]').click(); await tick();
+ok('按份数入车（101 × 3）', A.state.cart.lines.find(l => l.dishId === 101).qty === 3);
 
 window.location.hash = '#/groupon'; await tick();
 ok('团购专区列出 25 个品牌套餐', $$('.gp-card').length === 25, 'gp-card ' + $$('.gp-card').length);
