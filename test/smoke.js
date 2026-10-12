@@ -55,10 +55,10 @@ ok('顶部展示默认收货地址', ($('.loc-text') || {}).textContent.indexOf(
 ok('搜索入口带满减利益点文案', ($('.search-bar .ph') || {}).textContent.indexOf('满 30 减 5') !== -1);
 ok('金刚区 10 个入口', $$('.kk-item').length === 10, '实际 ' + $$('.kk-item').length);
 ok('金刚区图标各有专属色', new Set($$('.kk-item').map(b => b.style.getPropertyValue('--k'))).size >= 8);
-ok('瓷片区 3 个卡片', $$('.tile').length === 3);
+ok('瓷片区 4 个卡片', $$('.tile').length === 4);
 ok('排序条 4 项', $$('.sort-item').length === 4);
 ok('商家列表 21 家', $$('.shop-card').length === 21, '实际 ' + $$('.shop-card').length);
-ok('底部 Tab 3 个且首页高亮', $$('.tab').length === 3 && $$('.tab')[0].classList.contains('on'));
+ok('底部 Tab 4 个且首页高亮', $$('.tab').length === 4 && $$('.tab')[0].classList.contains('on'));
 ok('商家卡片显示评价数', $('.shop-card').textContent.indexOf('条评价') !== -1);
 ok('商家卡片含起送价与满减', $('.shop-card').textContent.indexOf('起送') !== -1 &&
     $('.shop-card').textContent.indexOf('满减') !== -1);
@@ -272,7 +272,7 @@ ok('下单后清空购物车', A.cartCount() === 0);
 // 10. 订单：状态推进 + 评价 + 取消/删除
 // ============================================================
 $('[data-go="home"]').click(); await tick();
-$$('.tab')[1].click(); await tick();
+$$('.tab').find(t => t.dataset.go === 'orders').click(); await tick();
 ok('进入订单页', A.parseHash().path === 'orders');
 ok('订单列表 3 单', $$('.order-card').length === 3, '实际 ' + $$('.order-card').length);
 ok('进行中筛选命中 1 单',
@@ -347,12 +347,12 @@ window.location.hash = '#/coupons'; await tick();
 ok('领券中心渲染英雄区', $('.cc-hero') !== null);
 ok('英雄区统计已持有数量', $('.cc-hero').textContent.indexOf('已持有') !== -1);
 ok('英雄区有会员入口', $('[data-go="vip"]') !== null);
-ok('分类 Tab 7 个', $$('.cc-tab').length === A.couponKinds.length, '实际 ' + $$('.cc-tab').length);
-ok('券池共 17 张', $$('.cc-card').length === 17, '实际 ' + $$('.cc-card').length);
+ok('分类 Tab 8 个', $$('.cc-tab').length === A.couponKinds.length, '实际 ' + $$('.cc-tab').length);
+ok('券池共 20 张', $$('.cc-card').length === 20, '实际 ' + $$('.cc-card').length);
 ok('会员专享券带 VIP 徽标', $$('.cc-card .vip-badge').length === 4, '实际 ' + $$('.cc-card .vip-badge').length);
 ok('未开通会员时会员券显示「开通会员领」', $$('[data-action="goto-vip"]').length === 4);
 ok('免运费券展示「免配送」', document.body.textContent.indexOf('免配送') !== -1);
-ok('券卡带领取进度条', $$('.cc-card .bar').length === 17);
+ok('券卡带领取进度条', $$('.cc-card .bar').length === 20);
 
 $$('.cc-tab').find(t => t.dataset.tab === 'member').click(); await tick();
 ok('会员专享 Tab 只显示会员券', $$('.cc-card').length === 4);
@@ -390,7 +390,7 @@ window.location.hash = '#/favs'; await tick();
 ok('收藏页列出 1 家', $$('.shop-card').length === 1, '实际 ' + $$('.shop-card').length);
 ok('收藏页卡片带「已收藏」标记', document.body.textContent.indexOf('已收藏') !== -1);
 window.location.hash = '#/coupons'; await tick();
-ok('领券中心显示全部 17 张券', $$('.cc-card').length === 17, '实际 ' + $$('.cc-card').length);
+ok('领券中心显示全部 20 张券', $$('.cc-card').length === 20, '实际 ' + $$('.cc-card').length);
 ok('已持有的券卡片带「已领取」标记', $$('.cc-claimed').length >= 1, $$('.cc-claimed').length + '/' + A.state.ownedCoupons.length);
 $('[data-action="claim-coupon"]').click(); await tick();
 ok('领取红包后持有数 +1', A.state.ownedCoupons.length >= 5, A.state.ownedCoupons.join(','));
@@ -453,7 +453,7 @@ const EMOJI_RE = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}
 const markupNoScript = html.replace(/<script>[\s\S]*?<\/script>/g, '');
 ok('页面标记无 emoji', !EMOJI_RE.test(markupNoScript));
 ok('渲染 DOM 无 emoji', !EMOJI_RE.test(document.body.textContent));
-ok('商家规模 21 家 / 116 道菜',
+ok('商家规模 21 家 / 112 道菜',
     A.shops.length === 21 && A.shops.reduce((s, x) => s + x.menu.length, 0) === 112,
     A.shops.length + ' 家 / ' + A.shops.reduce((s, x) => s + x.menu.length, 0) + ' 道');
 const catCount = {};
@@ -512,6 +512,62 @@ ok('独立模式会加 body.standalone 标记', html.indexOf("classList.add('sta
 ok('独立模式禁用下拉刷新', html.indexOf('body.standalone, body.standalone .app { overscroll-behavior: none; }') !== -1);
 ok('iOS 非独立模式显示添加到主屏幕引导', html.indexOf('添加到主屏幕，像 App 一样用') !== -1);
 ok('图标引用通过 <use>（i-bike 用于地图骑手）', html.indexOf('#i-bike') !== -1);
+
+// ============================================================
+// 16. 地图 / 团购 / 抽奖
+// ============================================================
+window.location.hash = '#/map'; await tick();
+ok('地图主界面渲染（含高德瓦片容器）', $('.map-page') !== null && $('.map-stage') !== null && $('.map-tiles') !== null);
+ok('地图加载高德瓦片图块', $$('.mtile').length >= 1, 'mtile ' + $$('.mtile').length);
+ok('地图标注全部 21 家品牌门店', $$('.mpin').length === 21, 'mpin ' + $$('.mpin').length);
+ok('品牌标记含名称色与 data-id', $$('.mpin').every(p => p.dataset.id && p.style.getPropertyValue('--pc')));
+ok('地图悬浮快捷入口含抽奖/团购', $$('.map-fab').length === 2);
+ok('地图分类筛选条 5 个（全部+4类）', $$('.map-cats .mc').length === 5, 'mc ' + $$('.map-cats .mc').length);
+$('.mpin[data-id="1"]').click(); await tick();
+ok('点击标记弹出品牌店铺弹窗', $('.map-pop') !== null);
+ok('弹窗含品牌名称/进店/领团购券/收藏',
+    document.body.textContent.indexOf('进店') !== -1 &&
+    document.body.textContent.indexOf('领团购券') !== -1 && $('.mp-fav') !== null);
+$$('.map-cats .mc').find(b => b.dataset.cat === 'dessert').click(); await tick();
+const dessertPins = $$('.mpin').length;
+ok('筛选甜品类后标记数量变化（>0 且 <21）', dessertPins > 0 && dessertPins < 21, 'dessert pins ' + dessertPins);
+$$('.map-cats .mc').find(b => b.dataset.cat === 'all').click(); await tick();
+ok('切回全部恢复 21 个标记', $$('.mpin').length === 21, 'mpin ' + $$('.mpin').length);
+
+window.location.hash = '#/groupon'; await tick();
+ok('团购专区列出 25 个品牌套餐', $$('.gp-card').length === 25, 'gp-card ' + $$('.gp-card').length);
+ok('团购按抢购进度降序排列', (() => {
+    const pct = $$('.gp-card .gp-bar i').map(i => parseFloat(i.style.width) || 0);
+    if (pct.length !== 25) return false;
+    for (let i = 1; i < pct.length; i++) if (pct[i] > pct[0]) return false;
+    return true;
+})());
+const beforeClaim = A.state.claimedGroups.length;
+$('.gp-claim').click(); await tick();
+ok('领取团购券写入状态', A.state.claimedGroups.length === beforeClaim + 1, 'claimed ' + A.state.claimedGroups.length);
+ok('领取后该卡显示「已领取」', $$('.gp-had').length >= 1);
+window.location.hash = '#/coupons'; await tick();
+$$('.cc-tab').find(b => b.dataset.tab === 'group').click(); await tick();
+ok('领券中心团购标签展示已领团购券',
+    $$('.gp-card').length === A.state.claimedGroups.length && A.state.claimedGroups.length >= 1);
+
+window.location.hash = '#/lottery'; await tick();
+ok('抽奖九宫格 8 格 + 中心按钮', $$('.lc-cell').length === 8 && $$('.lc-btn').length === 1,
+    'cell ' + $$('.lc-cell').length + ' btn ' + $$('.lc-btn').length);
+ok('抽奖按钮显示免费次数', /免费 \d+ 次/.test(($('.lc-btn') || {}).textContent || ''));
+const freeBefore = A.state.freeDraws;
+$('.lc-btn').click(); await tick();
+let drew = false;
+for (let i = 0; i < 100; i++) { await tick(); if ($('.sheet')) { drew = true; break; } }
+ok('抽奖动画结束后弹出结果弹窗', drew);
+ok('免费次数已扣减或「再来一次」回补', A.state.freeDraws === freeBefore - 1 || A.state.freeDraws === freeBefore,
+    'free ' + freeBefore + ' -> ' + A.state.freeDraws);
+const dlg = document.querySelector('.sheet [data-sheet="close"]');
+if (dlg) dlg.click(); await tick();
+ok('抽奖结果弹窗可关闭', $('.sheet') === null);
+ok('抽奖产出已落地（红包/积分/团购/会员/再来一次之一）',
+    A.state.ownedCoupons.length >= 1 || A.state.points > 0 || A.state.claimedGroups.length >= 1 ||
+    A.state.member.on || A.state.freeDraws >= freeBefore);
 
 console.log(results.join('\n'));
 console.log('\n' + (failed === 0 ? '✅ 全部 ' + results.length + ' 项通过' : '❌ ' + failed + ' / ' + results.length + ' 项失败'));

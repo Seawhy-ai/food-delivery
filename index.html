@@ -713,6 +713,122 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
 @media (min-width: 481px) {
     .tabbar, .submit-bar { box-shadow: 0 0 0 1px var(--mt-line), 0 0 40px rgba(0, 0, 0, .05); }
 }
+
+    /* ===== 地图主界面 ===== */
+    .map-page { padding-bottom: calc(var(--tab-h) + var(--safe-b) + 8px); }
+    .map-top { position: sticky; top: 0; z-index: 30; background: var(--mt-yellow-grad);
+        padding: calc(10px + var(--safe-t)) 12px 10px; }
+    .map-search { display: flex; align-items: center; gap: 8px; background: var(--mt-surface);
+        border-radius: 22px; padding: 9px 14px; color: var(--mt-text-3); font-size: 13px; }
+    .map-search svg { color: var(--mt-text-3); }
+    .map-cats { display: flex; gap: 8px; overflow-x: auto; padding: 10px 12px 2px; -webkit-overflow-scrolling: touch; }
+    .map-cats .mc { flex: 0 0 auto; padding: 6px 13px; border-radius: 16px; background: var(--mt-surface-2);
+        color: var(--mt-text-2); font-size: 12.5px; border: 1px solid transparent; white-space: nowrap; }
+    .map-cats .mc.on { background: var(--mt-yellow); color: var(--mt-black); border-color: var(--mt-yellow-deep); font-weight: 700; }
+    .map-stage { position: relative; width: 100%; overflow: hidden; background: #dfe7ea; }
+    .map-inner { position: relative; width: 1024px; height: 640px; transform-origin: top left; }
+    .map-tiles { position: absolute; inset: 0; }
+    .map-tiles .mtile { position: absolute; width: 256px; height: 256px; display: block; }
+    .map-pins { position: absolute; inset: 0; }
+    .mpin { position: absolute; transform: translate(-50%, -100%); display: flex; flex-direction: column;
+        align-items: center; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .mpin-dot { width: 18px; height: 18px; border-radius: 50% 50% 50% 0; background: var(--pc, #E5484D);
+        border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.3); transform: rotate(45deg); }
+    .mpin.on .mpin-dot { width: 26px; height: 26px; box-shadow: 0 0 0 5px rgba(255,209,0,.45), 0 2px 8px rgba(0,0,0,.35); }
+    .mpin-label { margin-top: 7px; background: #fff; color: #222; font-size: 11px; font-weight: 700;
+        padding: 2px 8px; border-radius: 10px; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,.18);
+        max-width: 130px; overflow: hidden; text-overflow: ellipsis; }
+    .map-me { position: absolute; width: 18px; height: 18px; transform: translate(-50%, -50%); }
+    .map-me .dot { position: absolute; left: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%;
+        background: #2E8FE0; border: 3px solid #fff; box-shadow: 0 0 0 4px rgba(46,143,224,.25); }
+    .map-me .ring { position: absolute; left: -8px; top: -8px; width: 34px; height: 34px; border-radius: 50%;
+        border: 2px solid rgba(46,143,224,.5); animation: mePulse 1.6s infinite; }
+    @keyframes mePulse { 0% { transform: scale(.6); opacity: .9; } 100% { transform: scale(1.4); opacity: 0; } }
+    .map-fabs { position: absolute; right: 12px; bottom: 14px; display: flex; flex-direction: column; gap: 10px; z-index: 20; }
+    .map-fab { width: 46px; height: 46px; border-radius: 50%; background: var(--mt-surface);
+        box-shadow: 0 4px 12px rgba(0,0,0,.18); display: flex; align-items: center; justify-content: center;
+        color: var(--mt-yellow-deep); border: 1px solid var(--mt-line); }
+    .map-fab svg { width: 22px; height: 22px; }
+    .map-hint { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%);
+        background: rgba(0,0,0,.6); color: #fff; font-size: 11.5px; padding: 5px 12px; border-radius: 14px; white-space: nowrap; }
+    .map-pop { margin: 10px 12px; background: var(--mt-surface); border-radius: 16px; box-shadow: var(--mt-shadow-sm); padding: 14px; }
+    .map-pop .mp-head { display: flex; gap: 10px; align-items: center; }
+    .map-pop .mp-name { font-size: 16px; font-weight: 800; }
+    .map-pop .mp-meta { font-size: 11.5px; color: var(--mt-text-3); margin-top: 3px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .map-pop .mp-tags { margin-top: 6px; display: flex; gap: 5px; flex-wrap: wrap; }
+    .map-pop .mp-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .map-pop .mp-actions button { flex: 1; padding: 10px; border-radius: 12px; border: none; font-size: 13px; font-weight: 700; }
+    .map-pop .mp-go { background: var(--mt-yellow); color: var(--mt-black); }
+    .map-pop .mp-grp { background: #E5484D; color: #fff; }
+    .map-pop .mp-fav { flex: 0 0 44px; background: var(--mt-surface-2); color: var(--mt-text-3); }
+    .map-pop .mp-fav.on { color: #E5484D; }
+    .map-list { display: flex; gap: 10px; overflow-x: auto; padding: 4px 12px 12px; -webkit-overflow-scrolling: touch; }
+    .map-list .ml { flex: 0 0 142px; background: var(--mt-surface); border-radius: 14px; padding: 10px;
+        box-shadow: var(--mt-shadow-sm); cursor: pointer; text-align: left; border: 2px solid transparent; }
+    .map-list .ml.on { border-color: var(--mt-yellow-deep); }
+    .map-list .ml .ml-n { font-size: 13px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .map-list .ml .ml-m { font-size: 11px; color: var(--mt-text-3); margin-top: 4px; }
+
+    /* ===== 抽奖 ===== */
+    .lottery-page { padding-bottom: calc(var(--tab-h) + var(--safe-b)); }
+    .lottery-hero { background: linear-gradient(135deg, #FF7A3D, #E5484D); color: #fff; padding: 22px 16px 26px; text-align: center; }
+    .lottery-hero h1 { font-size: 20px; }
+    .lottery-hero .lh-sub { font-size: 12px; opacity: .9; margin-top: 6px; }
+    .lottery-hero .lottery-prize { font-size: 13px; margin-top: 10px; }
+    .lottery-hero .lottery-prize b { font-size: 15px; }
+    .lottery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 16px 14px; max-width: 360px; margin: 0 auto; }
+    .lc-cell { background: var(--mt-surface); border-radius: 14px; padding: 14px 6px; text-align: center; border: 2px solid transparent; }
+    .lc-cell.lit { border-color: var(--mt-yellow-deep); background: #FFF6DC; box-shadow: 0 0 12px rgba(255,209,0,.5); }
+    .lc-cell .lc-t { font-size: 13px; font-weight: 800; color: #E5484D; }
+    .lc-cell .lc-s { font-size: 10.5px; color: var(--mt-text-3); margin-top: 3px; }
+    .lc-btn { grid-column: 2; background: linear-gradient(135deg, #FFD100, #FF9A3D); border: none; border-radius: 14px;
+        padding: 14px 0; font-weight: 800; color: #3a2400; cursor: pointer; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(255,154,61,.4); }
+    .lc-btn .lc-btn-t { font-size: 16px; }
+    .lc-btn .lc-btn-s { font-size: 10.5px; opacity: .8; margin-top: 2px; }
+    .lottery-info { text-align: center; font-size: 12px; color: var(--mt-text-3); padding: 0 14px 14px; line-height: 1.7; }
+    .lottery-info b { color: var(--mt-yellow-deep); }
+
+    /* ===== 团购券 ===== */
+    .gp-hero { background: linear-gradient(135deg, #E5484D, #C0392B); color: #fff; padding: 18px 16px; }
+    .gp-hero h1 { font-size: 18px; }
+    .gp-hero .gs { font-size: 12px; opacity: .9; margin-top: 4px; }
+    .gp-list { padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+    .gp-card { background: var(--mt-surface); border-radius: 16px; box-shadow: var(--mt-shadow-sm); padding: 13px; }
+    .gp-shop { display: flex; gap: 10px; align-items: center; }
+    .gp-shop .gp-name { font-size: 14px; font-weight: 800; }
+    .gp-shop .gp-cat { font-size: 11px; color: var(--mt-text-3); }
+    .gp-title { font-size: 14px; font-weight: 700; margin-top: 10px; }
+    .gp-desc { font-size: 11.5px; color: var(--mt-text-3); margin-top: 3px; }
+    .gp-bar { height: 6px; background: var(--mt-surface-2); border-radius: 4px; overflow: hidden; margin-top: 10px; }
+    .gp-bar i { display: block; height: 100%; background: #E5484D; }
+    .gp-foot { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+    .gp-price { font-size: 17px; font-weight: 800; color: #E5484D; }
+    .gp-price s { font-size: 11px; color: var(--mt-text-3); font-weight: 400; margin-left: 4px; }
+    .gp-sold { font-size: 11px; color: var(--mt-text-3); }
+    .gp-claim { margin-left: auto; background: var(--mt-yellow); color: var(--mt-black); border: none;
+        padding: 8px 16px; border-radius: 14px; font-weight: 800; font-size: 13px; }
+    .gp-had { margin-left: auto; color: var(--mt-text-3); font-size: 12px; }
+
+    /* ===== 商家页团购套餐 ===== */
+    .shop-groups { margin: 12px; background: var(--mt-surface); border-radius: 16px; box-shadow: var(--mt-shadow-sm); padding: 12px; }
+    .sg-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+    .sg-head .sg-t { font-size: 15px; font-weight: 800; }
+    .sg-head .sg-s { font-size: 11px; color: var(--mt-text-3); }
+    .sg-card { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--mt-line); }
+    .sg-info { flex: 1; min-width: 0; }
+    .sg-title { font-size: 13.5px; font-weight: 700; }
+    .sg-desc { font-size: 11px; color: var(--mt-text-3); margin: 2px 0 6px; }
+    .sg-bar { height: 5px; background: var(--mt-surface-2); border-radius: 3px; overflow: hidden; }
+    .sg-bar i { display: block; height: 100%; background: #E5484D; }
+    .sg-foot { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+    .sg-price { font-size: 15px; font-weight: 800; color: #E5484D; }
+    .sg-price s { font-size: 10.5px; color: var(--mt-text-3); font-weight: 400; margin-left: 3px; }
+    .sg-sold { font-size: 10.5px; color: var(--mt-text-3); }
+    .sg-claim { flex: 0 0 auto; background: var(--mt-yellow); color: var(--mt-black); border: none;
+        padding: 7px 14px; border-radius: 13px; font-weight: 800; font-size: 12.5px; }
+    .sg-had { flex: 0 0 auto; color: var(--mt-text-3); font-size: 12px; }
+
 </style>
 </head>
 <body data-page-node-id="LhxawlrsO3YNFiNMIq5KJm">
@@ -1495,14 +1611,82 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         { id: 'm1', title: '会员 · 满 30 减 10', amount: 10, threshold: 30,  scope: '会员专享 · 全平台', expire: '2026-12-31', kind: 'member',  total: 1000,  claimed: 420, vip: true },
         { id: 'm2', title: '会员 · 满 60 减 25', amount: 25, threshold: 60,  scope: '会员专享 · 全平台', expire: '2026-12-31', kind: 'member',  total: 800,   claimed: 315, vip: true },
         { id: 'm3', title: '会员 · 满 100 减 40', amount: 40, threshold: 100, scope: '会员专享 · 全平台', expire: '2026-12-31', kind: 'member',  total: 500,   claimed: 186, vip: true },
-        { id: 'm4', title: '会员免配送费券',    amount: 0,  threshold: 0,   scope: '会员专享 · 免配送费', expire: '2026-12-31', kind: 'member', total: 1000,  claimed: 524, vip: true, ship: true }
+        { id: 'm4', title: '会员免配送费券',    amount: 0,  threshold: 0,   scope: '会员专享 · 免配送费', expire: '2026-12-31', kind: 'member', total: 1000,  claimed: 524, vip: true, ship: true },
+        /* 抽奖产出的券（落入红包，可正常使用） */
+        { id: 'lc5',  title: '抽奖 · ¥5 无门槛',  amount: 5,  threshold: 0,  scope: '抽奖获得 · 全场通用',   expire: '2026-12-31', kind: 'all', total: 9999, claimed: 0 },
+        { id: 'lc6',  title: '抽奖 · 免配送费',   amount: 0,  threshold: 0,  scope: '抽奖获得 · 任意订单免配送', expire: '2026-12-31', kind: 'all', total: 9999, claimed: 0, ship: true },
+        { id: 'lc20', title: '抽奖 · ¥20 红包',   amount: 20, threshold: 50, scope: '抽奖获得 · 满 50 可用',  expire: '2026-12-31', kind: 'all', total: 9999, claimed: 0 }
     ];
     const COUPON_KINDS = [
         { id: 'all', name: '全部' }, { id: 'all2', name: '通用' }, { id: 'food', name: '美食' },
         { id: 'dessert', name: '甜品饮品' }, { id: 'market', name: '超市便利' },
-        { id: 'ship', name: '免运费' }, { id: 'member', name: '会员专享' }
+        { id: 'ship', name: '免运费' }, { id: 'group', name: '团购' }, { id: 'member', name: '会员专享' }
     ];
     const MEMBER_FEE = 12, MEMBER_DAYS = 30;
+
+    /* 商家地理位置（成都，用于地图标点；Web Mercator 投影换算像素） */
+    const MAP_CENTER = { lng: 104.0668, lat: 30.6598, z: 13 };   // 我的位置（天府广场一带）
+    const SHOP_GEO = {
+        1: [104.0698, 30.6628], 2: [104.0918, 30.6698], 3: [104.0468, 30.6748],
+        4: [104.0768, 30.6798], 5: [104.0568, 30.6498], 6: [104.0968, 30.6548],
+        7: [104.0368, 30.6648], 8: [104.0718, 30.6398], 9: [104.0868, 30.6398],
+        10: [104.0418, 30.6448], 11: [104.0818, 30.6898], 12: [104.0518, 30.6848],
+        13: [104.1018, 30.6748], 14: [104.0318, 30.6498], 15: [104.0668, 30.6748],
+        16: [104.0918, 30.6348], 17: [104.0468, 30.6348], 18: [104.1068, 30.6598],
+        19: [104.0268, 30.6698], 20: [104.0768, 30.6298], 21: [104.0568, 30.6948]
+    };
+    function shopLngLat(id) { return SHOP_GEO[id] || [MAP_CENTER.lng, MAP_CENTER.lat]; }
+    /* 经纬度 → 容器内像素（以 MAP_CENTER 为画布中心，虚拟坐标 1024×640） */
+    function geoToPixel(lng, lat, cw, ch, z) {
+        const c = lngLatToTile(MAP_CENTER.lng, MAP_CENTER.lat, z);
+        const p = lngLatToTile(lng, lat, z);
+        return { x: cw / 2 - c.fx * 256 + p.fx * 256, y: ch / 2 - c.fy * 256 + p.fy * 256 };
+    }
+
+    /* 团购券：品牌店铺套餐（查看 / 领取） */
+    const GROUP_DEALS = [
+        { id: 'g1',  shopId: 1,  title: '麻辣烫双人狂欢餐', price: 39.9, origin: 68,  desc: '2 份招牌锅底 + 8 样自选菜 + 2 杯酸梅汤', sold: 1820, total: 3000 },
+        { id: 'g2',  shopId: 2,  title: '寿司拼盘双人套餐', price: 88,   origin: 138, desc: '综合生鱼片盖饭 + 加州卷 + 味噌汤 ×2', sold: 940,  total: 2000 },
+        { id: 'g3',  shopId: 3,  title: '汉堡薯条超值双人餐', price: 45.9, origin: 72, desc: '豪华牛肉汉堡 ×2 + 黄金薯条（大）+ 可乐 ×2', sold: 2310, total: 4000 },
+        { id: 'g4',  shopId: 4,  title: '冒菜一人食套餐', price: 25.9, origin: 42,  desc: '冒菜（微辣）+ 米饭 + 酸梅汤', sold: 1560, total: 3000 },
+        { id: 'g5',  shopId: 5,  title: '轻食沙拉健身餐', price: 29.9, origin: 48,  desc: '鸡胸肉藜麦沙拉 + 冷萃茶', sold: 870,  total: 2000 },
+        { id: 'g6',  shopId: 6,  title: '烘焙早餐组合', price: 19.9, origin: 36,  desc: '可颂 ×2 + 美式咖啡', sold: 1320, total: 2500 },
+        { id: 'g7',  shopId: 7,  title: '奶茶买一送一', price: 16.9, origin: 32,  desc: '招牌奶茶 2 杯（同款）', sold: 4200, total: 6000 },
+        { id: 'g8',  shopId: 8,  title: '意面双人分享餐', price: 56,   origin: 92,  desc: '番茄肉酱意面 + 奶油培根意面 + 蒜香面包', sold: 760,  total: 1800 },
+        { id: 'g9',  shopId: 9,  title: '炸酱面经典套餐', price: 22.9, origin: 38,  desc: '老北京炸酱面 + 凉拌黄瓜 + 豆浆', sold: 1990, total: 3500 },
+        { id: 'g10', shopId: 10, title: '深夜暖胃粥铺', price: 26.9, origin: 44,  desc: '皮蛋瘦肉粥 + 蒸饺 6 只 + 小菜', sold: 1120, total: 2200 },
+        { id: 'g11', shopId: 11, title: '炸鸡啤酒派对', price: 69.9, origin: 118, desc: '半半炸鸡（原味+酱油）+ 啤酒 2 听', sold: 1680, total: 3000 },
+        { id: 'g12', shopId: 12, title: '小炒三菜一汤', price: 48,   origin: 78,  desc: '回锅肉 + 宫保鸡丁 + 清炒时蔬 + 汤', sold: 930,  total: 2000 },
+        { id: 'g13', shopId: 13, title: '米线双人套餐', price: 36.9, origin: 60,  desc: '云腿米线 ×2 + 卤味拼盘', sold: 1240, total: 2500 },
+        { id: 'g14', shopId: 14, title: '披萨三人分享', price: 79,   origin: 138, desc: '9 寸双拼披萨 + 鸡翅 4 只 + 饮品 ×3', sold: 610,  total: 1500 },
+        { id: 'g15', shopId: 15, title: '果饮果切畅享', price: 24.9, origin: 42,  desc: '鲜榨果饮 + 时令果切盒', sold: 2050, total: 4000 },
+        { id: 'g16', shopId: 16, title: '火锅 3-4 人餐', price: 158,  origin: 268, desc: '麻辣锅底 + 8 荤 8 素 + 饮料', sold: 540,  total: 1200 },
+        { id: 'g17', shopId: 17, title: '商超满减大礼包', price: 49.9, origin: 79,  desc: '日用百货 + 零食组合', sold: 1480, total: 3000 },
+        { id: 'g18', shopId: 18, title: '便利店夜宵包', price: 19.9, origin: 35,  desc: '泡面 + 卤蛋 + 饮料 + 零食', sold: 2600, total: 5000 },
+        { id: 'g19', shopId: 19, title: '甜品下午茶', price: 32.9, origin: 56,  desc: '提拉米苏 + 司康 + 花茶', sold: 720,  total: 1600 },
+        { id: 'g20', shopId: 20, title: '咖啡买二赠一', price: 33,   origin: 60,  desc: '精品手冲咖啡 3 杯', sold: 1340, total: 2600 },
+        { id: 'g21', shopId: 21, title: '会员日超级盲盒', price: 9.9,  origin: 39,  desc: '随机品牌套餐（价值 ¥39 起）', sold: 3100, total: 6000 },
+        { id: 'g22', shopId: 1,  title: '麻辣烫单人特惠', price: 22.9, origin: 38,  desc: '单人锅底 + 5 样自选菜', sold: 2200, total: 4000 },
+        { id: 'g23', shopId: 3,  title: '汉堡单人餐', price: 24.9, origin: 40,  desc: '汉堡 + 薯条（小）+ 可乐', sold: 3100, total: 5000 },
+        { id: 'g24', shopId: 9,  title: '炸酱面加量包', price: 29.9, origin: 50,  desc: '炸酱面 + 卤煮 + 饮料', sold: 980,  total: 2000 },
+        { id: 'g25', shopId: 21, title: '盲盒加赠券', price: 19.9, origin: 59,  desc: '品牌套餐 + 随机赠品', sold: 1700, total: 3500 }
+    ];
+    const GROUP_BY_SHOP = {};
+    GROUP_DEALS.forEach(g => { (GROUP_BY_SHOP[g.shopId] = GROUP_BY_SHOP[g.shopId] || []).push(g); });
+    const GROUP_BY_ID = new Map(GROUP_DEALS.map(g => [g.id, g]));
+
+    /* 抽奖奖品（8 格九宫格） */
+    const LOTTERY_PRIZES = [
+        { t: '¥5 无门槛',  sub: '全场通用',   w: 18, couponId: 'lc5' },
+        { t: '免配送券',   sub: '下单立减',   w: 14, couponId: 'lc6' },
+        { t: '¥20 红包',   sub: '满 50 可用', w: 5,  couponId: 'lc20' },
+        { t: '会员体验券', sub: '7 天会员',   w: 5,  vip: true },
+        { t: '团购券',     sub: '品牌套餐',   w: 8,  group: 'g1' },
+        { t: '积分 +20',   sub: '可用积分',   w: 16, points: 20 },
+        { t: '再来一次',   sub: '免费再抽',   w: 12, again: true },
+        { t: '谢谢参与',   sub: '再接再厉',   w: 22, none: true }
+    ];
+    const LOTTERY_COST = 5;   // 免费次数用完后每次消耗余额
 
     const DEFAULT_ADDRESSES = [
         { id: 'a1', name: '张小美', phone: '138****8888', tag: '公司', detail: '四川省成都市武侯区天府大道 1000 号 写字楼 A 座 18F', isDefault: true },
@@ -1594,6 +1778,10 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
     function readJSON(key, fallback) {
         try { const v = JSON.parse(store(key)); return v == null ? fallback : v; }
         catch (e) { return fallback; }
+    }
+    function todayStr() {
+        const d = new Date(), p = n => String(n).padStart(2, '0');
+        return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
     }
     function toast(msg) {
         const el = document.createElement('div');
@@ -1750,6 +1938,10 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         orderFilter: 'all', shopTab: 'menu',
         couponTab: 'all',
         member: { on: false, expire: '' },
+        claimedGroups: [],
+        points: 0,
+        freeDraws: 1, lastDrawDate: '',
+        mapSel: null, mapCat: 'all',
         reviewDraft: { rating: 0, tags: [] }
     };
 
@@ -1787,6 +1979,15 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         state.balance = isNaN(bal) ? 128 : bal;
         const mem = readJSON('kd.member', null);
         state.member = (mem && typeof mem === 'object') ? mem : { on: false, expire: '' };
+        const grp = readJSON('kd.groups', null);
+        state.claimedGroups = Array.isArray(grp) ? grp.filter(id => GROUP_BY_ID.has(id)) : [];
+        const pts = readJSON('kd.points', null);
+        state.points = (pts == null || isNaN(Number(pts))) ? 0 : Number(pts);
+        const dr = readJSON('kd.draws', null);
+        const today = todayStr();
+        if (dr && dr.d === today && typeof dr.f === 'number') {
+            state.freeDraws = dr.f; state.lastDrawDate = dr.d;
+        } else { state.freeDraws = 1; state.lastDrawDate = today; }
         state.addressId = (state.addresses.find(a => a.isDefault) || state.addresses[0]).id;
     }
     const saveCart = () => store('kd.cart', JSON.stringify(state.cart));
@@ -1797,6 +1998,9 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
     const saveCoupons = () => store('kd.coupons', JSON.stringify(state.ownedCoupons));
     const saveBalance = () => store('kd.balance', JSON.stringify(state.balance));
     const saveMember = () => store('kd.member', JSON.stringify(state.member));
+    const saveGroups = () => store('kd.groups', JSON.stringify(state.claimedGroups));
+    const savePoints = () => store('kd.points', JSON.stringify(state.points));
+    const saveDraws = () => store('kd.draws', JSON.stringify({ f: state.freeDraws, d: state.lastDrawDate }));
 
     /* ======================================================================
      * 5. 购物车 & 费用
@@ -1940,6 +2144,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
     const go = path => { location.hash = '#/' + path; };
     const TABS = [
         { id: 'home', name: '首页', ic: 'home', path: 'home' },
+        { id: 'map', name: '地图', ic: 'pin', path: 'map' },
         { id: 'orders', name: '订单', ic: 'receipt', path: 'orders' },
         { id: 'profile', name: '我的', ic: 'user', path: 'profile' }
     ];
@@ -2032,6 +2237,8 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                     '<span class="tile-title">准时达</span><span class="tile-sub">超时赔付</span>' + icon('clock') + '</button>' +
                 '<button type="button" class="tile" data-action="pick-category" data-cat="fruit">' +
                     '<span class="tile-title">果蔬生鲜</span><span class="tile-sub">坏果包赔</span>' + icon('leaf') + '</button>' +
+                '<button type="button" class="tile" data-go="lottery">' +
+                    '<span class="tile-title">天天抽奖</span><span class="tile-sub">最高¥20</span>' + icon('trophy') + '</button>' +
             '</section>' +
             '<div class="sortbar">' +
                 SORTS.map(s => '<button type="button" class="sort-item' + (state.sort === s.id ? ' on' : '') + '"' +
@@ -2184,6 +2391,26 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         '</div>';
     }
 
+    function shopGroupHTML(shop) {
+        const deals = GROUP_BY_SHOP[shop.id];
+        if (!deals || !deals.length) return '';
+        return '<div class="shop-groups">' +
+            '<div class="sg-head"><span class="sg-t">团购套餐</span><span class="sg-s">到店 / 外卖通用</span></div>' +
+            deals.map(g => {
+                const claimed = state.claimedGroups.indexOf(g.id) !== -1;
+                const pct = Math.min(Math.round(g.sold / g.total * 100), 100);
+                return '<div class="sg-card">' +
+                    '<div class="sg-info"><div class="sg-title">' + esc(g.title) + '</div>' +
+                        '<div class="sg-desc">' + esc(g.desc) + '</div>' +
+                        '<div class="sg-bar"><i style="width:' + pct + '%"></i></div>' +
+                        '<div class="sg-foot"><span class="sg-price">¥' + g.price + '<s>¥' + g.origin + '</s></span>' +
+                        '<span class="sg-sold">已抢 ' + pct + '%</span></div></div>' +
+                    (claimed ? '<span class="sg-had">已领取</span>'
+                        : '<button type="button" class="sg-claim" data-action="claim-group" data-id="' + g.id + '">领券</button>') +
+                '</div>';
+            }).join('') +
+        '</div>';
+    }
     function renderShop(id) {
         const shop = SHOP_BY_ID.get(Number(id));
         if (!shop) {
@@ -2247,6 +2474,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                     '</span>' +
                 '</div>' +
             '</div>' +
+            shopGroupHTML(shop) +
             '<div class="shop-tabs">' +
                 '<button type="button" class="shop-tab' + (tab !== 'reviews' ? ' on' : '') + '" data-action="shop-tab" data-tab="menu">点菜</button>' +
                 '<button type="button" class="shop-tab' + (tab === 'reviews' ? ' on' : '') + '" data-action="shop-tab" data-tab="reviews">评价<span class="cnt">' + revCount + '</span></button>' +
@@ -2780,6 +3008,12 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                 '<button type="button" class="menu-row" data-go="coupons">' +
                     '<span class="mi">' + icon('gift') + '</span><span class="mt">领券中心</span>' +
                     '<span class="mv">持 ' + state.ownedCoupons.length + ' 张</span><span class="caret">' + icon('chev-r') + '</span></button>' +
+                '<button type="button" class="menu-row" data-go="groupon">' +
+                    '<span class="mi">' + icon('ticket') + '</span><span class="mt">团购券</span>' +
+                    '<span class="mv">持 ' + state.claimedGroups.length + ' 张</span><span class="caret">' + icon('chev-r') + '</span></button>' +
+                '<button type="button" class="menu-row" data-go="lottery">' +
+                    '<span class="mi">' + icon('trophy') + '</span><span class="mt">幸运抽奖</span>' +
+                    '<span class="mv">积分 ' + state.points + '</span><span class="caret">' + icon('chev-r') + '</span></button>' +
                 '<button type="button" class="menu-row" data-go="favs">' +
                     '<span class="mi">' + icon('heart') + '</span><span class="mt">我的收藏</span>' +
                     '<span class="mv">' + state.favorites.length + ' 家</span><span class="caret">' + icon('chev-r') + '</span></button>' +
@@ -2862,8 +3096,23 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         if (tab === 'member') return !!c.vip;
         return c.kind === tab;
     }
+    function renderGroupCenter() {
+        const list = state.claimedGroups.map(id => GROUP_BY_ID.get(id)).filter(Boolean);
+        if (!list.length) return emptyState('ticket', '还没有领取团购券', '去「团购」专区领几张吧');
+        return '<div class="gp-list" style="padding:12px">' + list.map(g => {
+            const shop = SHOP_BY_ID.get(g.shopId);
+            return '<div class="gp-card">' +
+                '<div class="gp-shop">' + artHTML(shop.art[0], shop.art[1], shop.art[2], imgURL('s' + shop.id)) +
+                    '<div><div class="gp-name">' + esc(shop.name) + '</div><div class="gp-cat">' + catName(shop.cat) + '</div></div></div>' +
+                '<div class="gp-title">' + esc(g.title) + '</div>' +
+                '<div class="gp-foot"><span class="gp-price">¥' + g.price + '<s>¥' + g.origin + '</s></span>' +
+                    '<button type="button" class="gp-claim" data-go="groupon">去使用</button></div>' +
+            '</div>';
+        }).join('') + '</div>';
+    }
     function renderCouponCenter() {
         const tab = state.couponTab;
+        const isGroup = tab === 'group';
         const list = COUPONS.filter(c => couponMatches(c, tab))
             .slice().sort((a, b) => {
                 const ao = state.ownedCoupons.indexOf(a.id) !== -1 ? 1 : 0;
@@ -2893,7 +3142,9 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                 COUPON_KINDS.map(k => '<button type="button" class="cc-tab' + (tab === k.id ? ' on' : '') + '"' +
                     ' data-action="coupon-tab" data-tab="' + k.id + '">' + k.name + '</button>').join('') +
             '</div>' +
-            (list.length
+            (isGroup
+                ? renderGroupCenter()
+                : (list.length
                 ? '<div class="cc-list">' + list.map(c => {
                     const owned = state.ownedCoupons.indexOf(c.id) !== -1;
                     const pct = Math.min(Math.round(c.claimed / c.total * 100), 100);
@@ -2918,7 +3169,7 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                         '</div>' +
                     '</div>';
                 }).join('') + '</div>'
-                : emptyState('ticket', '该分类暂无可领的券', '换个分类看看吧')) +
+                : emptyState('ticket', '该分类暂无可领的券', '换个分类看看吧'))) +
             tabbarHTML('profile') +
         '</div>';
     }
@@ -2972,6 +3223,228 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                     ? '<button type="button" class="btn-sm" data-action="cancel-member">关闭自动续费</button>'
                     : '<button type="button" class="btn-vip" data-action="open-member">立即开通</button>') +
             '</div>' +
+        '</div>';
+    }
+
+    /* ======================================================================
+     * 12c. 地图主界面 / 抽奖 / 团购券
+     * ==================================================================== */
+    function catName(cat) {
+        const c = CATEGORIES.find(x => x.id === cat);
+        return c ? c.name : cat;
+    }
+    function claimGroup(id) {
+        if (state.claimedGroups.indexOf(id) !== -1) return false;
+        state.claimedGroups.push(id); saveGroups();
+        return true;
+    }
+    function mapTilesHTML() {
+        const z = MAP_CENTER.z;
+        const c = lngLatToTile(MAP_CENTER.lng, MAP_CENTER.lat, z);
+        const cx = Math.floor(c.fx), cy = Math.floor(c.fy);
+        const tx = 512 - c.fx * 256, ty = 320 - c.fy * 256;
+        let t = '';
+        for (let r = -1; r <= 3; r++) {
+            for (let col = -2; col <= 3; col++) {
+                const x = cx + col, y = cy + r;
+                const sub = ((x % 4) + 4) % 4 + 1;
+                t += '<img class="mtile" style="left:' + (x * 256) + 'px;top:' + (y * 256) + 'px" ' +
+                    'src="https://webrd0' + sub + '.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x=' + x + '&y=' + y + '&z=' + z + '" alt="" loading="lazy" decoding="async">';
+            }
+        }
+        return '<div class="map-tiles" style="transform:translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px)">' + t + '</div>';
+    }
+    function mapPinsHTML() {
+        const z = MAP_CENTER.z;
+        const c = lngLatToTile(MAP_CENTER.lng, MAP_CENTER.lat, z);
+        const cfx = c.fx * 256, cfy = c.fy * 256;
+        const list = SHOPS.filter(s => state.mapCat === 'all' || s.cat === state.mapCat);
+        return list.map(shop => {
+            const g = shopLngLat(shop.id), p = lngLatToTile(g[0], g[1], z);
+            const left = 512 - cfx + p.fx * 256, top = 320 - cfy + p.fy * 256;
+            const sel = state.mapSel === shop.id;
+            return '<button type="button" class="mpin' + (sel ? ' on' : '') + '" ' +
+                'style="left:' + left.toFixed(1) + 'px;top:' + top.toFixed(1) + 'px;--pc:' + shop.art[1] + '" ' +
+                'data-action="map-pick" data-id="' + shop.id + '" aria-label="查看 ' + esc(shop.name) + '">' +
+                '<span class="mpin-dot"></span>' +
+                (sel ? '<span class="mpin-label">' + esc(shop.name) + '</span>' : '') +
+                '</button>';
+        }).join('');
+    }
+    function renderMap() {
+        const sel = state.mapSel ? SHOP_BY_ID.get(state.mapSel) : null;
+        const cats = CATEGORIES.filter(c => ['food', 'dessert', 'market', 'fruit'].indexOf(c.id) !== -1);
+        const list = SHOPS.filter(s => state.mapCat === 'all' || s.cat === state.mapCat);
+        const pop = sel ? (
+            '<div class="map-pop">' +
+                '<div class="mp-head">' +
+                    artHTML(sel.art[0], sel.art[1], sel.art[2], imgURL('s' + sel.id)) +
+                    '<div class="mp-info">' +
+                        '<div class="mp-name">' + esc(sel.name) + '</div>' +
+                        '<div class="mp-meta">' +
+                            '<span class="stars">' + icon('star', 'fill') + '<span class="num">' + shopRating(sel.id, sel.rating).toFixed(1) + '</span></span>' +
+                            '<span>月售 ' + sel.monthSales + '</span>' +
+                            '<span>' + sel.minutes + ' 分钟</span>' +
+                            '<span>' + sel.distance + 'km</span>' +
+                        '</div>' +
+                        '<div class="mp-tags">' + sel.tags.map(t => '<span class="tag yellow">' + esc(t) + '</span>').join('') + '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="mp-actions">' +
+                    '<button type="button" class="mp-go" data-go="shop/' + sel.id + '">进店</button>' +
+                    '<button type="button" class="mp-grp" data-action="map-groupon" data-id="' + sel.id + '">领团购券</button>' +
+                    '<button type="button" class="mp-fav' + (state.favorites.indexOf(sel.id) !== -1 ? ' on' : '') + '" data-action="toggle-fav" data-id="' + sel.id + '">' + icon('heart') + '</button>' +
+                '</div>' +
+            '</div>'
+        ) : '';
+        const nearby = '<div class="map-list">' + list.map(s =>
+            '<button type="button" class="ml' + (state.mapSel === s.id ? ' on' : '') + '" data-action="map-pick" data-id="' + s.id + '">' +
+                '<div class="ml-n">' + esc(s.name) + '</div>' +
+                '<div class="ml-m">' + s.minutes + ' 分钟 · ' + s.distance + 'km · ' + shopRating(s.id, s.rating).toFixed(1) + ' 分</div>' +
+            '</button>').join('') + '</div>';
+        return '<div class="map-page">' +
+            '<div class="map-top">' +
+                '<div class="map-search" data-go="search">' + icon('search') + '<span>搜索商家、菜品、团购</span></div>' +
+            '</div>' +
+            '<div class="map-cats">' +
+                '<button type="button" class="mc' + (state.mapCat === 'all' ? ' on' : '') + '" data-action="map-cat" data-cat="all">全部</button>' +
+                cats.map(c => '<button type="button" class="mc' + (state.mapCat === c.id ? ' on' : '') + '" data-action="map-cat" data-cat="' + c.id + '">' + esc(c.name) + '</button>').join('') +
+            '</div>' +
+            '<div class="map-stage" id="mapStage">' +
+                '<div class="map-inner" id="mapInner">' +
+                    mapTilesHTML() +
+                    '<div class="map-pins">' + mapPinsHTML() + '</div>' +
+                    '<div class="map-me" style="left:512px;top:320px"><span class="dot"></span><span class="ring"></span></div>' +
+                '</div>' +
+                '<div class="map-fabs">' +
+                    '<button type="button" class="map-fab" data-go="lottery" aria-label="抽奖">' + icon('trophy') + '</button>' +
+                    '<button type="button" class="map-fab" data-go="groupon" aria-label="团购">' + icon('ticket') + '</button>' +
+                '</div>' +
+                (sel ? '' : '<div class="map-hint">点击地图上的店铺标记查看品牌详情 · 共 ' + SHOPS.length + ' 家门店</div>') +
+            '</div>' +
+            pop +
+            nearby +
+            tabbarHTML('map') +
+        '</div>';
+    }
+    function afterRenderMap() {
+        const inner = document.getElementById('mapInner');
+        const stage = document.getElementById('mapStage');
+        if (!inner || !stage) return;
+        const s = stage.clientWidth / 1024;
+        inner.style.transform = 'scale(' + s + ')';
+        stage.style.height = (640 * s) + 'px';
+    }
+
+    function lotteryGridCells() { return [0, 1, 2, 7, 'btn', 3, 6, 5, 4]; }
+    function renderLottery() {
+        const cells = lotteryGridCells();
+        const grid = cells.map(cell => {
+            if (cell === 'btn') {
+                return '<button type="button" class="lc-btn" data-action="draw-lottery">' +
+                    '<span class="lc-btn-t">抽奖</span><span class="lc-btn-s">免费 ' + state.freeDraws + ' 次</span></button>';
+            }
+            const p = LOTTERY_PRIZES[cell];
+            return '<div class="lc-cell" data-lc="' + cell + '">' +
+                '<div class="lc-t">' + esc(p.t) + '</div>' +
+                '<div class="lc-s">' + esc(p.sub) + '</div></div>';
+        }).join('');
+        const canFree = state.freeDraws > 0;
+        const canPay = state.balance >= LOTTERY_COST;
+        return '<div class="lottery-page">' +
+            '<div class="lottery-hero">' +
+                '<h1>幸运大抽奖</h1>' +
+                '<div class="lh-sub">每日免费 1 次 · 额外抽奖每次 ¥' + LOTTERY_COST + '</div>' +
+                '<div class="lottery-prize">我的积分 <b>' + state.points + '</b> · 免费次数 <b>' + state.freeDraws + '</b></div>' +
+            '</div>' +
+            '<div class="lottery-grid">' + grid + '</div>' +
+            '<div class="lottery-info">' +
+                (canFree ? '今日还有 <b>' + state.freeDraws + '</b> 次免费抽奖'
+                    : (canPay ? '免费次数已用完，可用余额 ¥' + state.balance + ' 继续抽' : '免费次数已用完，余额不足，明天再来~')) +
+                '<br>奖品含：红包 / 免配送券 / 会员体验 / 团购券 / 积分' +
+            '</div>' +
+            tabbarHTML('profile') +
+        '</div>';
+    }
+    function afterRenderLottery() {
+        const spin = state._spin;
+        if (!spin) return;
+        state._spin = null;
+        const cells = Array.from(document.querySelectorAll('.lc-cell'));
+        let cur = -1, step = 0;
+        const light = i => { cells.forEach(c => c.classList.remove('lit')); if (i >= 0 && cells[i]) cells[i].classList.add('lit'); };
+        const totalSteps = 8 * 3 + spin.target;
+        const iv = setInterval(() => {
+            cur = (cur + 1) % 8;
+            light(cur);
+            step++;
+            if (step >= totalSteps) {
+                clearInterval(iv);
+                light(spin.target);
+                grantLottery(spin.target);
+            }
+        }, 75);
+    }
+    function grantLottery(i) {
+        const p = LOTTERY_PRIZES[i];
+        let msg, title = p.t;
+        if (p.couponId) {
+            if (state.ownedCoupons.indexOf(p.couponId) === -1) state.ownedCoupons.push(p.couponId);
+            saveCoupons(); msg = '已将「' + p.t + '」放入你的红包';
+        } else if (p.vip) {
+            if (!state.member.on) {
+                const d = new Date(); d.setDate(d.getDate() + 7);
+                const pad = n => String(n).padStart(2, '0');
+                state.member = { on: true, expire: d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) };
+                saveMember(); msg = '已为你开通 7 天会员体验';
+            } else { state.points += 10; savePoints(); msg = '已是会员，赠送积分 +10'; }
+        } else if (p.group) {
+            if (claimGroup(p.group)) { const g = GROUP_BY_ID.get(p.group); msg = '已领取团购券：' + (g ? g.title : '品牌套餐'); }
+            else msg = '该团购券已领取过啦';
+        } else if (p.points) {
+            state.points += p.points; savePoints(); msg = '恭喜获得积分 +' + p.points;
+        } else if (p.again) {
+            state.freeDraws += 1; saveDraws(); msg = '好运加持，免费再抽一次！';
+        } else { msg = '谢谢参与，下次好运~'; }
+        saveDraws();
+        openSheet(title, '<div style="text-align:center;padding:8px 4px;line-height:1.7">' + esc(msg) + '</div>',
+            (ev, close) => { close(); renderApp(); });
+    }
+
+    function renderGroupon() {
+        const list = GROUP_DEALS.slice().sort((a, b) => (b.sold / b.total) - (a.sold / a.total));
+        return '<div class="page">' +
+            '<div class="subheader">' +
+                '<button type="button" class="back" data-go="home" aria-label="返回">' + icon('back') + '</button>' +
+                '<h1>团购券</h1>' +
+            '</div>' +
+            '<div class="gp-hero">' +
+                '<h1>品牌团购 · 限时特惠</h1>' +
+                '<div class="gs">精选 ' + SHOPS.length + ' 家品牌门店，套餐低至 5 折，领取后到店或外卖通用</div>' +
+            '</div>' +
+            '<div class="gp-list">' + list.map(g => {
+                const shop = SHOP_BY_ID.get(g.shopId);
+                const claimed = state.claimedGroups.indexOf(g.id) !== -1;
+                const pct = Math.min(Math.round(g.sold / g.total * 100), 100);
+                return '<div class="gp-card">' +
+                    '<div class="gp-shop">' +
+                        artHTML(shop.art[0], shop.art[1], shop.art[2], imgURL('s' + shop.id)) +
+                        '<div><div class="gp-name">' + esc(shop.name) + '</div>' +
+                        '<div class="gp-cat">' + catName(shop.cat) + ' · ' + shop.minutes + ' 分钟达</div></div>' +
+                    '</div>' +
+                    '<div class="gp-title">' + esc(g.title) + '</div>' +
+                    '<div class="gp-desc">' + esc(g.desc) + '</div>' +
+                    '<div class="gp-bar"><i style="width:' + pct + '%"></i></div>' +
+                    '<div class="gp-foot">' +
+                        '<span class="gp-price">¥' + g.price + '<s>¥' + g.origin + '</s></span>' +
+                        '<span class="gp-sold">已抢 ' + pct + '%</span>' +
+                        (claimed
+                            ? '<span class="gp-had">已领取</span>'
+                            : '<button type="button" class="gp-claim" data-action="claim-group" data-id="' + g.id + '">领取</button>') +
+                    '</div>' +
+                '</div>';
+            }).join('') +
+            tabbarHTML('home') +
         '</div>';
     }
 
@@ -3034,11 +3507,16 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
             case 'vip':      html = renderVip(); break;
             case 'coupons':  html = renderCouponCenter(); break;
             case 'messages': html = renderMessages(); break;
+            case 'map':      html = renderMap(); break;
+            case 'lottery':  html = renderLottery(); break;
+            case 'groupon':  html = renderGroupon(); break;
             default:         html = renderHome();
         }
         document.getElementById('app').innerHTML = html;
         window.scrollTo(0, 0);
         if (route.path === 'shop') afterRenderShop();
+        if (route.path === 'map') afterRenderMap();
+        if (route.path === 'lottery') afterRenderLottery();
         if (route.path === 'checkout') {
             const remark = document.querySelector('[data-remark]');
             if (remark) remark.addEventListener('input', e => { state.remark = e.target.value; });
@@ -3239,7 +3717,14 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
     function makeActions(el) {
         return {
             'toggle-theme': () => { applyTheme(!isDark()); renderApp(); },
-            'pick-category': () => { state.category = el.dataset.cat; renderApp(); },
+            'pick-category': () => {
+                const c = el.dataset.cat;
+                if (c === 'group') { go('groupon'); return; }
+                if (c === 'coupon') { showCouponSheet(null); return; }
+                if (c === 'ranking') { state.category = 'all'; state.sort = 'sales'; renderApp(); return; }
+                if (c === 'errand') { toast('跑腿代购即将上线，敬请期待'); return; }
+                state.category = c; renderApp();
+            },
             'pick-sort': () => { state.sort = el.dataset.sort; renderApp(); },
             'open-notice': () => go('messages'),
             'open-coupons': () => showCouponSheet(null),
@@ -3283,6 +3768,36 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                 state.ownedCoupons.push(id);
                 saveCoupons();
                 toast('领取成功，已放入红包');
+                renderApp();
+            },
+            'claim-group': () => {
+                const id = el.dataset.id;
+                if (state.claimedGroups.indexOf(id) !== -1) { toast('已经领过啦'); return; }
+                claimGroup(id);
+                const g = GROUP_BY_ID.get(id);
+                toast('领取成功：' + (g ? g.title : '团购券'));
+                renderApp();
+            },
+            'map-pick': () => { state.mapSel = Number(el.dataset.id); renderApp(); },
+            'map-cat': () => { state.mapCat = el.dataset.cat; state.mapSel = null; renderApp(); },
+            'map-groupon': () => {
+                const id = Number(el.dataset.id);
+                const deals = GROUP_BY_SHOP[id] || [];
+                const first = deals.find(g => state.claimedGroups.indexOf(g.id) === -1);
+                if (first) { claimGroup(first.id); toast('已领取：' + first.title); renderApp(); }
+                else { toast('该店团购券已领完'); go('groupon'); }
+            },
+            'draw-lottery': () => {
+                const today = todayStr();
+                if (state.lastDrawDate !== today) { state.freeDraws = 1; state.lastDrawDate = today; }
+                if (state.freeDraws > 0) state.freeDraws--;
+                else if (state.balance >= LOTTERY_COST) { state.balance -= LOTTERY_COST; saveBalance(); }
+                else { toast('今日免费抽奖已用完，余额不足 ¥' + LOTTERY_COST); return; }
+                saveDraws();
+                const tot = LOTTERY_PRIZES.reduce((s, p) => s + p.w, 0);
+                let r = Math.random() * tot, target = 0;
+                for (let i = 0; i < LOTTERY_PRIZES.length; i++) { r -= LOTTERY_PRIZES[i].w; if (r <= 0) { target = i; break; } }
+                state._spin = { target: target };
                 renderApp();
             },
             'minus-line': () => minusLine(el.dataset.key),
@@ -3383,6 +3898,9 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
                     state.couponId = null; state.addressId = 'a1';
                     state.favorites = []; state.ownedCoupons = ['c1', 'c2'];
                     state.member = { on: false, expire: '' };
+                    state.claimedGroups = []; state.points = 0;
+                    state.freeDraws = 1; state.lastDrawDate = todayStr();
+                    state.mapSel = null; state.mapCat = 'all';
                     state.balance = 128; state.useBalance = true;
                     toast('已重置'); go('home'); renderApp();
                 });
@@ -3445,7 +3963,9 @@ body.dark { --map-bg: #1B2320; --map-block: #232D28; --map-street: #2E3A34; --ma
         art: artHTML, icon: icon, imgURL: imgURL,
         memberFee: MEMBER_FEE, couponKinds: COUPON_KINDS,
         liveStatus: liveStatus, shopReviews: shopReviews, shopRating: shopRating,
-        specsOf: specsOf, specUnitPrice: specUnitPrice, nextDiscountGap: nextDiscountGap
+        specsOf: specsOf, specUnitPrice: specUnitPrice, nextDiscountGap: nextDiscountGap,
+        shopGeo: SHOP_GEO, groupDeals: GROUP_DEALS, groupById: GROUP_BY_ID,
+        lotteryPrizes: LOTTERY_PRIZES, mapCenter: MAP_CENTER
     };
 })();
 </script>
