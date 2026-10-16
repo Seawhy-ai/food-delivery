@@ -1,0 +1,10 @@
+{
+  "name": "kangaroo-food-delivery-demo",
+  "private": true,
+  "scripts": {
+    "test": "node test/smoke.js"
+  },
+  "devDependencies": {
+    "jsdom": "^26.0.0"
+  }
+}

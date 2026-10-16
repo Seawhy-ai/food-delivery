@@ -2180,10 +2180,15 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         syncLock();
     }
 
-    /* 照片加载失败时移除 <img>，露出下层 SVG 插画（error 事件不冒泡，需捕获阶段） */
+    /* 图片加载失败时降级；error 事件不冒泡，需捕获阶段 */
     document.addEventListener('error', e => {
         if (e.target && e.target.tagName === 'IMG' && e.target.classList.contains('photo')) {
             e.target.remove();
+        }
+        // 任意一张高德瓦片失败时，隐藏整层瓦片，露出已渲染的 SVG 路线图。
+        if (e.target && e.target.tagName === 'IMG' && e.target.classList.contains('tile')) {
+            const map = e.target.closest('.amap-wrap');
+            if (map) map.classList.add('tiles-failed');
         }
     }, true);
     const emptyState = (ic, title, sub) =>
@@ -2246,6 +2251,12 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         state.balance = isNaN(bal) ? 128 : bal;
         const mem = readJSON('kd.member', null);
         state.member = (mem && typeof mem === 'object') ? mem : { on: false, expire: '' };
+        // 会员状态完全由本地演示数据驱动，也必须在每次启动时校验有效期。
+        // YYYY-MM-DD 使用字典序比较即可，避免本地时区解析带来的偏差。
+        if (state.member.on && (!/^\d{4}-\d{2}-\d{2}$/.test(state.member.expire || '') || state.member.expire < todayStr())) {
+            state.member = { on: false, expire: '' };
+            store('kd.member', JSON.stringify(state.member));
+        }
         const grp = readJSON('kd.groups', null);
         state.claimedGroups = Array.isArray(grp) ? grp.filter(id => GROUP_BY_ID.has(id)) : [];
         const pts = readJSON('kd.points', null);
@@ -4096,7 +4107,9 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
             'reset-demo': () => {
                 confirmDialog({ title: '重置演示数据', message: '将清空购物车、订单、地址、红包、收藏与偏好，恢复初始状态。', okText: '重置' }).then(ok => {
                     if (!ok) return;
-                    ['kd.cart', 'kd.orders', 'kd.addresses', 'kd.searchHistory', 'kd.favs', 'kd.coupons', 'kd.balance'].forEach(k => store(k, null));
+                    ['kd.cart', 'kd.orders', 'kd.addresses', 'kd.searchHistory', 'kd.favs', 'kd.coupons',
+                     'kd.balance', 'kd.member', 'kd.groups', 'kd.points', 'kd.draws', 'kd.dark']
+                        .forEach(k => store(k, null));
                     state.cart = { shopId: null, lines: [] };
                     state.orders = SEED_ORDERS.slice();
                     state.addresses = DEFAULT_ADDRESSES.slice();
@@ -4107,6 +4120,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
                     state.claimedGroups = []; state.points = 0;
                     state.freeDraws = 1; state.lastDrawDate = todayStr();
                     state.balance = 128; state.useBalance = true;
+                    initTheme();
                     toast('已重置'); go('home'); renderApp();
                 });
             }

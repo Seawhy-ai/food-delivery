@@ -137,10 +137,11 @@ python -m http.server 8000
 
 ## 测试
 
-项目自身零依赖，测试**不需要在项目内安装任何包**：
+网页运行时零依赖。测试使用 `jsdom`，首次执行时安装开发依赖：
 
 ```bash
-npx --yes -p jsdom node test/smoke.js
+npm install
+npm test
 ```
 
 `test/smoke.js` 用 jsdom 真实加载 `index.html` 并模拟点击/输入，**223 项断言**覆盖：

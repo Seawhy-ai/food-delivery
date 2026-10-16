@@ -432,10 +432,15 @@ ok('深色模式切换并持久化', document.body.classList.contains('dark') &&
     window.localStorage.getItem('kd.dark') === '1');
 $('[data-action="toggle-theme"]').click(); await tick();
 
+// 重置必须同时清除所有持久化状态；否则刷新后会员、积分或抽奖记录会复活。
+['kd.member', 'kd.groups', 'kd.points', 'kd.draws'].forEach((key, i) =>
+    window.localStorage.setItem(key, JSON.stringify(i ? ['stale'] : { on: true, expire: '2099-01-01' })));
 $('[data-action="reset-demo"]').click(); await tick();
 $$('.mask').pop().querySelector('[data-dlg="ok"]').click(); await tick();
 ok('重置恢复种子数据/余额/会员', A.state.orders.length === 2 && A.state.addresses.length === 2 && A.state.balance === 128 && A.state.member.on === false);
 ok('重置后购物车为空', A.cartCount() === 0);
+ok('重置清除会员、团购、积分和抽奖持久化',
+    ['kd.member', 'kd.groups', 'kd.points', 'kd.draws'].every(key => window.localStorage.getItem(key) === null));
 
 // ============================================================
 // 14. 代码质量 / 视觉 / 安全
@@ -548,6 +553,8 @@ ok('订单详情地图标注品牌店名（蜜雪冰城）',
     $('.amap-wrap').textContent.indexOf('蜜雪冰城') !== -1 &&
     $('.amap-wrap').textContent.indexOf('收货地址') !== -1);
 ok('订单详情地图加载高德瓦片', $$('.amap-wrap .tile').length === 6);
+$('.amap-wrap .tile').dispatchEvent(new window.Event('error'));
+ok('地图瓦片失败时切换到 SVG 路线图', $('.amap-wrap').classList.contains('tiles-failed'));
 A.state.orders = A.state.orders.filter(o => o.id !== 'FDTEA000001');
 
 // 商家专属券：仅在指定门店可用
@@ -629,6 +636,18 @@ ok('抽奖结果弹窗可关闭', $('.sheet') === null);
 ok('抽奖产出已落地（红包/积分/团购/会员/再来一次之一）',
     A.state.ownedCoupons.length >= 1 || A.state.points > 0 || A.state.claimedGroups.length >= 1 ||
     A.state.member.on || A.state.freeDraws >= freeBefore);
+
+// 启动时应自动使过期会员失效，避免本地旧数据继续享受权益。
+const expiredDom = new JSDOM(html, {
+    runScripts: 'dangerously', pretendToBeVisual: true, url: 'https://expired.example.com/',
+    beforeParse(w) {
+        w.matchMedia = () => ({ matches: false, addListener() {}, removeListener() {} });
+        w.scrollTo = () => {};
+        w.localStorage.setItem('kd.member', JSON.stringify({ on: true, expire: '2000-01-01' }));
+    }
+});
+ok('启动时过期会员自动失效', expiredDom.window.__app.state.member.on === false &&
+    expiredDom.window.localStorage.getItem('kd.member').indexOf('false') !== -1);
 
 console.log(results.join('\n'));
 console.log('\n' + (failed === 0 ? '✅ 全部 ' + results.length + ' 项通过' : '❌ ' + failed + ' / ' + results.length + ' 项失败'));
