@@ -133,6 +133,10 @@ body.dark :focus-visible { outline-color: var(--mt-yellow); }
 .art { position: relative; display: block; width: 100%; height: 100%; }
 /* 真实照片叠在 SVG 插画之上：图挂了会自动移除，露出下面的插画 */
 .art-wrap .photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+/* 生成的茶饮商品图以精灵图保存，减少 55 张菜单缩略图的网络请求。 */
+.art-wrap .photo-sprite { position: absolute; inset: 0; display: block; z-index: 1;
+    background-image: url('assets/milk-tea-products.png'); background-repeat: no-repeat;
+    background-size: 400% 400%; background-position: var(--sx) var(--sy); }
 
 /* ============================ 顶部：定位 + 搜索 ============================ */
 .hero {
@@ -1374,28 +1378,17 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         s19: '1513104890138-7c749659a591', s20: '1587049352846-4a222e784d38',
         s21: '1566478989037-eec170784d0b',
 
-        /* 奶茶菜品图（Pexels，逐张下载拼图人工核对内容；px: 前缀走 Pexels CDN） */
-        2201: 'px:11470218', 2202: 'px:11160121', 2203: 'px:12666797', 2204: 'px:27126830',
-        2205: 'px:9271564',   2206: 'px:29839946',
-        2301: 'px:35137082', 2302: 'px:35727299', 2303: 'px:4071422',  2304: 'px:11160112',
-        2305: 'px:11470219', 2306: 'px:4669243',
-        2401: 'px:31336121', 2402: 'px:35137074', 2403: 'px:17612801', 2404: 'px:12666754',
-        2405: 'px:7167298',   2406: 'px:26238520',
-        2501: 'px:4134388',  2502: 'px:28525200', 2503: 'px:14267667', 2504: 'px:5668202',
-        2505: 'px:38430712', 2506: 'px:4725716',   2507: 'px:38987552',
-        2601: 'px:6174882',  2602: 'px:8679075',   2603: 'px:29111184', 2604: 'px:26904228',
-        2605: 'px:30215455',
-        2701: 'px:38006841', 2702: 'px:5817518',   2703: 'px:34511977',
-        2704: '1546173159-315724a31696',   /* 杨枝甘露：沿用已核对的 Unsplash 实拍 */
-        2705: 'px:6896035',
-        2801: 'px:8771961',  2802: 'px:26780826', 2803: 'px:33511696', 2804: 'px:11160112',
-        2805: 'px:38934820',
-        2901: 'px:32644590', 2902: 'px:11015772', 2903: 'px:26904220', 2904: 'px:33766806',
-        2905: 'px:37146773',
-        3001: 'px:32927743', 3002: 'px:5335709',   3003: 'px:8679575',  3004: 'px:39536485',
-        3005: 'px:33212344',
-        3101: 'px:12666754', 3102: 'px:11470219', 3103: 'px:8771961',  3104: 'px:11160121',
-        3105: 'px:14267667',
+        /* 10 家品牌茶饮店：本地生成的商品级实拍风格图（sp: 为 4×4 精灵图序号）。 */
+        2201: 'sp:11', 2202: 'sp:11', 2203: 'sp:11', 2204: 'sp:14', 2205: 'sp:14', 2206: 'sp:11',
+        2301: 'sp:7',  2302: 'sp:8',  2303: 'sp:9',  2304: 'sp:10', 2305: 'sp:11', 2306: 'sp:4',
+        2401: 'sp:8',  2402: 'sp:3',  2403: 'sp:3',  2404: 'sp:2',  2405: 'sp:11', 2406: 'sp:5',
+        2501: 'sp:0',  2502: 'sp:1',  2503: 'sp:2',  2504: 'sp:3',  2505: 'sp:4',  2506: 'sp:5', 2507: 'sp:6',
+        2601: 'sp:11', 2602: 'sp:10', 2603: 'sp:11', 2604: 'sp:3',  2605: 'sp:2',
+        2701: 'sp:5',  2702: 'sp:4',  2703: 'sp:2',  2704: 'sp:10', 2705: 'sp:9',
+        2801: 'sp:12', 2802: 'sp:14', 2803: 'sp:7',  2804: 'sp:10', 2805: 'sp:11',
+        2901: 'sp:9',  2902: 'sp:12', 2903: 'sp:15', 2904: 'sp:9',  2905: 'sp:10',
+        3001: 'sp:2',  3002: 'sp:12', 3003: 'sp:3',  3004: 'sp:0',  3005: 'sp:2',
+        3101: 'sp:2',  3102: 'sp:11', 3103: 'sp:14', 3104: 'sp:14', 3105: 'sp:13',
 
         901: '1584118624012-df056829fbd0', 902: '1512003867696-6d5ce6835040',
         903: '1555939594-58d7cb561ad1',   904: '1565680018434-b513d5e5fd47',
@@ -1452,7 +1445,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
     const imgURL = key => {
         const v = IMG[key];
         if (!v) return null;
-        return v.indexOf('px:') === 0
+        return v.indexOf('sp:') === 0 ? 'sprite:' + v.slice(3) : v.indexOf('px:') === 0
             ? 'https://images.pexels.com/photos/' + v.slice(3) + '/pexels-photo-' + v.slice(3) +
               '.jpeg?auto=compress&cs=tinysrgb&w=320&h=320&fit=crop'
             : 'https://images.unsplash.com/photo-' + v + '?auto=format&fit=crop&w=320&h=320&q=70';
@@ -1462,9 +1455,15 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         const p = mkPal(main);
         const f = mkPal(food || shade(main, 0.78));
         const fn = ART[kind] || ART.soupbowl;
+        const sprite = img && img.indexOf('sprite:') === 0;
+        const spriteIndex = sprite ? Math.max(0, Math.min(15, Number(img.slice(7)) || 0)) : 0;
+        const spriteX = (spriteIndex % 4) * 100 / 3;
+        const spriteY = Math.floor(spriteIndex / 4) * 100 / 3;
         return '<span class="art-wrap" style="--ac:' + main + '">' +
                '<svg class="art" viewBox="0 0 120 120" aria-hidden="true" focusable="false">' + fn(p, f) + '</svg>' +
-               (img
+               (sprite
+                   ? '<span class="photo-sprite" role="img" aria-label="商品图" style="--sx:' + spriteX + '%;--sy:' + spriteY + '%"></span>'
+                   : img
                    ? '<img class="photo" src="' + esc(img) + '" alt="" loading="lazy" decoding="async">'
                    : '') +
                '</span>';

@@ -471,8 +471,9 @@ ok('菜品 ID 全局唯一', new Set(allIds).size === allIds.length,
     '重复: ' + allIds.filter((v, i) => allIds.indexOf(v) !== i).join(','));
 ok('店铺都有照片（奶茶品牌 22+ 也配了核对过的封面）', A.shops.every(s => A.imgURL('s' + s.id)));
 ok('奶茶品牌 55 道菜品全部配真实照片', A.shops.filter(s => s.id >= 22).every(s => s.menu.every(d => A.imgURL(d.id))));
-ok('菜品图含 Unsplash 与 Pexels 两个图源', A.imgURL(2201).indexOf('images.pexels.com') !== -1 &&
-    A.imgURL(2704).indexOf('images.unsplash.com') !== -1);
+ok('品牌茶饮使用本地生成商品图，其他菜品保留真实照片', A.imgURL(2201) === 'sprite:11' &&
+    fs.existsSync(path.join(__dirname, '..', 'assets', 'milk-tea-products.png')) &&
+    A.imgURL(101).indexOf('images.unsplash.com') !== -1);
 ok('SVG 图标雪碧图 ≥ 32 个', document.querySelectorAll('symbol').length >= 32,
     'symbol ' + document.querySelectorAll('symbol').length + ' 个');
 ok('商家卡与菜品都有插画兜底', $$('.art-wrap').length > 0 && $$('.art').length > 0);
