@@ -267,6 +267,8 @@ ok('未用余额，balanceCut = 0', newOrder.balanceCut === 0);
 ok('余额未被扣减', A.state.balance === 128, 'balance=' + A.state.balance);
 ok('订单保留规格文案', (newOrder.items[0].spec || '') === '标准 / 不加料 / 微辣', newOrder.items[0].spec);
 ok('下单后清空购物车', A.cartCount() === 0);
+ok('使用后的红包被核销并持久化', A.state.ownedCoupons.indexOf('c1') === -1 &&
+    (window.localStorage.getItem('kd.coupons') || '').indexOf('c1') === -1, A.state.ownedCoupons.join(','));
 
 // ============================================================
 // 10. 订单：状态推进 + 评价 + 取消/删除
@@ -393,7 +395,7 @@ window.location.hash = '#/coupons'; await tick();
 ok('领券中心显示全部 30 张券', $$('.cc-card').length === 30, '实际 ' + $$('.cc-card').length);
 ok('已持有的券卡片带「已领取」标记', $$('.cc-claimed').length >= 1, $$('.cc-claimed').length + '/' + A.state.ownedCoupons.length);
 $('[data-action="claim-coupon"]').click(); await tick();
-ok('领取红包后持有数 +1', A.state.ownedCoupons.length >= 5, A.state.ownedCoupons.join(','));
+ok('领取红包后持有数 +1', A.state.ownedCoupons.length >= 4, A.state.ownedCoupons.join(','));
 window.location.hash = '#/messages'; await tick();
 ok('消息中心 5 条', $$('.msg-item').length === 5, '实际 ' + $$('.msg-item').length);
 
@@ -471,9 +473,10 @@ ok('菜品 ID 全局唯一', new Set(allIds).size === allIds.length,
     '重复: ' + allIds.filter((v, i) => allIds.indexOf(v) !== i).join(','));
 ok('店铺都有照片（奶茶品牌 22+ 也配了核对过的封面）', A.shops.every(s => A.imgURL('s' + s.id)));
 ok('奶茶品牌 55 道菜品全部配真实照片', A.shops.filter(s => s.id >= 22).every(s => s.menu.every(d => A.imgURL(d.id))));
-ok('品牌茶饮使用本地生成商品图，其他菜品保留真实照片', A.imgURL(2201) === 'sprite:11' &&
+ok('菜单商品使用本地生成图，品牌茶饮保留专属商品图', A.imgURL(2201) === 'sprite:11' &&
     fs.existsSync(path.join(__dirname, '..', 'assets', 'milk-tea-products.png')) &&
-    A.imgURL(101).indexOf('images.unsplash.com') !== -1);
+    fs.existsSync(path.join(__dirname, '..', 'assets', 'menu-products.png')) &&
+    A.imgURL(101) === 'menu-sprite:0');
 ok('SVG 图标雪碧图 ≥ 32 个', document.querySelectorAll('symbol').length >= 32,
     'symbol ' + document.querySelectorAll('symbol').length + ' 个');
 ok('商家卡与菜品都有插画兜底', $$('.art-wrap').length > 0 && $$('.art').length > 0);

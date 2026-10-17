@@ -133,9 +133,9 @@ body.dark :focus-visible { outline-color: var(--mt-yellow); }
 .art { position: relative; display: block; width: 100%; height: 100%; }
 /* 真实照片叠在 SVG 插画之上：图挂了会自动移除，露出下面的插画 */
 .art-wrap .photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
-/* 生成的茶饮商品图以精灵图保存，减少 55 张菜单缩略图的网络请求。 */
+/* 本地生成的商品图以精灵图保存，避免混用来源、光线和构图各异的外链缩略图。 */
 .art-wrap .photo-sprite { position: absolute; inset: 0; display: block; z-index: 1;
-    background-image: url('assets/milk-tea-products.png'); background-repeat: no-repeat;
+    background-image: var(--sprite-url, url('assets/milk-tea-products.png')); background-repeat: no-repeat;
     background-size: 400% 400%; background-position: var(--sx) var(--sy); }
 
 /* ============================ 顶部：定位 + 搜索 ============================ */
@@ -1574,7 +1574,25 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         2103: '1566478989037-eec170784d0b', 2104: '1584556812952-905ffd0c611a'
         /* 2105 电池：无合适实拍图，保留 SVG 插画 */
     };
+    /* 非品牌茶饮店统一使用同一套原创棚拍菜单图：同一家店按菜品类别取图，视觉语言保持一致。 */
+    const MENU_SPRITE_SLOTS = {
+        1: [0, 0, 0, 13, 3, 15, 15, 4], 2: [1, 1, 1, 1, 1, 0, 0],
+        3: [2, 2, 2, 2, 2, 15], 4: [3, 3, 3, 14, 9], 5: [4, 4, 13, 4, 4],
+        6: [5, 5, 5, 15, 5], 7: [6, 6, 6, 6, 6], 8: [7, 7, 7, 7, 7],
+        9: [8, 8, 4, 8, 9, 5], 10: [9, 9, 9, 9, 15], 11: [10, 10, 10, 10, 5],
+        12: [15, 15, 15, 15, 15], 13: [11, 11, 11, 10, 9], 14: [12, 12, 4, 9, 15],
+        15: [13, 13, 13, 14, 15], 16: [0, 0, 0, 0, 14], 17: [4, 4, 4, 5, 15],
+        18: [9, 9, 9, 15, 5], 19: [10, 10, 10, 5, 15], 20: [1, 1, 1, 15, 5],
+        21: [7, 7, 7, 7, 7]
+    };
     const imgURL = key => {
+        const numericKey = Number(key);
+        const shopNo = Math.floor(numericKey / 100);
+        const dishNo = numericKey % 100;
+        if (MENU_SPRITE_SLOTS[shopNo] && dishNo >= 1) {
+            const slots = MENU_SPRITE_SLOTS[shopNo];
+            return 'menu-sprite:' + slots[(dishNo - 1) % slots.length];
+        }
         const v = IMG[key];
         if (!v) return null;
         return v.indexOf('sp:') === 0 ? 'sprite:' + v.slice(3) : v.indexOf('px:') === 0
@@ -1587,14 +1605,15 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         const p = mkPal(main);
         const f = mkPal(food || shade(main, 0.78));
         const fn = ART[kind] || ART.soupbowl;
-        const sprite = img && img.indexOf('sprite:') === 0;
-        const spriteIndex = sprite ? Math.max(0, Math.min(15, Number(img.slice(7)) || 0)) : 0;
+        const sprite = img && (img.indexOf('sprite:') === 0 || img.indexOf('menu-sprite:') === 0);
+        const menuSprite = img && img.indexOf('menu-sprite:') === 0;
+        const spriteIndex = sprite ? Math.max(0, Math.min(15, Number(img.slice(menuSprite ? 12 : 7)) || 0)) : 0;
         const spriteX = (spriteIndex % 4) * 100 / 3;
         const spriteY = Math.floor(spriteIndex / 4) * 100 / 3;
         return '<span class="art-wrap" style="--ac:' + main + '">' +
                '<svg class="art" viewBox="0 0 120 120" aria-hidden="true" focusable="false">' + fn(p, f) + '</svg>' +
                (sprite
-                   ? '<span class="photo-sprite" role="img" aria-label="商品图" style="--sx:' + spriteX + '%;--sy:' + spriteY + '%"></span>'
+                   ? '<span class="photo-sprite" role="img" aria-label="商品图" style="--sx:' + spriteX + '%;--sy:' + spriteY + '%;--sprite-url:url(\'' + (menuSprite ? 'assets/menu-products.png' : 'assets/milk-tea-products.png') + '\')"></span>'
                    : img
                    ? '<img class="photo" src="' + esc(img) + '" alt="" loading="lazy" decoding="async">'
                    : '') +
@@ -3950,7 +3969,11 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         const shop = cartShop();
         const lines = cartLines();
         if (!shop || !lines.length) { toast('购物车是空的'); return; }
-        const b = bill(shop, lines, state.couponId, state.member.on);
+        // 只允许使用当前账户真正持有的券；避免过期页面状态绕过领券校验。
+        const selectedCouponId = state.couponId;
+        const selectedCoupon = selectedCouponId && state.ownedCoupons.indexOf(selectedCouponId) !== -1
+            ? COUPON_BY_ID.get(selectedCouponId) : null;
+        const b = bill(shop, lines, selectedCoupon ? selectedCouponId : null, state.member.on);
         const addr = state.addresses.find(a => a.id === state.addressId) || currentAddress();
         const now = new Date();
         const pad = n => String(n).padStart(2, '0');
@@ -3976,6 +3999,13 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         state.orders.unshift(order);
         saveOrders();
         if (balanceCut) { state.balance -= balanceCut; saveBalance(); }
+        // 仅在优惠确实生效时核销。会员免配送费覆盖运费券时，运费券仍保留。
+        const couponConsumed = selectedCoupon &&
+            (b.couponCut > 0 || (selectedCoupon.ship && !state.member.on && b.shipCut > 0));
+        if (couponConsumed) {
+            state.ownedCoupons = state.ownedCoupons.filter(id => id !== selectedCouponId);
+            saveCoupons();
+        }
         state.cart = { shopId: null, lines: [] };
         state.couponId = null; state.couponOptOut = false; state.remark = ''; state.timeSlot = TIME_SLOTS[0];
         state.useBalance = true;
