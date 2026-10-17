@@ -55,7 +55,7 @@ ok('顶部展示默认收货地址', ($('.loc-text') || {}).textContent.indexOf(
 ok('搜索入口带满减利益点文案', ($('.search-bar .ph') || {}).textContent.indexOf('满 30 减 5') !== -1);
 ok('金刚区 10 个入口', $$('.kk-item').length === 10, '实际 ' + $$('.kk-item').length);
 ok('金刚区图标各有专属色', new Set($$('.kk-item').map(b => b.style.getPropertyValue('--k'))).size >= 8);
-ok('瓷片区 4 个卡片', $$('.tile').length === 4);
+ok('首页保留两张核心优惠卡，移除重复入口', $$('.promo-card').length === 2);
 ok('排序条 4 项', $$('.sort-item').length === 4);
 ok('商家列表 31 家', $$('.shop-card').length === 31, '实际 ' + $$('.shop-card').length);
 ok('底部 Tab 3 个且首页高亮', $$('.tab').length === 3 && $$('.tab')[0].classList.contains('on'));

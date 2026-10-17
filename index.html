@@ -317,7 +317,7 @@ body.dark .tab.on { color: var(--mt-yellow); }
 .shop-brief .info .promo .k { background: var(--mt-red); color: #fff; border-radius: 4px; padding: 1px 5px; flex-shrink: 0; font-weight: 700; }
 .shop-brief .info .promo .v { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-.shop-body { flex: 1; display: flex; overflow: hidden; position: relative; }
+    .shop-body { flex: 1; min-height: 0; display: flex; overflow: hidden; position: relative; }
 .dish-cats { width: 90px; flex-shrink: 0; background: var(--mt-surface-2); overflow-y: auto; }
 .dish-cat { width: 100%; padding: 16px 6px; font-size: 13px; color: var(--mt-text-2); text-align: center; position: relative; }
 .dish-cat.on { background: var(--mt-surface); color: var(--mt-text); font-weight: 700; }
@@ -929,6 +929,47 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
     .sg-claim { flex: 0 0 auto; background: var(--mt-yellow); color: var(--mt-black); border: none;
         padding: 7px 14px; border-radius: 13px; font-weight: 800; font-size: 12.5px; }
     .sg-had { flex: 0 0 auto; color: var(--mt-text-3); font-size: 12px; }
+
+    /* 首页与团购条：贴近外卖首页的轻快信息节奏。 */
+    .home-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:13px; color:#211E1C; }
+    .home-nav .brand { display:flex; align-items:center; gap:5px; font-size:18px; font-weight:900; }
+    .home-nav .brand .ic { width:21px; height:21px; }
+    .home-nav .switch { display:flex; align-items:center; gap:22px; font-size:17px; font-weight:800; }
+    .home-nav .switch .on { position:relative; }
+    .home-nav .switch .on::after { content:''; position:absolute; left:50%; bottom:-8px; transform:translateX(-50%); width:20px; height:3px; border-radius:5px; background:#211E1C; }
+    .home-nav .more { width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,.45); display:grid; place-items:center; }
+    .hero-row.home-location { margin-bottom:10px; }
+    .hero-row.home-location .loc { max-width:100%; font-size:15px; }
+    .hero-row.home-location .loc-text { font-size:14px; }
+    .kingkong { margin:-5px 10px 0; padding:16px 7px 11px; background:#fff; border-radius:24px 24px 16px 16px; box-shadow:0 8px 22px rgba(112,81,8,.10); position:relative; z-index:2; }
+    .kk-ico { background-image:url('assets/home-category-icons.png'); background-size:500% 200%; background-position:calc(var(--ix) * 25%) calc(var(--iy) * 100%); border-radius:15px; box-shadow:none; }
+    .kk-ico::after, .kk-ico .ic { display:none; }
+    .kk-item.on .kk-ico { box-shadow:0 0 0 2px #FFD100, 0 5px 12px rgba(239,183,0,.22); }
+    .promo-row { display:grid; grid-template-columns:1fr 1fr; gap:9px; padding:12px 12px 5px; background:#F7F7F7; }
+    .promo-card { min-height:73px; padding:12px 11px; border-radius:14px; text-align:left; color:#fff; background:linear-gradient(125deg,#FF6249,#FF343C); box-shadow:0 5px 12px rgba(255,70,62,.18); }
+    .promo-card.alt { background:linear-gradient(125deg,#FF9744,#FF5C32); }
+    .promo-card b { display:block; font-size:16px; letter-spacing:-.3px; }
+    .promo-card span { display:block; margin-top:4px; font-size:11.5px; opacity:.91; }
+    .featured-deal { margin:7px 12px 11px; padding:11px; display:flex; align-items:center; gap:10px; background:#fff; border-radius:15px; box-shadow:0 4px 12px rgba(38,31,27,.05); }
+    .featured-deal .lead { font-size:17px; font-weight:900; flex:1; }
+    .featured-deal .lead small { display:block; color:#8C8581; font-size:11.5px; font-weight:500; margin-top:3px; }
+    .featured-deal .art-wrap { width:60px; height:60px; border-radius:10px; }
+    .featured-deal .price { color:#FA3F30; font-weight:900; font-size:18px; }
+    .shop-list { padding-top:12px; }
+    .shop-list::before { padding-left:2px; }
+
+    /* 团购不再挤占点单区高度，横滑浏览且菜单可独立滚动。 */
+    .shop-groups { margin:0; padding:8px 10px; display:flex; gap:8px; overflow-x:auto; overflow-y:hidden; flex:0 0 auto; border-radius:0; box-shadow:none; border-bottom:1px solid #F0EEEC; scrollbar-width:none; }
+    .shop-groups::-webkit-scrollbar { display:none; }
+    .shop-groups .sg-head { flex:0 0 auto; display:flex; flex-direction:column; justify-content:center; gap:1px; margin:0 1px 0 0; }
+    .shop-groups .sg-head .sg-t { font-size:13px; }
+    .shop-groups .sg-head .sg-s { font-size:10px; }
+    .shop-groups .sg-card { flex:0 0 214px; padding:7px 8px; gap:7px; border:1px solid #F3E7D9; border-radius:10px; background:#FFFBF7; }
+    .shop-groups .sg-title { font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .shop-groups .sg-desc, .shop-groups .sg-bar, .shop-groups .sg-sold { display:none; }
+    .shop-groups .sg-foot { margin-top:3px; }
+    .shop-groups .sg-price { font-size:14px; }
+    .shop-groups .sg-claim { padding:6px 10px; font-size:11px; }
 
     /* ===== 点单页重构：商品主导，而不是信息堆叠 ===== */
     .shop-page { background: #FFFDF9; }
@@ -2711,15 +2752,13 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         const cat = CATEGORIES.find(c => c.id === state.category);
         return '<div class="page">' +
             '<header class="hero">' +
-                '<div class="hero-row">' +
+                '<div class="home-nav"><span class="brand">' + icon('back') + '外卖</span><span class="switch"><span class="on">首页</span><span>自取</span></span><button type="button" class="more" data-action="open-notice" aria-label="消息中心">···</button></div>' +
+                '<div class="hero-row home-location">' +
                     '<button type="button" class="loc" data-go="address">' +
                         icon('pin') +
                         '<span class="loc-text">' + esc(addr ? addr.detail : '选择收货地址') + '</span>' +
                         icon('chev-d', 'caret') +
                     '</button>' +
-                    '<span class="spacer"></span>' +
-                    '<button type="button" class="icon-btn" data-action="toggle-theme" aria-label="切换深色模式">' + icon('moon') + '</button>' +
-                    '<button type="button" class="icon-btn badge-dot" data-action="open-notice" aria-label="消息中心">' + icon('bell') + '</button>' +
                 '</div>' +
                 '<button type="button" class="search-bar" data-go="search">' +
                     icon('search') +
@@ -2728,31 +2767,20 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
                 '</button>' +
             '</header>' +
             '<section aria-label="功能入口"><div class="kingkong">' +
-                CATEGORIES.map(c =>
+                CATEGORIES.map((c, i) =>
                     '<button type="button" class="kk-item' + (state.category === c.id ? ' on' : '') + '"' +
-                    ' style="--k:' + c.c + '" data-action="pick-category" data-cat="' + c.id + '">' +
+                    ' style="--k:' + c.c + ';--ix:' + (i % 5) + ';--iy:' + Math.floor(i / 5) + '" data-action="pick-category" data-cat="' + c.id + '">' +
                         '<span class="kk-ico">' + kIcon(c.id) + '</span>' +
                         '<span class="kk-name">' + esc(c.name) + '</span>' +
                     '</button>').join('') +
             '</div></section>' +
-            '<section class="tiles" aria-label="活动专区">' +
-                '<button type="button" class="tile hot" data-action="open-coupons">' +
-                    '<span class="tile-title">天天神券</span><span class="tile-sub">最高减 30</span>' + icon('ticket') + '</button>' +
-                '<button type="button" class="tile" data-go="orders">' +
-                    '<span class="tile-title">准时达</span><span class="tile-sub">超时赔付</span>' + icon('clock') + '</button>' +
-                '<button type="button" class="tile" data-action="pick-category" data-cat="fruit">' +
-                    '<span class="tile-title">果蔬生鲜</span><span class="tile-sub">坏果包赔</span>' + icon('leaf') + '</button>' +
-                '<button type="button" class="tile" data-go="lottery">' +
-                    '<span class="tile-title">天天抽奖</span><span class="tile-sub">最高¥20</span>' + icon('trophy') + '</button>' +
+            '<section class="promo-row" aria-label="优惠活动">' +
+                '<button type="button" class="promo-card" data-action="open-coupons"><b>¥12 外卖大额券</b><span>满 30 可用 · 去使用</span></button>' +
+                '<button type="button" class="promo-card alt" data-go="groupon"><b>品牌团购套餐</b><span>到店外卖通用 · 限时领</span></button>' +
             '</section>' +
-            '<section class="flash-deals" aria-label="限时好价">' +
-                '<div class="fd-head"><h2>夜宵一口价<span class="fd-badge">0 元起送</span></h2><span class="fd-more">更多 ›</span></div>' +
-                '<div class="fd-list">' + list.slice(0, 2).map(shop => {
-                    const dish = shop.menu[0];
-                    return '<button type="button" class="fd-item" data-go="shop/' + shop.id + '">' +
-                        artHTML(dish.art[0], dish.art[1], dish.art[2], imgURL(dish.id)) +
-                        '<span><span class="fd-name">' + esc(dish.name) + '</span><span class="fd-price">' + money(dish.price) + '</span></span></button>';
-                }).join('') + '</div>' +
+            '<section class="featured-deal" aria-label="今日一口价">' +
+                '<span class="lead">夜宵一口价<small>0 元起送 · 附近正在热卖</small></span>' +
+                (list[0] ? artHTML(list[0].menu[0].art[0], list[0].menu[0].art[1], list[0].menu[0].art[2], imgURL(list[0].menu[0].id)) + '<span class="price">' + money(list[0].menu[0].price) + '</span>' : '') +
             '</section>' +
             '<div class="sortbar">' +
                 SORTS.map(s => '<button type="button" class="sort-item' + (state.sort === s.id ? ' on' : '') + '"' +
