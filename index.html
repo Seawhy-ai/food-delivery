@@ -994,6 +994,74 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
     .cartbar .checkout-btn.ready { background: #FFCB42; color: #281A0A; min-width: 92px; height: 46px; border-radius: 14px; font-weight: 800; }
     .cartbar .checkout-btn:not(.ready) { background: rgba(255,255,255,.12); color: rgba(255,255,255,.55); }
 
+    /* ===== 外卖感强化：明亮首页 + 高效率白底点单 ===== */
+    .hero { background: linear-gradient(150deg, #FFE52E 0%, #FFD100 72%, #FFCC00 100%); padding-bottom: 22px; }
+    .hero::before { width: 240px; height: 240px; right: -116px; top: -155px; background: rgba(255,255,255,.18); }
+    .hero::after { display: none; }
+    .kingkong { margin: -6px 0 0; padding: 15px 6px 10px; border-radius: 25px 25px 0 0; box-shadow: none; }
+    .kk-ico { width: 50px; height: 50px; border-radius: 19px; box-shadow: 0 5px 12px color-mix(in srgb, var(--k) 20%, transparent); }
+    .kk-ico::after { opacity: .2; }
+    .kk-name { color: #38322E; font-weight: 600; }
+    .tiles { grid-template-columns: 1fr 1fr; padding-top: 11px; }
+    .tile { min-height: 71px; border: 0; box-shadow: none; background: #FFF5F1; }
+    .tile:first-child { background: #FFF0EC; }
+    .shop-list { background: #F7F7F7; padding-top: 14px; }
+    .shop-list::before { content: '附近好店'; display: block; font-size: 19px; font-weight: 800; padding: 0 2px 2px; color: #241E1B; }
+    .shop-card { border: 0; box-shadow: none; border-radius: 13px; padding: 11px; }
+    .shop-card .art-wrap { width: 92px; height: 92px; border-radius: 10px; }
+    .shop-name { font-size: 16px; }
+    .flash-deals { margin: 0 12px 12px; padding: 12px; border-radius: 16px; background: #fff; box-shadow: 0 5px 14px rgba(42,26,9,.06); }
+    .flash-deals .fd-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+    .flash-deals h2 { font-size:18px; letter-spacing:-.35px; }
+    .flash-deals .fd-badge { background:#FF563E; color:#fff; font-size:11px; padding:2px 6px; border-radius:5px; margin-left:5px; }
+    .flash-deals .fd-more { color:#8E8580; font-size:12px; }
+    .flash-deals .fd-list { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .flash-deals .fd-item { display:flex; min-width:0; gap:8px; text-align:left; }
+    .flash-deals .art-wrap { width:66px; height:66px; border-radius:9px; }
+    .flash-deals .fd-name { font-size:12.5px; font-weight:700; line-height:1.35; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+    .flash-deals .fd-price { color:#F14331; font-size:17px; font-weight:800; margin-top:4px; }
+
+    .shop-page { background:#fff; }
+    .shop-hero { background:#fff; color:#23201F; padding:calc(8px + var(--safe-t)) 14px 11px; border-bottom:1px solid #F2F0EE; }
+    .shop-hero::before { display:none; }
+    .shop-hero-top { margin-bottom:8px; }
+    .shop-hero-top .back, .shop-hero-top .icon-btn { background:transparent; color:#211E1C; border:0; }
+    .shop-hero-top .ttl { color:#211E1C; font-size:16px; font-weight:800; }
+    .shop-hero .fav-btn { background:transparent; color:#211E1C; width:32px; height:32px; }
+    .shop-brief { gap:9px; align-items:center; }
+    .shop-brief > .art-wrap { width:54px; height:54px; border:0; border-radius:9px; box-shadow:none; }
+    .shop-brief .info h2 { font-size:15px; color:#211E1C; letter-spacing:0; }
+    .shop-brief .meta { margin-top:4px; color:#9B9692; font-size:10.5px; gap:6px; }
+    .shop-brief .stars .num { color:#FF6A22; }
+    .shop-brief .promo { display:none; }
+    .shop-tabs { box-shadow:none; min-height:50px; border-bottom:1px solid #F0EEEC; padding-left:10px; }
+    .shop-tab { padding:14px 12px 12px; font-size:16px; }
+    .shop-tab.on::after { background:#55B82B; width:21px; bottom:4px; }
+    .shop-body, .dish-list { background:#fff; }
+    .dish-cats { width:94px; background:#F7F7F7; }
+    .dish-cat { padding:15px 6px; color:#6B6764; font-size:13px; }
+    .dish-cat.on { font-size:14px; color:#22201E; font-weight:800; }
+    .dish-cat.on::before { display:none; }
+    .dish-list { padding:2px 10px 104px 8px; }
+    .dish-section-title { padding:11px 2px 6px; color:#2A2725; font-size:15px; letter-spacing:0; }
+    .dish { min-height:116px; margin:0; padding:8px 0; border:0; border-radius:0; box-shadow:none; background:#fff; gap:10px; }
+    .dish .art-wrap { width:103px; height:103px; border-radius:7px; }
+    .dish-body { padding:2px 0; }
+    .dish-name { font-size:16px; line-height:1.28; }
+    .dish-desc { margin-top:4px; font-size:11.5px; color:#9C9793; }
+    .dish-sales { color:#A29C98; font-size:11.5px; margin-top:5px; }
+    .dish .price { font-size:19px; color:#FA3F30; }
+    .step-add { width:31px; height:31px; background:#55B82B; box-shadow:none; }
+    .step-minus { background:#EFF9EA; color:#55B82B; border-color:#8DDB70; }
+    .cartbar { left:0; right:0; bottom:0; height:68px; padding:0 14px; border-radius:0; background:#fff; box-shadow:0 -4px 18px rgba(43,32,22,.08); }
+    .cartbar.empty-state { background:#fff; color:#8F8985; border-top:1px solid #F1EFED; }
+    .cartbar .cart-ico { background:#55B82B; border-color:#55B82B; box-shadow:none; }
+    .cartbar.empty-state .cart-ico { background:#C7C3C0; }
+    .cartbar .cart-sum .amt { color:#FA3F30; font-size:23px; }
+    .cartbar .cart-sum .hint { color:#8E8884; }
+    .cartbar .checkout-btn.ready { min-width:118px; height:48px; border-radius:25px; background:#FFD329; color:#26200E; }
+    .cartbar .checkout-btn:not(.ready) { background:#E7E4E1; color:#A09A95; }
+
 </style>
 </head>
 <body data-page-node-id="LhxawlrsO3YNFiNMIq5KJm">
@@ -2657,6 +2725,15 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
                     '<span class="tile-title">果蔬生鲜</span><span class="tile-sub">坏果包赔</span>' + icon('leaf') + '</button>' +
                 '<button type="button" class="tile" data-go="lottery">' +
                     '<span class="tile-title">天天抽奖</span><span class="tile-sub">最高¥20</span>' + icon('trophy') + '</button>' +
+            '</section>' +
+            '<section class="flash-deals" aria-label="限时好价">' +
+                '<div class="fd-head"><h2>夜宵一口价<span class="fd-badge">0 元起送</span></h2><span class="fd-more">更多 ›</span></div>' +
+                '<div class="fd-list">' + list.slice(0, 2).map(shop => {
+                    const dish = shop.menu[0];
+                    return '<button type="button" class="fd-item" data-go="shop/' + shop.id + '">' +
+                        artHTML(dish.art[0], dish.art[1], dish.art[2], imgURL(dish.id)) +
+                        '<span><span class="fd-name">' + esc(dish.name) + '</span><span class="fd-price">' + money(dish.price) + '</span></span></button>';
+                }).join('') + '</div>' +
             '</section>' +
             '<div class="sortbar">' +
                 SORTS.map(s => '<button type="button" class="sort-item' + (state.sort === s.id ? ' on' : '') + '"' +
