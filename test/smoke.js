@@ -453,6 +453,9 @@ ok('无内联事件处理器', inlineHandlers === null, inlineHandlers ? inlineH
 ok('定义并统一使用 esc() 转义', html.indexOf('const esc =') !== -1 && html.indexOf('ESC_MAP') !== -1);
 ok('使用 data-action 事件委托', html.indexOf("closest('[data-action]')") !== -1);
 ok('使用 hash 路由', html.indexOf("addEventListener('hashchange'") !== -1);
+ok('二级页面返回键使用来源路径栈', html.indexOf('const routeTrail = []') !== -1 &&
+    html.indexOf("'go-back': () => goBack") !== -1 && html.indexOf('data-action="go-back"') !== -1);
+ok('团购商家图固定尺寸，避免撑爆卡片', html.indexOf('.gp-shop .art-wrap { width: 68px; height: 68px;') !== -1);
 ok('购物车按店铺独立保存，不再强制清空另一家商品', html.indexOf('kd.carts') !== -1 && html.indexOf('function activateCart') !== -1 && html.indexOf('更换商家') === -1);
 ok('使用美团黄作为主色令牌', html.indexOf('--mt-yellow: #FFD100') !== -1);
 

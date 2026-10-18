@@ -457,7 +457,7 @@ body.dark .tl-item.now .tl-title { color: var(--mt-yellow); }
 .rider .sub { font-size: 11.5px; color: var(--mt-text-3); }
 
 /* ============================ 我的 ============================ */
-.profile-hero { background: var(--mt-yellow-grad); padding: 22px 16px 48px; }
+.profile-hero { background: var(--mt-yellow-grad); padding: calc(22px + var(--safe-t)) 16px 48px; }
 .profile-hero .u { display: flex; align-items: center; gap: 14px; }
 .profile-hero .u .av { width: 60px; height: 60px; border-radius: 50%; background: rgba(255, 255, 255, .85); color: var(--mt-black); display: flex; align-items: center; justify-content: center; }
 .profile-hero .u .av .ic { width: 30px; height: 30px; }
@@ -897,6 +897,8 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
     .gp-list { padding: 12px; display: flex; flex-direction: column; gap: 12px; }
     .gp-card { background: var(--mt-surface); border-radius: 16px; box-shadow: var(--mt-shadow-sm); padding: 13px; }
     .gp-shop { display: flex; gap: 10px; align-items: center; }
+    .gp-shop .art-wrap { width: 68px; height: 68px; border-radius: 11px; flex: 0 0 68px; }
+    .gp-shop > div:last-child { min-width: 0; flex: 1; }
     .gp-shop .gp-name { font-size: 14px; font-weight: 800; }
     .gp-shop .gp-cat { font-size: 11px; color: var(--mt-text-3); }
     .gp-title { font-size: 14px; font-weight: 700; margin-top: 10px; }
@@ -934,7 +936,8 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
     .home-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:13px; color:#211E1C; }
     .home-nav .brand { display:flex; align-items:center; gap:5px; font-size:18px; font-weight:900; }
     .home-nav .brand .ic { width:21px; height:21px; }
-    .home-nav .switch { display:flex; align-items:center; gap:22px; font-size:17px; font-weight:800; }
+    .home-nav .switch { display:flex; align-items:center; gap:22px; width:auto; height:auto; border-radius:0; background:none; position:static; flex-shrink:0; font-size:17px; font-weight:800; }
+    .home-nav .switch::after { display:none; }
     .home-nav .switch .on { position:relative; }
     .home-nav .switch .on::after { content:''; position:absolute; left:50%; bottom:-8px; transform:translateX(-50%); width:20px; height:3px; border-radius:5px; background:#211E1C; }
     .home-nav .more { width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,.45); display:grid; place-items:center; }
@@ -2713,7 +2716,25 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
         return { path: parts[0] || 'home', args: parts.slice(1) };
     }
-    const go = path => { location.hash = '#/' + path; };
+    const routeTrail = [];
+    const routeKey = () => {
+        const r = parseHash();
+        return r.path + (r.args.length ? '/' + r.args.join('/') : '');
+    };
+    const go = path => {
+        const current = routeKey();
+        if (current !== path) routeTrail.push(current);
+        location.hash = '#/' + path;
+    };
+    const goBack = fallback => {
+        const current = routeKey();
+        let target = null;
+        while (routeTrail.length && !target) {
+            const candidate = routeTrail.pop();
+            if (candidate && candidate !== current) target = candidate;
+        }
+        location.hash = '#/' + (target || fallback || 'home');
+    };
     const TABS = [
         { id: 'home', name: '首页', ic: 'home', path: 'home' },
         { id: 'orders', name: '订单', ic: 'receipt', path: 'orders' },
@@ -2777,7 +2798,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         const cat = CATEGORIES.find(c => c.id === state.category);
         return '<div class="page">' +
             '<header class="hero">' +
-                '<div class="home-nav"><span class="brand">' + icon('back') + '外卖</span><span class="switch"><span class="on">首页</span><span>自取</span></span><button type="button" class="more" data-action="open-notice" aria-label="消息中心">···</button></div>' +
+                '<div class="home-nav"><span class="brand">外卖</span><span class="switch"><span class="on">首页</span><span>自取</span></span><button type="button" class="more" data-action="open-notice" aria-label="消息中心">···</button></div>' +
                 '<div class="hero-row home-location">' +
                     '<button type="button" class="loc" data-go="address">' +
                         icon('pin') +
@@ -2840,7 +2861,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         const kw = state.searchKeyword || '';
         const results = searchResults(kw);
         const head = '<div class="search-head">' +
-            '<button type="button" class="icon-btn" data-go="home" aria-label="返回">' + icon('back') + '</button>' +
+            '<button type="button" class="icon-btn" data-action="go-back" data-fallback="home" aria-label="返回">' + icon('back') + '</button>' +
             '<div class="search-field">' + icon('search') +
                 '<label class="sr-only" for="kw">搜索商家或菜品</label>' +
                 '<input id="kw" type="search" placeholder="搜索商家或菜品" autocomplete="off" value="' + esc(kw) + '">' +
@@ -2985,7 +3006,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         const shop = SHOP_BY_ID.get(Number(id));
         if (!shop) {
             return '<div class="page"><div class="subheader">' +
-                '<button type="button" class="back" data-go="home" aria-label="返回">' + icon('back') + '</button><h1>商家详情</h1></div>' +
+                '<button type="button" class="back" data-action="go-back" data-fallback="home" aria-label="返回">' + icon('back') + '</button><h1>商家详情</h1></div>' +
                 emptyState('store', '商家不存在', '该商家可能已下线') + tabbarHTML('home') + '</div>';
         }
         activateCart(shop.id);
@@ -3024,7 +3045,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         return '<div class="shop-page">' +
             '<div class="shop-hero">' +
                 '<div class="shop-hero-top">' +
-                    '<button type="button" class="back" data-go="home" aria-label="返回">' + icon('back') + '</button>' +
+                    '<button type="button" class="back" data-action="go-back" data-fallback="home" aria-label="返回">' + icon('back') + '</button>' +
                     '<span class="ttl">' + esc(shop.name) + '</span>' +
                     '<button type="button" class="fav-btn' + (fav ? ' on' : '') + '" data-action="toggle-fav" data-id="' + shop.id + '"' +
                         ' aria-label="收藏商家" aria-pressed="' + (fav ? 'true' : 'false') + '">' + icon('heart') + '</button>' +
@@ -3143,7 +3164,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         const lines = cartLines();
         if (!shop || !lines.length) {
             return '<div class="page"><div class="subheader">' +
-                '<button type="button" class="back" data-go="home" aria-label="返回">' + icon('back') + '</button><h1>确认订单</h1></div>' +
+                '<button type="button" class="back" data-action="go-back" data-fallback="home" aria-label="返回">' + icon('back') + '</button><h1>确认订单</h1></div>' +
                 emptyState('cart', '购物车是空的', '先去挑点好吃的吧') +
                 '<div style="padding:0 24px"><button type="button" class="btn-primary" style="width:100%" data-go="home">去逛逛</button></div>' +
             '</div>';
@@ -3172,7 +3193,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         const nextGap = nextDiscountGap(shop, b.subtotal);
         return '<div class="page" style="padding-bottom:96px">' +
             '<div class="subheader">' +
-                '<button type="button" class="back" data-go="shop/' + shop.id + '" aria-label="返回">' + icon('back') + '</button>' +
+                '<button type="button" class="back" data-action="go-back" data-fallback="shop/' + shop.id + '" aria-label="返回">' + icon('back') + '</button>' +
                 '<h1>确认订单</h1>' +
             '</div>' +
             '<div class="card">' +
@@ -3458,7 +3479,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         const order = state.orders.find(o => o.id === orderId);
         if (!order) {
             return '<div class="page"><div class="subheader">' +
-                '<button type="button" class="back" data-go="orders" aria-label="返回">' + icon('back') + '</button><h1>订单详情</h1></div>' +
+                '<button type="button" class="back" data-action="go-back" data-fallback="orders" aria-label="返回">' + icon('back') + '</button><h1>订单详情</h1></div>' +
                 emptyState('receipt', '订单不存在', '这条订单可能已被清除') + '</div>';
         }
         const shop = SHOP_BY_ID.get(order.shopId);
@@ -3473,7 +3494,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         }).join('');
         return '<div class="page">' +
             '<div class="subheader">' +
-                '<button type="button" class="back" data-go="orders" aria-label="返回">' + icon('back') + '</button>' +
+                '<button type="button" class="back" data-action="go-back" data-fallback="orders" aria-label="返回">' + icon('back') + '</button>' +
                 '<h1>订单详情</h1>' +
             '</div>' +
             '<div class="card" style="padding:16px 14px"><div class="timeline">' + timeline + '</div></div>' +
@@ -3627,7 +3648,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
     function renderAddress() {
         return '<div class="page" style="padding-bottom:40px">' +
             '<div class="subheader">' +
-                '<button type="button" class="back" data-go="profile" aria-label="返回">' + icon('back') + '</button>' +
+                '<button type="button" class="back" data-action="go-back" data-fallback="profile" aria-label="返回">' + icon('back') + '</button>' +
                 '<h1>收货地址</h1>' +
             '</div>' +
             (state.addresses.length
@@ -3668,7 +3689,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         const list = SHOPS.filter(s => state.favorites.indexOf(s.id) !== -1);
         return '<div class="page">' +
             '<div class="subheader">' +
-                '<button type="button" class="back" data-go="profile" aria-label="返回">' + icon('back') + '</button>' +
+                '<button type="button" class="back" data-action="go-back" data-fallback="profile" aria-label="返回">' + icon('back') + '</button>' +
                 '<h1>我的收藏</h1>' +
                 '<span class="tag yellow" style="margin-left:auto">' + list.length + ' 家</span>' +
             '</div>' +
@@ -3774,7 +3795,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         ];
         return '<div class="page" style="padding-bottom:96px">' +
             '<div class="subheader">' +
-                '<button type="button" class="back" data-go="coupons" aria-label="返回">' + icon('back') + '</button>' +
+                '<button type="button" class="back" data-action="go-back" data-fallback="coupons" aria-label="返回">' + icon('back') + '</button>' +
                 '<h1>会员中心</h1>' +
             '</div>' +
             '<div class="vip-hero">' +
@@ -3905,7 +3926,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         const list = GROUP_DEALS.slice().sort((a, b) => (b.sold / b.total) - (a.sold / a.total));
         return '<div class="page">' +
             '<div class="subheader">' +
-                '<button type="button" class="back" data-go="home" aria-label="返回">' + icon('back') + '</button>' +
+                '<button type="button" class="back" data-action="go-back" data-fallback="home" aria-label="返回">' + icon('back') + '</button>' +
                 '<h1>团购券</h1>' +
             '</div>' +
             '<div class="gp-hero">' +
@@ -3941,7 +3962,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
     function renderMessages() {
         return '<div class="page">' +
             '<div class="subheader">' +
-                '<button type="button" class="back" data-go="home" aria-label="返回">' + icon('back') + '</button>' +
+                '<button type="button" class="back" data-action="go-back" data-fallback="home" aria-label="返回">' + icon('back') + '</button>' +
                 '<h1>消息中心</h1></div>' +
             MESSAGES.map(m =>
                 '<div class="msg-item">' +
@@ -4226,6 +4247,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
      * ==================================================================== */
     function makeActions(el) {
         return {
+            'go-back': () => goBack(el.dataset.fallback || 'home'),
             'toggle-theme': () => { applyTheme(!isDark()); renderApp(); },
             'pick-category': () => {
                 const c = el.dataset.cat;
