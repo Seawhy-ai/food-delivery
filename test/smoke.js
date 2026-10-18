@@ -167,14 +167,14 @@ ok('行项目单价 28', A.state.cart.lines[0].unit === 28);
 // 7. 直接加购 / 起送门槛 / 凑单提示
 // ============================================================
 addBtn(106).click();   // 冰镇酸梅汤 ¥6，无规格
-ok('无规格菜品直接加购，金额 ¥34', ($('#cartBar .amt') || {}).textContent === '¥34',
+ok('无规格菜品直接加购，显示满减后预估 ¥29', ($('#cartBar .amt') || {}).textContent === '已减 ¥5预估 ¥29',
     ($('#cartBar .amt') || {}).textContent);
 ok('分类角标显示已选件数', ($('[data-cat-dot="热销"]') || {}).textContent === '1');
 ok('给出凑单提示（再买 X 可减 Y）', ($('#cartBar .hint') || {}).textContent.indexOf('再买') !== -1,
     ($('#cartBar .hint') || {}).textContent);
 
 document.querySelector('[data-dish-row="101"] [data-action="minus-dish"]').click();
-ok('菜品行「−」生效，金额 ¥6（101 已减光）', ($('#cartBar .amt') || {}).textContent === '¥6',
+ok('菜品行「−」生效，显示预估 ¥6（101 已减光）', ($('#cartBar .amt') || {}).textContent === '预估 ¥6',
     ($('#cartBar .amt') || {}).textContent);
 ok('低于起送价按钮禁用', $('#cartBar .checkout-btn').disabled === true);
 
@@ -182,7 +182,7 @@ ok('低于起送价按钮禁用', $('#cartBar .checkout-btn').disabled === true)
 addBtn(101).click();
 ok('再次弹出规格面板', $('.spec-sheet') !== null);
 $('[data-spec-add]').click();
-ok('加回 101 后金额 ¥34', ($('#cartBar .amt') || {}).textContent === '¥34',
+ok('加回 101 后显示满减后预估 ¥29', ($('#cartBar .amt') || {}).textContent === '已减 ¥5预估 ¥29',
     ($('#cartBar .amt') || {}).textContent);
 
 // 抽屉里用「+」继续加购带规格的行（data-picks 走直加，不再弹面板）
@@ -193,7 +193,7 @@ const lineAdd = document.querySelector('#cartDrawer [data-action="add-dish"][dat
 ok('抽屉里能找到 101 的规格行', lineAdd !== null);
 ok('抽屉行带 data-picks（跳过规格面板）', lineAdd.dataset.picks !== undefined, lineAdd.dataset.picks);
 lineAdd.click();
-ok('抽屉加购后金额 ¥62', ($('#cartBar .amt') || {}).textContent === '¥62',
+ok('抽屉加购后显示满减后预估 ¥50', ($('#cartBar .amt') || {}).textContent === '已减 ¥12预估 ¥50',
     ($('#cartBar .amt') || {}).textContent);
 ok('同规格合并为一行且数量 2',
     A.state.cart.lines.length === 2 &&
@@ -453,7 +453,7 @@ ok('无内联事件处理器', inlineHandlers === null, inlineHandlers ? inlineH
 ok('定义并统一使用 esc() 转义', html.indexOf('const esc =') !== -1 && html.indexOf('ESC_MAP') !== -1);
 ok('使用 data-action 事件委托', html.indexOf("closest('[data-action]')") !== -1);
 ok('使用 hash 路由', html.indexOf("addEventListener('hashchange'") !== -1);
-ok('实现单店下单约束', html.indexOf('更换商家') !== -1);
+ok('购物车按店铺独立保存，不再强制清空另一家商品', html.indexOf('kd.carts') !== -1 && html.indexOf('function activateCart') !== -1 && html.indexOf('更换商家') === -1);
 ok('使用美团黄作为主色令牌', html.indexOf('--mt-yellow: #FFD100') !== -1);
 
 const EMOJI_RE = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{1F1E6}-\u{1F1FF}]/u;

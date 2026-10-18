@@ -1099,6 +1099,9 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
     .cartbar .cart-ico { background:#55B82B; border-color:#55B82B; box-shadow:none; }
     .cartbar.empty-state .cart-ico { background:#C7C3C0; }
     .cartbar .cart-sum .amt { color:#FA3F30; font-size:23px; }
+    .cartbar .cart-sum { justify-content:center; gap:2px; }
+    .cartbar .cart-sum .hint { order:-1; }
+    .cartbar .cart-sum .amt small { font-size:10px; color:#8D8783; font-weight:600; margin-right:4px; }
     .cartbar .cart-sum .hint { color:#8E8884; }
     .cartbar .checkout-btn.ready { min-width:118px; height:48px; border-radius:25px; background:#FFD329; color:#26200E; }
     .cartbar .checkout-btn:not(.ready) { background:#E7E4E1; color:#A09A95; }
@@ -2446,7 +2449,8 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
      * 4. 状态与持久化
      * ==================================================================== */
     const state = {
-        cart: { shopId: null, lines: [] },   // 行项目模型：{ key, dishId, picks, qty, unit }
+        cart: { shopId: null, lines: [] },   // 当前店铺的行项目模型
+        carts: {},                            // 按店铺保存：{ [shopId]: 行项目[] }
         addresses: [], orders: [],
         ownedCoupons: ['c1', 'c2'],          // 已领取的红包
         favorites: [],                       // 收藏的商家
@@ -2465,10 +2469,9 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
     };
 
     function loadState() {
-        const raw = readJSON('kd.cart', null);
-        if (raw && typeof raw === 'object' && Array.isArray(raw.lines)) {
+        const normalizeLines = rawLines => {
             const lines = [];
-            raw.lines.forEach(l => {
+            (Array.isArray(rawLines) ? rawLines : []).forEach(l => {
                 const dishId = Number(l.dishId), qty = Math.floor(Number(l.qty));
                 const entry = DISH_INDEX.get(dishId);
                 if (!entry || qty <= 0) return;
@@ -2478,8 +2481,21 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
                     qty: Math.min(qty, MAX_QTY), unit: specUnitPrice(entry.dish, picks)
                 });
             });
+            return lines;
+        };
+        const savedCarts = readJSON('kd.carts', null);
+        if (savedCarts && typeof savedCarts === 'object' && !Array.isArray(savedCarts)) {
+            Object.keys(savedCarts).forEach(id => {
+                const sid = Number(id), lines = normalizeLines(savedCarts[id]);
+                if (SHOP_BY_ID.has(sid) && lines.length) state.carts[sid] = lines;
+            });
+        }
+        const raw = readJSON('kd.cart', null);
+        if (raw && typeof raw === 'object' && Array.isArray(raw.lines)) {
             const sid = SHOP_BY_ID.has(raw.shopId) ? raw.shopId : null;
-            state.cart = { shopId: lines.length ? sid : null, lines: lines };
+            const lines = normalizeLines(raw.lines);
+            if (sid && lines.length && !state.carts[sid]) state.carts[sid] = lines;
+            state.cart = { shopId: sid, lines: sid && state.carts[sid] ? state.carts[sid] : lines };
         }
         const addrs = readJSON('kd.addresses', null);
         state.addresses = (Array.isArray(addrs) && addrs.length) ? addrs : DEFAULT_ADDRESSES.slice();
@@ -2515,7 +2531,14 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         } else { state.freeDraws = 1; state.lastDrawDate = today; }
         state.addressId = (state.addresses.find(a => a.isDefault) || state.addresses[0]).id;
     }
-    const saveCart = () => store('kd.cart', JSON.stringify(state.cart));
+    const saveCart = () => {
+        if (state.cart.shopId) {
+            if (state.cart.lines.length) state.carts[state.cart.shopId] = state.cart.lines;
+            else delete state.carts[state.cart.shopId];
+        }
+        store('kd.carts', JSON.stringify(state.carts));
+        store('kd.cart', JSON.stringify(state.cart)); // 保留旧键，兼容已存在的演示数据。
+    };
     const saveAddresses = () => store('kd.addresses', JSON.stringify(state.addresses));
     const saveOrders = () => store('kd.orders', JSON.stringify(state.orders));
     const saveHistory = () => store('kd.searchHistory', JSON.stringify(state.searchHistory));
@@ -2534,6 +2557,15 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
     const cartLines = () => state.cart.lines.slice();
     const cartCount = () => state.cart.lines.reduce((s, l) => s + l.qty, 0);
     const cartSubtotal = () => state.cart.lines.reduce((s, l) => s + l.unit * l.qty, 0);
+    const allCartCount = () => Object.keys(state.carts).reduce((sum, id) =>
+        sum + state.carts[id].reduce((n, l) => n + l.qty, 0), 0);
+    function activateCart(shopId) {
+        const sid = Number(shopId);
+        if (!SHOP_BY_ID.has(sid) || state.cart.shopId === sid) return;
+        if (state.cart.shopId && state.cart.lines.length) state.carts[state.cart.shopId] = state.cart.lines;
+        state.cart = { shopId: sid, lines: state.carts[sid] || [] };
+        state.couponId = null; state.couponOptOut = false;
+    }
 
     function discountFor(shop, subtotal) {
         if (!shop) return 0;
@@ -2572,14 +2604,8 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         // 带规格的菜品：第一次点先弹规格面板（Meituan 交互）
         if (!picks && specsOf(id).length) { openSpecSheet(Number(id)); return; }
 
-        if (state.cart.shopId && state.cart.shopId !== shop.id && cartCount() > 0) {
-            const other = SHOP_BY_ID.get(state.cart.shopId);
-            confirmDialog({ title: '更换商家', message: '购物车中已有「' + other.name + '」的商品，切换商家需要先清空购物车。', okText: '清空并添加' })
-                .then(ok => { if (!ok) return; state.cart = { shopId: shop.id, lines: [] }; state.couponId = null; addDish(id, picks, nArg); });
-            return;
-        }
+        activateCart(shop.id);
         picks = picks || [];
-        state.cart.shopId = shop.id;
         const key = lineKey(id, picks);
         const found = state.cart.lines.find(l => l.key === key);
         const n = Math.max(1, Math.min(Math.floor(Number(nArg)) || 1, MAX_QTY));
@@ -2603,7 +2629,6 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         const l = state.cart.lines[i];
         l.qty -= 1;
         if (l.qty <= 0) state.cart.lines.splice(i, 1);
-        if (!cartCount()) state.cart.shopId = null;
         saveCart();
         refreshShopUI();
     }
@@ -2614,7 +2639,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
         if (idx < 0) return;
         minusLine(state.cart.lines[idx].key);
     }
-    function clearCart() { state.cart = { shopId: null, lines: [] }; state.couponId = null; state.couponOptOut = false; saveCart(); refreshShopUI(); }
+    function clearCart() { state.cart.lines = []; state.couponId = null; state.couponOptOut = false; saveCart(); refreshShopUI(); }
 
     /* ---------- 规格选择面板 ---------- */
     function openSpecSheet(dishId) {
@@ -2748,7 +2773,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
     function renderHome() {
         const addr = currentAddress();
         const list = visibleShops();
-        const n = cartCount();
+        const n = allCartCount();
         const cat = CATEGORIES.find(c => c.id === state.category);
         return '<div class="page">' +
             '<header class="hero">' +
@@ -2791,7 +2816,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
                 : emptyState('store', '该分类下暂无商家', cat ? '「' + cat.name + '」还没有商家，换个分类看看' : '换个分类看看吧')) +
             (n ? '<div style="position:fixed;bottom:calc(var(--tab-h) + var(--safe-b) + 16px);left:50%;transform:translateX(-50%);z-index:65">' +
                  '<button type="button" class="checkout-btn ready" data-go="' + (state.cart.shopId ? 'shop/' + state.cart.shopId : 'home') + '">' +
-                 '购物车 ' + n + ' 件</button></div>' : '') +
+                 '购物车共 ' + n + ' 件</button></div>' : '') +
             tabbarHTML('home') +
         '</div>';
     }
@@ -2889,6 +2914,8 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
     function cartBarHTML(shop) {
         const n = cartCount();
         const subtotal = cartSubtotal();
+        const menuDiscount = discountFor(shop, subtotal);
+        const afterDiscount = Math.max(subtotal - menuDiscount, 0);
         const enough = shop ? subtotal >= shop.minPrice : false;
         const lack = shop ? Math.max(shop.minPrice - subtotal, 0) : 0;
         const gap = nextDiscountGap(shop, subtotal);
@@ -2901,7 +2928,8 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
                 '<span class="cart-ico' + (n ? ' has' : '') + '">' + icon('cart') + '</span>' +
                 (n ? '<span class="cart-badge" data-cart-badge>' + n + '</span>' : '') +
             '</button>' +
-            '<div class="cart-sum"><div class="amt">' + money(subtotal) + '</div><div class="hint">' + hint + '</div></div>' +
+            '<div class="cart-sum"><div class="hint">' + hint + '</div><div class="amt">' +
+                (menuDiscount ? '<small>已减 ' + money(menuDiscount) + '</small>' : '') + '预估 ' + money(afterDiscount) + '</div></div>' +
             '<button type="button" class="checkout-btn' + (enough ? ' ready' : '') + '" data-action="go-checkout"' +
                 (enough ? '' : ' disabled') + '>' + (enough ? '去结算' : money(shop.minPrice) + ' 起送') + '</button>' +
         '</div>';
@@ -2960,6 +2988,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
                 '<button type="button" class="back" data-go="home" aria-label="返回">' + icon('back') + '</button><h1>商家详情</h1></div>' +
                 emptyState('store', '商家不存在', '该商家可能已下线') + tabbarHTML('home') + '</div>';
         }
+        activateCart(shop.id);
         const cats = [];
         shop.menu.forEach(d => { if (cats.indexOf(d.cat) === -1) cats.push(d.cat); });
         const promo = shop.discounts.map(d => '满' + d.threshold + '减' + d.cut).join('，');
@@ -4034,7 +4063,7 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
             state.ownedCoupons = state.ownedCoupons.filter(id => id !== selectedCouponId);
             saveCoupons();
         }
-        state.cart = { shopId: null, lines: [] };
+        state.cart.lines = [];
         state.couponId = null; state.couponOptOut = false; state.remark = ''; state.timeSlot = TIME_SLOTS[0];
         state.useBalance = true;
         saveCart();
@@ -4056,7 +4085,8 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
             });
         });
         if (!lines.length) { toast('该商家菜品已全部下架'); return; }
-        state.cart = { shopId: shop.id, lines: lines };
+        state.carts[shop.id] = lines;
+        state.cart = { shopId: shop.id, lines: state.carts[shop.id] };
         state.couponId = null;
         saveCart();
         toast(skipped ? skipped + ' 件商品已下架，其余已加入购物车' : '已加入购物车');
@@ -4361,10 +4391,10 @@ body.dark .shop-badge { background: rgba(230, 0, 18, .18); }
             'reset-demo': () => {
                 confirmDialog({ title: '重置演示数据', message: '将清空购物车、订单、地址、红包、收藏与偏好，恢复初始状态。', okText: '重置' }).then(ok => {
                     if (!ok) return;
-                    ['kd.cart', 'kd.orders', 'kd.addresses', 'kd.searchHistory', 'kd.favs', 'kd.coupons',
+                    ['kd.cart', 'kd.carts', 'kd.orders', 'kd.addresses', 'kd.searchHistory', 'kd.favs', 'kd.coupons',
                      'kd.balance', 'kd.member', 'kd.groups', 'kd.points', 'kd.draws', 'kd.dark']
                         .forEach(k => store(k, null));
-                    state.cart = { shopId: null, lines: [] };
+                    state.cart = { shopId: null, lines: [] }; state.carts = {};
                     state.orders = SEED_ORDERS.slice();
                     state.addresses = DEFAULT_ADDRESSES.slice();
                     state.searchHistory = []; state.searchKeyword = '';
